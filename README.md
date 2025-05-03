@@ -1,2 +1,1 @@
-echo "# looper_frontend" > README.md
-echo "게임 로그인, 캐릭터 정보 확인 등 주요 화면을 구현한 React 기반 프론트엔드입니다." >> README.md
+
