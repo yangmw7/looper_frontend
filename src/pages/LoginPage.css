@@ -1,0 +1,108 @@
+/* src/pages/LoginPage.css */
+.login-background {
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;                  /* ✅ 가로 여백 제거 */
+  margin: 0;                    /* ✅ 혹시 모를 외부 여백 제거 */
+  display: flex;
+  flex-direction: column;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+
+.login-container {
+  background-color: rgb(255, 255, 255); /* 반투명 배경 */
+  padding: 40px 20px;
+  max-width: 400px;
+  margin: 200px auto 40px auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.login-title {
+  color: #333333;
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #333333;
+  padding-bottom: 10px;
+}
+
+/* 기존 .login-input 부분을 아래 코드로 교체하세요 */
+.login-input {
+  width: 100%;
+  padding: 12px 4px;          /* 좌우 패딩을 조금 줄여도 되고, 취향대로 조정 */
+  margin-bottom: 16px;
+  font-size: 1rem;
+  box-sizing: border-box;
+
+  /* 테두리 대신 아래쪽 밑줄만 표시 */
+  border: none;               /* 모든 면 테두리 제거 */
+  border-bottom: 1px solid #cccccc;  /* 아래쪽에만 연회색 선 추가 */
+  background: transparent;    /* 배경이 흰색 등의 컨테이너 위라면 투명으로 두세요 */
+  transition: border-color 0.2s ease-in-out;
+}
+
+/* 포커스 시엔 밑줄 색상만 오렌지로 바뀌도록 */
+.login-input:focus {
+  outline: none;
+  border-bottom-color: #f26323;
+}
+
+
+.login-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #333333;
+  font-size: 0.9rem;
+}
+
+/* 기존 .login-button */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #f26323;  /* 기본 오렌지 */
+  color: #333333;             /* 기본 텍스트 색상 */
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* 마우스 오버(hover) 시 스타일 */
+.login-button:hover {
+  background-color: #d9531f;  /* 조금 더 진한 오렌지 */
+  color: #ffffff;             /* 글자색을 흰색으로 변경 */
+}
+
+
+.login-links {
+  display: flex;
+  justify-content: center; /* ✅ 가운데 정렬 */
+  gap: 20px;               /* ✅ 링크 간격 */
+  font-size: 0.9rem;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.login-links a {
+  color: #333333;
+  text-decoration: none;
+}
+
+
+
+.fb { color: #3b5998; }
+.google { color: #db4437; }
+.naver { color: #03c75a; }
+.apple { color: #000; }

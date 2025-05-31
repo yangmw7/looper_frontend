@@ -1,0 +1,61 @@
+.navbar {
+  position: fixed;
+  top: 30px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 3rem;
+  background-color: rgba(58, 47, 40, 0.74);
+  color: #f0f0f0;
+  border-radius: 12px 12px 12px 12px;
+  width: 84%;              /* ✅ 전체의 80%만 차지 */
+  margin: 0 auto;          /* ✅ 가운데 정렬 */
+  box-sizing: border-box;
+}
+
+.header-logo-container {
+  padding-top: 100px; /* 헤더 고정 영역 피해서 로고 내리기 */
+  text-align: center;
+}
+
+
+.header-logo {
+  width: 200px;
+  height: auto;
+}
+
+
+
+
+
+.nav-left a,
+.nav-right a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+.play-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.header-logo-container {
+  text-align: center;
+  margin: 20px 0; /* 위아래 여백 */
+}
+
+.header-logo {
+  width: 200px;   /* 크기 조절 가능 */
+  height: auto;
+}
+

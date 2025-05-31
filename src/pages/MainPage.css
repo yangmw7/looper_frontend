@@ -1,0 +1,70 @@
+/* src/pages/MainPage.css */
+
+.main-page {
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.hero {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5vh 2rem;
+}
+
+.hero-text p {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  margin: 0.6rem 0;
+  font-weight: 500;
+  color: #fff;
+}
+
+.download-button {
+  margin-top: 2rem;
+  padding: 0.8rem 2rem;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  background-color: #1d5e49;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #148267;
+}
+
+.sub-text {
+  margin-top: 1.5rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: #ffc107;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 3vh 1rem;
+  }
+
+  .download-button {
+    width: 100%;
+  }
+
+  .hero-text p {
+    font-size: 1.1rem;
+  }
+}
