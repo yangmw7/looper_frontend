@@ -1,0 +1,161 @@
+/* SignupPage.css */
+
+/* 1) 페이지 전체 배경 및 중앙 정렬 */
+.signup-page {
+  background-color: #f5f5f5;
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+
+  /* 헤더(nav바)가 fixed일 때, 이만큼 여백을 줍니다. */
+  padding-top: 130px; /* 실제 Header 높이에 맞춰 조절하세요 */
+}
+
+/* 2) 회원가입 컨테이너 래퍼(너비 400px) */
+.signup-container {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; /* Header와 컨테이너 사이 여백 */
+  box-sizing: border-box;
+
+  /* → 중요한 수정: 아래에 충분한 여백을 줘서 Footer와 겹치지 않게 합니다. */
+  margin-bottom: 120px; /* Footer 높이보다 조금 크게 설정하세요 (예: Footer 높이가 80px이면 120px 정도) */
+}
+
+/* 3) 로고 + 서브타이틀 영역 */
+.signup-header {
+  background-color: #ffffff;
+  width: 100%;
+  border-bottom: 1px solid #dddddd;
+  text-align: left;
+  padding: 20px 24px;
+  box-sizing: border-box;
+}
+
+.signup-header .logo {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+  color: #f26323; /* looper 오렌지 */
+  line-height: 1;
+}
+
+.signup-header .subtitle {
+  margin-top: 8px;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.2;
+}
+
+/* 4) 계정정보 폼 전체 컨테이너 */
+.account-info {
+  background-color: #ffffff;
+  width: 100%;
+  margin-top: 20px; /* signup-header와의 간격 */
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.account-info h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #333333;
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+/* 5) 폼 그룹(각 입력 필드 블록) */
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 유효성 메시지(빨간 글씨) */
+.validation-text {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  color: #d32f2f;
+  line-height: 1.2;
+}
+
+/* 예시 텍스트(회색, 작게) */
+.example-text {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.2;
+}
+
+/* 공통 입력 필드 스타일 */
+.input {
+  width: 100%;
+  font-size: 14px;
+  padding: 10px 4px;
+  border: none;
+  border-bottom: 1px solid #cccccc;
+  background-color: transparent;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* 유효성 에러가 있는 입력 필드(밑줄을 빨간색으로) */
+.input-error {
+  border-bottom: 2px solid #d32f2f;
+}
+
+/* 입력 필드 포커스 시 밑줄 강조 */
+.input:focus {
+  border-bottom: 2px solid #555555;
+}
+
+/* 6) 회원가입 버튼 그룹 */
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px; /* 폼과 버튼 사이 간격 */
+}
+
+.signup-button {
+  width: 100%;
+  height: 48px;
+  background-color: #f26323; /* looper 오렌지 */
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.signup-button:hover {
+  background-color: #d9531f; /* 호버 시 진해지는 색 */
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;               /* ← 이 두 줄(left:0; right:0;)이 화면 전체를 채워줍니다 */
+  background-color: #000000; /* 어두운 회색 */
+  color: #ffffff;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+  box-sizing: border-box;
+  z-index: 999;
+}
+
+
+
