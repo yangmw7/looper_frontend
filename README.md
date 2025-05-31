@@ -1,12 +1,28 @@
-# React + Vite
+# looper_frontend  
+게임 사용자 관리 및 회원가입/로그인 페이지를 포함한 전반적인 프론트엔드 기능을 처리하는 클라이언트 애플리케이션입니다.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🎓 Graduation Project - Game Frontend
 
-Currently, two official plugins are available:
+## 📅 작업 히스토리
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+### 2025.05.31
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+✅ **기본 페이지 구현**  
+→ `MainPage.jsx`, `MainPage.css` 파일 생성  
+→ 헤더(로고, 내비게이션), 간단한 환영 메시지, 푸터 화면 배치  
+→ 배경에 숲 이미지(`main.png`) 풀스크린 적용  
+
+✅ **로그인 페이지 구현**  
+→ `LoginPage.jsx`, `LoginPage.css` 파일 생성  
+→ 이메일(ID) 및 비밀번호 입력 필드, 로그인 버튼 배치  
+→ “회원가입”, “아이디 찾기”, “비밀번호 찾기” 링크 추가  
+→ 반투명 흰색 컨테이너로 입력 구역 강조 및 그림자 적용  
+
+✅ **회원가입 페이지 구현**  
+→ `SignupPage.jsx`, `SignupPage.css` 파일 생성  
+→ 이메일, 아이디, 닉네임, 비밀번호, 비밀번호 재확인 입력 필드 배치  
+→ 폼 제출 버튼(회원가입) 추가  
+
+---
