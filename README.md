@@ -26,3 +26,24 @@
 → 폼 제출 버튼(회원가입) 추가  
 
 ---
+
+### 2025.06.02
+
+✅ **회원가입 페이지 백엔드 연동**  
+→ `SignupPage.jsx`에서 폼 입력 시 `axios.post('http://localhost:8080/api/join', payload)`를 통해 백엔드 API 호출  
+→ 백엔드 응답 확인 후, 회원정보가 MySQL DB에 정상 저장됨을 검증  
+
+---
+
+### 2025.06.03
+
+✅ **로그인 페이지 기능 개선**  
+→ `LoginPage.jsx`에서 폼 입력 후 `axios.post('http://localhost:8080/api/login', payload)` 호출  
+  - 로그인 성공 시 `navigate('/')`를 이용해 `MainPage`로 이동  
+  - 로그인 실패 시, 에러 코드에 따라 적절한 `alert` 메시지 표시 (“아이디 또는 비밀번호가 올바르지 않습니다.” 등)  
+
+✅ **Remember-Me(로그인 상태 유지) 기능 추가**  
+→ 로그인 폼에 체크박스를 추가하여,  
+  - 체크 시 `localStorage.setItem('accessToken', token)` 처리  
+  - 미체크 시 `sessionStorage.setItem('accessToken', token)` 처리  
+  → 이를 통해 브라우저 세션 유지/만료에 따른 자동 로그인 제어 가능
