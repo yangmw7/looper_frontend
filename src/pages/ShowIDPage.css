@@ -1,0 +1,62 @@
+/* src/pages/ShowIDPage.css */
+
+.showid-background {
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.showid-box {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  margin-top: 200px;
+  margin-bottom: 80px;
+}
+
+.showid-title {
+  color: #333333;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 8px;
+}
+
+.showid-text {
+  color: #444444;
+  font-size: 1rem;
+  margin: 16px 0 8px 0;
+}
+
+.showid-username {
+  color: #f26323; /* looper 오렌지 */
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 0 16px 0;
+}
+
+.showid-button {
+  background-color: #f26323;
+  color: #ffffff;
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.showid-button:hover {
+  background-color: #c65528;
+}

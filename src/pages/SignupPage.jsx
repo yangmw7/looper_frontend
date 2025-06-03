@@ -47,7 +47,7 @@ function SignupPage() {
         alert(message);
         navigate('/login');
       } else {
-        // “이미 있는 이메일입니다.” 또는 “이미 있는 아이디입니다.”
+        // “이미 있는 이메일입니다.” 또는 “이미 있는 아이디입니다.” 등
         alert(message);
       }
     } catch (err) {
@@ -141,6 +141,12 @@ function SignupPage() {
                 회원가입
               </button>
             </div>
+
+            {/* ↓ 여기서부터 로그인으로 돌아가기 링크 추가 ↓ */}
+            <div className="signup-footer-links">
+              <a href="/login">로그인으로 돌아가기</a>
+            </div>
+            {/* ↑ 추가 끝 ↑ */}
           </form>
         </div>
       </div>
