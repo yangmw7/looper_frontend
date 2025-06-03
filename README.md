@@ -46,4 +46,28 @@
 → 로그인 폼에 체크박스를 추가하여,  
   - 체크 시 `localStorage.setItem('accessToken', token)` 처리  
   - 미체크 시 `sessionStorage.setItem('accessToken', token)` 처리  
-  → 이를 통해 브라우저 세션 유지/만료에 따른 자동 로그인 제어 가능
+  → 이를 통해 브라우저 세션 유지/만료에 따른 자동 로그인 제어 가능  
+
+---
+
+### 2025.06.04
+
+✅ **아이디 찾기 페이지 구현 및 백엔드 연동**  
+→ `FindIDPage.jsx`, `ShowIDPage.jsx`, `FailIDPage.jsx` 파일 생성  
+  - 사용자가 이메일 입력 후 `axios.post('http://localhost:8080/api/find-id', { email })` 호출  
+  - 성공 시 `/find-id/success`로 이동하며, `ShowIDPage`에서 아이디 노출  
+  - 실패 시 `/find-id/fail`로 이동하며, `FailIDPage`에서 에러 메시지 표시  
+→ 라우팅 설정(`App.jsx`)에 `/find-id`, `/find-id/success`, `/find-id/fail` 경로 추가  
+→ CSS(`FindIDPage.css`, `ShowIDPage.css`, `FailIDPage.css`)로 로그인 페이지와 동일한 디자인 적용  
+
+✅ **비밀번호 찾기 페이지 구현 및 백엔드 연동**  
+→ `FindPasswordPage.jsx`, `ResetPasswordPage.jsx`, `FailPasswordPage.jsx` 파일 생성  
+  - `FindPasswordPage`에서 아이디+이메일 입력 후 `axios.post('http://localhost:8080/api/reset-password/request', { username, email })` 호출  
+    • 성공 시 `/reset-password`로 이동하며 `ResetPasswordPage`에서 새 비밀번호 입력 폼 노출  
+    • 실패 시 `/find-password/fail`로 이동하며 `FailPasswordPage`에서 에러 메시지 표시  
+  - `ResetPasswordPage`에서 새 비밀번호/확인비밀번호 입력 후 `axios.post('http://localhost:8080/api/reset-password', { username, newPassword, confirmPassword })` 호출  
+    • 성공 시 알림창(“비밀번호가 변경이 완료되었습니다!”) 후 `/login`으로 이동  
+    • 실패 시 페이지 내에 오류 메시지 표시  
+→ 라우팅 설정(`App.jsx`)에 `/find-password`, `/reset-password`, `/find-password/fail` 경로 추가  
+→ CSS(`FindPasswordPage.css`, `ResetPasswordPage.css`, `FailPasswordPage.css`)로 로그인 페이지와 일관된 디자인 적용  
+
