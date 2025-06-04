@@ -37,8 +37,8 @@ function Header() {
     sessionStorage.removeItem('accessToken');
     // 5) axios 기본 헤더에서 Authorization 제거
     delete axios.defaults.headers.common['Authorization'];
-    // 6) 로그인 페이지로 이동
-    navigate('/login');
+    // 6) 홈페이지로 이동
+    navigate('/');
     // 7) 화면 갱신을 위해 nickname 상태 초기화
     setNickname(null);
   };
