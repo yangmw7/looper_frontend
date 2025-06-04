@@ -1,0 +1,405 @@
+/* src/pages/CommunityDetailPage.css */
+
+/* ────────────────────────────────────────────────────── */
+/* 1) 최상위 배경 컨테이너 */
+.community-background {
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 2) 상세 페이지 전체 레이아웃 */
+.community-detail-page {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 20px 20px 200px;
+  color: #f0f0f0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+  color: #ff6b6b;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* 로딩 텍스트 스타일 */
+.loading {
+  text-align: center;
+  font-size: 1rem;
+  color: #bbb;
+  margin: 40px 0;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 3) 상단 제목 */
+.detail-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.detail-subtitle {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 32px;
+  letter-spacing: 0.5px;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 4) 상세 컨테이너: 반투명 배경 + 그림자 + 패딩 */
+.detail-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 12px;
+  padding: 32px 40px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5) 게시글 제목 */
+.post-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+  position: relative;
+  line-height: 1.3;
+}
+
+/* 제목 아래에 얇은 밑줄 강조선 */
+.post-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background-color: #ffe07a;
+  border-radius: 2px;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 6) 메타 정보 (작성자 · 조회 · 작성일) */
+.post-meta {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 28px;
+  font-size: 0.95rem;
+  color: #ccc;
+  flex-wrap: wrap;
+}
+
+/* 메타 각각에 아이콘을 미리 배치 */
+.meta-author::before {
+  content: '👤';
+  margin-right: 6px;
+}
+
+.meta-views::before {
+  content: '👁️';
+  margin-right: 6px;
+}
+
+.meta-date::before {
+  content: '📅';
+  margin-right: 6px;
+}
+
+/* 텍스트에 마우스를 올리면 약간 색 변화를 줘서 부드럽게 보이도록 */
+.post-meta span:hover {
+  color: #fff;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 7) 본문 내용 */
+.post-content {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 4px solid #ffe07a;
+  border-radius: 6px;
+  padding: 24px;
+  color: #eee;
+  line-height: 1.8rem;
+  white-space: pre-wrap;
+  margin-bottom: 36px;
+  position: relative;
+}
+
+/* 본문 배경 위에 약간의 반투명 그림자 */
+.post-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  z-index: -1;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 8) 버튼 그룹: “목록으로”, “수정”, “삭제” */
+.button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+/* 버튼 기본 스타일 */
+.button-group button {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* “목록으로” 버튼 */
+.btn-back {
+  background-color: #444;
+  color: #fff;
+}
+
+.btn-back:hover {
+  background-color: #555;
+  transform: translateY(-1px);
+}
+
+/* “수정” 버튼 */
+.btn-edit {
+  background-color: #2a7cff;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background-color: #1a5cd8;
+  transform: translateY(-1px);
+}
+
+/* “삭제” 버튼 */
+.btn-delete {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background-color: #e04343;
+  transform: translateY(-1px);
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 9) 댓글 입력 영역 */
+.comment-input-container {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 40px;
+  gap: 12px;
+}
+
+.comment-input {
+  flex: 1;
+  min-height: 80px;
+  resize: vertical;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #eee;
+  font-size: 1rem;
+  line-height: 1.4;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.comment-input::placeholder {
+  color: #bbb;
+}
+
+/* 댓글 등록 버튼을 세련되게 */
+.btn-comment-submit {
+  padding: 0 24px;
+  height: 40px;
+  background-color: #ffc947;      /* 밝은 노란색 포인트 */
+  color: #222;                    /* 어두운 텍스트로 가독성 확보 */
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  align-self: flex-end;           /* 입력창 하단에 붙도록 정렬 */
+}
+
+.btn-comment-submit:hover {
+  background-color: #e6b337;     /* 호버 시 어두운 노란색 */
+  transform: translateY(-1px);
+}
+
+/* 버튼 비활성화 상태 */
+.btn-comment-submit:disabled {
+  background-color: rgba(255, 201, 71, 0.5);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* “로그인해주세요” 메시지 */
+.comment-login-prompt {
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #bbb;
+  text-align: center;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 10) 댓글 목록 영역 */
+.comments-section {
+  margin-top: 32px;
+}
+
+.comments-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+/* 제목 아래에 얇은 밑줄 추가 */
+.comments-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: #ffe07a;
+  border-radius: 2px;
+}
+
+.no-comments {
+  color: #bbb;
+  font-size: 1rem;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* 댓글 리스트 스타일 */
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 개별 댓글 아이템 */
+.comment-item {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 댓글 헤더: 작성자 · 작성일 */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* 작성자 닉네임을 파란색으로 강조 */
+.comment-author {
+  font-weight: 500;
+  color: #2a7cff;   /* 파란색 포인트 */
+}
+
+.comment-date {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+/* 댓글 본문 */
+.comment-content {
+  font-size: 1rem;
+  color: #eee;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 11) 반응형(Responsive) */
+@media (max-width: 768px) {
+  .community-detail-page {
+    margin-top: 80px;
+    padding: 16px 16px 200px;
+  }
+
+  .detail-container {
+    padding: 24px 16px;
+  }
+
+  .post-title {
+    font-size: 1.6rem;
+  }
+
+  .post-meta {
+    gap: 20px;
+    font-size: 0.85rem;
+  }
+
+  .post-content {
+    padding: 20px;
+    line-height: 1.6rem;
+    margin-bottom: 24px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .button-group button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .comment-input-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-comment-submit {
+    width: 100%;
+    text-align: center;
+  }
+
+  .comment-item {
+    padding: 12px;
+  }
+}

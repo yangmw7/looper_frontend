@@ -8,6 +8,9 @@ import SignupPage from './pages/SignupPage';
 import FindIDPage from './pages/FindIDPage';
 import ShowIDPage from './pages/ShowIDPage';
 import FailIDPage from './pages/FailIDPage';
+import CommunityListPage from './pages/CommunityListPage';
+import CommunityDetailPage from './pages/CommunityDetailPage';
+import CommunityCreatePage from './pages/CommunityCreatePage';
 
 // 비밀번호 찾기(1단계: 아이디+이메일 확인)
 import FindPasswordPage from './pages/FindPasswordPage';
@@ -34,6 +37,13 @@ function App() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       {/* 비밀번호 찾기 실패 */}
       <Route path="/find-password/fail" element={<FailPasswordPage />} />
+      {/* 커뮤니티 목록 */}
+      <Route path="/community" element={<CommunityListPage />} />
+      {/* 커뮤니티 상세 */}
+      <Route path="/community/:id" element={<CommunityDetailPage />} />
+      {/* 커뮤니티 작성 */}
+      <Route path="/community/new" element={<CommunityCreatePage />} />
+
     </Routes>
   );
 }

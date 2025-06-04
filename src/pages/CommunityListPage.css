@@ -1,0 +1,201 @@
+/* src/pages/CommunityListPage.css */
+
+/* ────────────────────────────────────────────────────── */
+/* 1) 최상위 배경 컨테이너 */
+.community-background {
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 2) 내부 콘텐츠 영역 (가운데 정렬 & 너비 제한) */
+.community-list-page {
+  flex: 1;
+  max-width: 1250px;  /* 원하는 가로 너비로 조절 */
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 100px;
+
+  /* 아래쪽 여유 공간 추가 */
+  padding: 20px 0 200px;
+
+  color: #f0f0f0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+  color: #ff4d4d;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 3) 상단 제목 & 탭 메뉴 */
+.community-title {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+.tab-menu {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  cursor: pointer;
+  font-size: 1rem;
+  color: #bbb;
+}
+
+.tab.active {
+  color: #ffe07a;
+  border-bottom: 2px solid #ffe07a;
+  padding-bottom: 4px;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 4) 게시글 목록 - 전체 구분선 */
+.post-table {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 
+  그리드 헤더는 실제 화면에 보이지 않지만, 
+  CSS 그리드의 칼럼 너비를 고정하는 역할을 합니다.
+*/
+.post-header {
+  display: none; /* 화면에는 숨기기 */
+}
+
+/* 게시글 목록 리스트 */
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5) 게시글 행: CSS Grid 5컬럼(제목 / 작성자 / 댓글 / 조회 / 날짜) */
+.post-row {
+  display: grid;
+
+  /* 
+    grid-template-columns:
+      6fr   1fr   1fr   1fr   1fr
+    6fr   → 제목 칸: 나머지 남는 공간의 6/10을 차지 (상대 비율)
+    1fr   → 작성자 칸: 1/10
+    1fr   → 댓글 칸:   1/10
+    1fr   → 조회 칸:   1/10
+    1fr   → 날짜 칸:   1/10
+  */
+  grid-template-columns: 6fr 0.5fr 0.5fr 0.5fr 0.5fr;
+  align-items: center; /* 수직 중앙 정렬 */
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  /* 마우스 올릴 때 반투명 배경 */
+  transition: background-color 0.2s ease;
+}
+
+.post-row:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5-1) 제목 칼럼 (첫 번째 컬럼) */
+.col-title {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  padding-left: 0;       /* 왼쪽 여백 없이 딱 붙음 */
+}
+
+/* 제목에 마우스 올렸을 때도 밑줄 없음 */
+.col-title:hover {
+  text-decoration: none;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5-2) 작성자 칼럼 (두 번째 컬럼) */
+.col-author {
+  justify-self: start;   /* 칼럼 시작점(왼쪽)과 딱 맞닿음 */
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5-3) 댓글 칼럼 (세 번째 컬럼) */
+.col-comments {
+  justify-self: center;  /* 칼럼 가운데 정렬 */
+  display: flex;
+  align-items: center;
+  gap: 4px;              /* 아이콘과 숫자 사이 간격 */
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5-4) 조회 칼럼 (네 번째 컬럼) */
+.col-views {
+  justify-self: center;  /* 칼럼 가운데 정렬 */
+  display: flex;
+  align-items: center;
+  gap: 4px;              /* 아이콘과 숫자 사이 간격 */
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 5-5) 날짜 칼럼 (다섯 번째 칼럼) */
+.col-date {
+  justify-self: end;     /* 칼럼 끝(오른쪽)과 딱 맞닿음 */
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 6) “글쓰기” 버튼 스타일 (CommunityCreatePage의 등록 버튼과 동일) */
+.new-post-button {
+  /* 기본 스타일 */
+  display: inline-block;
+  padding: 10px 24px;
+  background-color: #ffc947;   /* 노란색 배경 */
+  color: #000;                 /* 텍스트 검은색 (#000) */
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  /* 오른쪽 정렬 + 위쪽 여백 추가 */
+  float: right;
+  margin-top: 20px;
+}
+
+.new-post-button:hover {
+  background-color: #e6b337;   /* 어두운 노란색 */
+  transform: translateY(-1px);
+}
+
+/* disabled 상태 (필요 시) */
+.new-post-button:disabled {
+  background-color: rgba(255, 201, 71, 0.5);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
