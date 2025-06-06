@@ -11,6 +11,11 @@ export default function CommunityListPage() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
 
+  // ──────────────────────────────────────────────────────
+  // 페이징 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10;
+
   useEffect(() => {
     // 백엔드에서 게시글 목록 가져오기 (인증 필요 없는 공개 API)
     axios
@@ -54,6 +59,26 @@ export default function CommunityListPage() {
     return `${diffDay}일 전`;
   }
 
+  // ──────────────────────────────────────────────────────
+  // 페이징 로직
+  const indexOfLastPost = currentPage * postsPerPage;            // 예: 1페이지면 1*10=10
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;       // 예: 10-10=0
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : totalPages));
+  };
+
   return (
     <div className="community-background">
       <Header />
@@ -69,10 +94,7 @@ export default function CommunityListPage() {
         {error && <div className="error-message">{error}</div>}
 
         <div className="post-table">
-          {/*
-            그리드 헤더(눈에는 보이지 않지만 칼럼 너비를 잡기 위해 남겨둡니다).
-            CSS에서 display: none 처리하면 실제 화면에는 감춰집니다.
-          */}
+          {/* 그리드 헤더 (눈에는 보이지 않지만 칼럼 너비를 잡기 위해 남겨둡니다). */}
           <div className="post-header">
             <span className="col-title">제목</span>
             <span className="col-author">작성자</span>
@@ -82,7 +104,7 @@ export default function CommunityListPage() {
           </div>
 
           <ul className="post-list">
-            {posts.map((post) => (
+            {currentPosts.map((post) => (
               <li key={post.id} className="post-row">
                 {/* 1) 제목 */}
                 <a href={`/community/${post.id}`} className="col-title">
@@ -105,7 +127,39 @@ export default function CommunityListPage() {
           </ul>
         </div>
 
-        <div className="new-post-button-wrapper">
+        {/* 페이지네이션 + 글쓰기 버튼을 같은 줄에 */}
+        <div className="pagination-wrapper">
+          <div className="pagination">
+            {/* 이전 버튼 */}
+            <button
+              className="page-button prev-button"
+              onClick={handlePrev}
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+
+            {/* 페이지 번호 */}
+            {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((num) => (
+              <button
+                key={num}
+                className={`page-button ${currentPage === num ? 'active' : ''}`}
+                onClick={() => handlePageClick(num)}
+              >
+                {num}
+              </button>
+            ))}
+
+            {/* 다음 버튼 */}
+            <button
+              className="page-button next-button"
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
+              &gt;
+            </button>
+          </div>
+
           <a href="/community/new" className="new-post-button">
             글쓰기
           </a>

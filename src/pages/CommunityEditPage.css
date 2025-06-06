@@ -1,54 +1,46 @@
-/* src/pages/CommunityCreatePage.css */
+/* src/pages/CommunityEditPage.css */
 
 /* ────────────────────────────────────────────────────── */
-/* 1) 최상위 배경 컨테이너 */
-.create-background {
-  background-image: url('../assets/main.png');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  min-height: 100vh;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+/* (1) 기본 배경은 상세 페이지와 동일하게 재사용 */
+/* (CommunityDetailPage.css의 .community-background를 그대로 활용합니다) */
 
 /* ────────────────────────────────────────────────────── */
-/* 2) 페이지 전체 레이아웃 */
-.create-page {
+/* (2) 수정 페이지 전체 레이아웃 */
+/* CommunityCreatePage.css의 .create-page와 동일하게 적용 */
+.community-edit-page {
   flex: 1;
   width: 100%;
-  max-width: 800px;         /* 중앙 최대 넓이 */
+  max-width: 800px;          /* 중앙 최대 넓이 */
   margin: 0 auto;
   margin-top: 100px;
-  padding: 20px 16px 200px; /* 모바일 여유 포함 */
+  padding: 20px 16px 200px;  /* 모바일 여유 포함 */
   color: #f0f0f0;
   font-family: 'Noto Sans KR', sans-serif;
   box-sizing: border-box;
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 3) 상단 제목 및 서브타이틀 */
-.create-title {
+/* (3) 상단 제목 및 서브타이틀 */
+.edit-title {
   font-size: 2.4rem;
   font-weight: 700;
   color: #fff;
   margin-bottom: 8px;
   letter-spacing: 1px;
+  text-align: center;
 }
 
-.create-subtitle {
+.edit-subtitle {
   font-size: 1rem;
   color: #ccc;
   margin-bottom: 32px;
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 4) 로그인 필요 안내문 */
-.create-login-prompt {
+/* (4) 로그인 필요 안내문 (필요하다면) */
+.edit-login-prompt {
   margin-top: 40px;
   font-size: 1rem;
   color: #bbb;
@@ -60,8 +52,9 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 5) 작성 폼 컨테이너 */
-.create-form {
+/* (5) 수정 폼 컨테이너 */
+/* CommunityCreatePage.css의 .create-form 스타일을 그대로 복사 */
+.edit-form {
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 12px;
   padding: 32px 24px 40px;
@@ -72,8 +65,8 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 6) 에러 메시지 */
-.create-error {
+/* (6) 에러 메시지 */
+.edit-error {
   color: #ff6b6b;
   background: rgba(255, 107, 107, 0.15);
   padding: 12px;
@@ -85,8 +78,8 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 7) 입력 라벨 */
-.create-label {
+/* (7) 입력 라벨 */
+.edit-label {
   display: block;
   margin-top: 16px;
   margin-bottom: 6px;
@@ -96,8 +89,8 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 8) 제목 입력창 */
-.create-input {
+/* (8) 제목 입력창 */
+.edit-input {
   width: 100%;
   padding: 12px;
   font-size: 1rem;
@@ -110,19 +103,19 @@
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.create-input:focus {
+.edit-input:focus {
   outline: none;
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
-.create-input::placeholder {
+.edit-input::placeholder {
   color: #aaa;
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 9) 내용 입력창(텍스트 에어리어) */
-.create-textarea {
+/* (9) 내용 입력창(텍스트 에어리어) */
+.edit-textarea {
   width: 100%;
   padding: 12px;
   margin-top: 4px;
@@ -139,102 +132,19 @@
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.create-textarea:focus {
+.edit-textarea:focus {
   outline: none;
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
-.create-textarea::placeholder {
+.edit-textarea::placeholder {
   color: #aaa;
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 9.1) 파일 첨부(input[type="file"]) 스타일 */
-.create-file-input {
-  display: block;
-  width: 100%;
-  margin-top: 4px;
-  padding: 10px 12px;
-  font-size: 0.95rem;
-  color: #eee;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: none;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  box-sizing: border-box;
-}
-
-/* input[type="file"] 버튼 부분 꾸미기 (WebKit 브라우저) */
-.create-file-input::-webkit-file-upload-button {
-  background-color: #444;          /* 어두운 회색 버튼 배경 */
-  color: #fff;                     /* 버튼 텍스트는 흰색 */
-  padding: 6px 12px;
-  margin-right: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
-}
-
-.create-file-input::-webkit-file-upload-button:hover {
-  background-color: #555;          /* 호버 시 밝은 회색 */
-}
-
-/* input[type="file"] 버튼 부분 꾸미기 (Firefox) */
-.create-file-input::file-selector-button {
-  background-color: #444;
-  color: #fff;
-  padding: 6px 12px;
-  margin-right: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
-}
-
-.create-file-input::file-selector-button:hover {
-  background-color: #555;
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 9.2) 선택된 파일명 표시 영역 */
-.selected-files {
-  margin-top: 8px;
-  font-size: 0.95rem;
-  color: #ccc;
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
-  word-break: break-all;  /* 긴 파일명도 줄바꿈 처리 */
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 9.3) 반응형: 모바일에서 입력창 크기 맞추기 */
-@media (max-width: 768px) {
-  .create-file-input {
-    font-size: 0.9rem;
-    padding: 8px 10px;
-  }
-  .create-file-input::-webkit-file-upload-button,
-  .create-file-input::file-selector-button {
-    font-size: 0.9rem;
-    padding: 4px 10px;
-  }
-  .selected-files {
-    font-size: 0.9rem;
-    padding: 6px 10px;
-  }
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 10) 버튼 그룹: 취소, 등록 */
-.create-button-group {
+/* (10) 버튼 그룹: 취소, 수정 완료 */
+.edit-button-group {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
@@ -243,7 +153,8 @@
 }
 
 /* 버튼 공통 스타일 */
-.create-button-group button {
+/* CommunityCreatePage.css의 .create-button-group 내부 버튼 스타일과 동일 */
+.edit-button-group button {
   padding: 10px 24px;
   font-size: 1rem;
   font-weight: 500;
@@ -257,29 +168,31 @@
 }
 
 /* “취소” 버튼 스타일 */
-.btn-create-back {
+/* CommunityCreatePage.css의 .btn-create-back에서 클래스 이름만 변경 */
+.btn-cancel {
   background-color: #444;
   color: #fff;
 }
 
-.btn-create-back:hover {
+.btn-cancel:hover {
   background-color: #555;
   transform: translateY(-1px);
 }
 
-/* “게시글 등록” 버튼 스타일 */
-.btn-create-submit {
+/* “수정 완료” 버튼 스타일 */
+/* CommunityCreatePage.css의 .btn-create-submit에서 클래스 이름만 변경 */
+.btn-submit {
   background-color: #ffc947;   /* 노란색 포인트 */
   color: #222;
 }
 
-.btn-create-submit:hover {
+.btn-submit:hover {
   background-color: #e6b337;   /* 호버 시 어두운 노란색 */
   transform: translateY(-1px);
 }
 
 /* 버튼 비활성화 상태 */
-.btn-create-submit:disabled {
+.btn-submit:disabled {
   background-color: rgba(255, 201, 71, 0.5);
   cursor: not-allowed;
   box-shadow: none;
@@ -287,37 +200,37 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 11) 반응형(Responsive) */
+/* (11) 반응형(Responsive) */
 @media (max-width: 768px) {
-  .create-page {
+  .community-edit-page {
     margin-top: 80px;
     padding: 16px 16px 200px;
   }
 
-  .create-form {
+  .edit-form {
     padding: 24px 16px 32px;
   }
 
-  .create-title {
+  .edit-title {
     font-size: 1.8rem;
   }
 
-  .create-subtitle {
+  .edit-subtitle {
     font-size: 0.9rem;
   }
 
-  .create-input,
-  .create-textarea {
+  .edit-input,
+  .edit-textarea {
     font-size: 0.95rem;
   }
 
-  .create-button-group {
+  .edit-button-group {
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
   }
 
-  .create-button-group button {
+  .edit-button-group button {
     width: 100%;
     text-align: center;
   }
