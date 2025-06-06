@@ -71,7 +71,6 @@
 → 라우팅 설정(`App.jsx`)에 `/find-password`, `/reset-password`, `/find-password/fail` 경로 추가  
 → CSS(`FindPasswordPage.css`, `ResetPasswordPage.css`, `FailPasswordPage.css`)로 로그인 페이지와 일관된 디자인 적용  
 
-
 ✅ **커뮤니티 목록 페이지 구현 (`CommunityListPage.jsx` / `CommunityListPage.css`)**  
 → `CommunityListPage.jsx` 파일 생성  
   - 컴포넌트가 마운트될 때 `axios.get('http://localhost:8080/api/posts')` 호출  
@@ -108,7 +107,7 @@
   - 로그인 여부 검사: 로그인 토큰이 없으면 `navigate('/login')`  
   - 제목(`input type="text"`), 내용(`textarea`) 입력 form 구성  
   - “작성하기” 버튼 클릭 시 유효성 검사(제목/내용 빈 값 체크) 후:  
-   `const payload = { title, body };`
+   `const payload = { title, body };`  
    `axios.post('http://localhost:8080/api/posts', payload, { headers: { Authorization: `Bearer ${token}` } })`  
    - 요청 성공 시 `navigate('/community')` (목록 페이지)로 이동  
   - “취소” 버튼 클릭 시 `navigate('/community')`  
@@ -132,12 +131,57 @@
 
 ---
 
+### 2025.06.05
+
+✅ **댓글 수정 삭제 기능 추가**  
+→ `CommunityDetailPage.jsx` 수정:  
+  - 댓글 목록 렌더링 시, 댓글 작성자 본인만 ‘삭제’ 버튼 표시  
+  - `handleCommentDelete` 구현:  
+    ```js
+    axios
+      .delete(`http://localhost:8080/api/posts/${id}/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        setComments((prev) => prev.filter((c) => c.id !== commentId));
+        alert('댓글이 삭제되었습니다.');
+      })
+      .catch((err) => {
+        console.error('댓글 삭제 실패:', err);
+        alert('댓글 삭제 중 오류가 발생했습니다.');
+      });
+    ```  
+  - 삭제 후 댓글 리스트 자동 갱신 및 성공/실패 알림  
+
+---
+
+### 2025.06.06
+
+✅ **글 작성 시 사진 여러 장 첨부 기능 추가**  
+→ `CommunityCreatePage.jsx` 수정:  
+  - `<input type="file" multiple accept="image/*" name="imageFiles" />` 태그로 여러 파일 선택 가능  
+  - `handleFileChange`에서 `Array.from(e.target.files)`로 파일 배열 상태 관리  
+  - `handleSubmit`에서 `FormData`에 `formData.append('imageFiles', file)`로 여러 파일 전송  
+→ `PostRequest` DTO에 `List<MultipartFile> imageFiles` 추가, `PostServiceImpl`에서 `request.getImageFiles()` 반복 처리  
+
+✅ **커뮤니티 목록 페이지 10개 단위 페이징 기능 구현**  
+→ `CommunityListPage.jsx` 수정:  
+  - 페이지 상태 관리: `const [currentPage, setCurrentPage] = useState(1); const postsPerPage = 10;`  
+  - `currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost)` 로 현재 페이지 게시글 구분  
+  - `totalPages = Math.ceil(posts.length / postsPerPage)` 계산, “이전”, “다음” 버튼으로 페이지 이동  
+  - 페이지네이션 버튼 클릭 시 `setCurrentPage(num)` 호출  
+→ `CommunityListPage.css`에 `.pagination-wrapper`, `.pagination`, `.page-button` 등 스타일 추가  
+
+✅ **메인페이지 텍스트 이벤트(애니메이션) 추가**  
+→ `MainPage.jsx` 수정:  
+  - `lines = ['끝없는 던전에서 살아남아라!', '매번 새롭게 시작되는 로그라이크 어드벤처', '2D 액션 + 아이템 파밍의 재미, 지금 경험해보세요']` 배열 선언  
+  - 각 줄 요소에 `.typing-line` 클래스를 주고, `fade-in` 클래스가 붙으면 슬라이드업+페이드인 효과 적용  
+  - 마지막줄 애니메이션이 끝난 뒤에만 “무료 다운로드” 버튼과 “2D 로그라이크 게임 · 무료 플레이” 서브텍스트에 `.fade-in` 클래스 추가  
+→ `MainPage.css`에 `.typing-line`, `.fade-in`, `@keyframes fadeInText` 등 관련 애니메이션 CSS 추가  
+
+---
+
 (추후 작업 예정)  
-- **댓글 수정/삭제 기능**: `CommunityDetailPage` 내에서 댓글 작성자만 수정/삭제 가능하도록 구현  
-- **게시글 수정 페이지 (`CommunityEditPage.jsx`)**: 기존 정보를 미리 채워서 수정할 수 있도록 폼 구성  
 - **게시글 좋아요(Like) 기능**: 게시글 상세에서 토큰 포함 `POST /api/posts/{id}/like` 호출, 좋아요 개수 렌더링  
 - **게시글 신고(Report) 기능**: 신고 모달 UI 추가, `POST /api/posts/{id}/report` 호출  
-- **페이징 처리**: `CommunityListPage`에서 스크롤 페이징 혹은 페이지네이션 UI 구현  
-
-
-
+- **무한 스크롤 페이징**: `CommunityListPage`에서 스크롤 페이징 방식으로 데이터 로드 최적화  
