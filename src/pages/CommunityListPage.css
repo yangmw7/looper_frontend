@@ -92,12 +92,12 @@
 
   /* 
     grid-template-columns:
-      6fr   1fr   1fr   1fr   1fr
-    6fr   → 제목 칸: 나머지 남는 공간의 6/10을 차지 (상대 비율)
-    1fr   → 작성자 칸: 1/10
-    1fr   → 댓글 칸:   1/10
-    1fr   → 조회 칸:   1/10
-    1fr   → 날짜 칸:   1/10
+      6fr   0.5fr   0.5fr   0.5fr   0.5fr
+    6fr   → 제목 칸: 나머지 남는 공간의 6/9을 차지 (상대 비율)
+    0.5fr → 작성자 칸: 1/9
+    0.5fr → 댓글 칸:   1/9
+    0.5fr → 조회 칸:   1/9
+    0.5fr → 날짜 칸:   1/9
   */
   grid-template-columns: 6fr 0.5fr 0.5fr 0.5fr 0.5fr;
   align-items: center; /* 수직 중앙 정렬 */
@@ -158,7 +158,7 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 5-5) 날짜 칼럼 (다섯 번째 칼럼) */
+/* 5-5) 날짜 칼럼 (다섯 번째 컬럼) */
 .col-date {
   justify-self: end;     /* 칼럼 끝(오른쪽)과 딱 맞닿음 */
   font-size: 0.9rem;
@@ -181,10 +181,6 @@
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.2s ease, transform 0.1s ease;
-
-  /* 오른쪽 정렬 + 위쪽 여백 추가 */
-  float: right;
-  margin-top: 20px;
 }
 
 .new-post-button:hover {
@@ -192,10 +188,81 @@
   transform: translateY(-1px);
 }
 
-/* disabled 상태 (필요 시) */
 .new-post-button:disabled {
   background-color: rgba(255, 201, 71, 0.5);
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 7) 페이지네이션 + “글쓰기” 버튼 같은 선상 배치            */
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;  /* 좌우 여백을 주어 테이블 영역과 맞춥니다 */
+  margin-top: 24px;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 8) 페이지네이션 컨테이너 (가운데 정렬)                   */
+.pagination {
+  display: flex;
+  gap: 8px;
+  margin: 0 auto; /* 컨테이너 내에서 가운데 정렬 */
+}
+
+/* 페이지 버튼 공통 스타일 */
+.page-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.page-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 활성화된 페이지 버튼 */
+.page-button.active {
+  background-color: #ffe07a;
+  color: #222;
+  cursor: default;
+}
+
+/* 이전/다음 버튼 비활성화 상태 */
+.page-button:disabled {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #777;
+  cursor: default;
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 9) 반응형 (모바일)                                      */
+@media (max-width: 768px) {
+  .pagination-wrapper {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+  }
+
+  .pagination {
+    justify-content: center;
+    margin: 0; /* 모바일에서는 가로 중앙만 유지 */
+  }
+
+  .page-button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .new-post-button {
+    width: 100%;
+    text-align: center;
+  }
 }

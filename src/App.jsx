@@ -11,6 +11,7 @@ import FailIDPage from './pages/FailIDPage';
 import CommunityListPage from './pages/CommunityListPage';
 import CommunityDetailPage from './pages/CommunityDetailPage';
 import CommunityCreatePage from './pages/CommunityCreatePage';
+import CommunityEditPage from './pages/CommunityEditPage';
 
 // 비밀번호 찾기(1단계: 아이디+이메일 확인)
 import FindPasswordPage from './pages/FindPasswordPage';
@@ -43,7 +44,7 @@ function App() {
       <Route path="/community/:id" element={<CommunityDetailPage />} />
       {/* 커뮤니티 작성 */}
       <Route path="/community/new" element={<CommunityCreatePage />} />
-
+      <Route path="/community/:id/edit" element={<CommunityEditPage />} />
     </Routes>
   );
 }

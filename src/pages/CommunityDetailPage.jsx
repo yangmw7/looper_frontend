@@ -11,7 +11,7 @@ export default function CommunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // 게시물 데이터
+  // 게시물 데이터 (imageUrls를 포함하도록 상태에 추가)
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
 
@@ -58,20 +58,23 @@ export default function CommunityDetailPage() {
   }, []);
 
   // ──────────────────────────────────────────────────────
-  // 1) 게시물 상세 조회
+  // 1) 게시물 상세 조회 (imageUrls 포함)
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/posts/${id}`)
       .then((response) => {
         const data = response.data;
+
         setPost({
           id: data.id,
           title: data.title,
           content: data.content,
-          // 여기서 writerNickname 대신 writer 로 가져와야 합니다.
+          // 백엔드에서 writer 필드로 작성자 닉네임을 내려준다고 가정
           author: data.writer,
           views: data.viewCount,
           createdAt: formatDate(data.createdAt),
+          // 백엔드가 imageUrls를 List<String> 형태로 내려준다고 가정
+          imageUrls: data.imageUrls || [], 
         });
       })
       .catch((err) => {
@@ -82,27 +85,38 @@ export default function CommunityDetailPage() {
 
   // ──────────────────────────────────────────────────────
   // 2) 댓글 목록 조회
-  useEffect(() => {
+  const fetchComments = () => {
     axios
       .get(`http://localhost:8080/api/posts/${id}/comments`)
       .then((response) => {
-        // response.data는 Comment 객체 배열: { id, content, writerNickname, createdAt }
-        const apiComments = response.data.map((c) => ({
-          id: c.id,
-          content: c.content,
-          author: c.writerNickname, 
-          createdAt: formatDate(c.createdAt),
-        }));
+        // response.data는 CommentResponse DTO 배열:
+        // { id, content, writerNickname, createdAt, writerUsername, ... }
+        const apiComments = response.data.map((c) => {
+          // 백엔드에서 내려준 c.createdAt이 ISO 문자열이라고 가정
+          const rawCreated = c.createdAt;
+          return {
+            id: c.id,
+            content: c.content,
+            author: c.writerNickname,
+            createdAt: formatDate(rawCreated),    // 반드시 포맷팅
+            writerUsername: c.writerUsername,      // 로그인 비교용
+          };
+        });
         setComments(apiComments);
       })
       .catch((err) => {
         console.error('댓글 목록 조회 실패:', err);
         setCommentsError('댓글을 불러오는 중 오류가 발생했습니다.');
       });
+  };
+
+  useEffect(() => {
+    fetchComments();
   }, [id]);
 
   // 날짜 포맷팅 함수 (게시물/댓글 공용)
   function formatDate(isoString) {
+    if (!isoString) return ''; // isoString이 없으면 빈 문자열 반환
     const created = new Date(isoString);
     const now = new Date();
     const diffMs = now - created;
@@ -123,12 +137,12 @@ export default function CommunityDetailPage() {
     navigate('/community');
   };
 
-  // 수정
+  // 게시물 수정
   const handleEdit = () => {
     navigate(`/community/${id}/edit`);
   };
 
-  // 삭제
+  // 게시물 삭제
   const handleDelete = () => {
     if (!window.confirm('정말 이 게시물을 삭제하시겠습니까?')) return;
 
@@ -166,24 +180,91 @@ export default function CommunityDetailPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((response) => {
-        // 저장된 댓글을 곧바로 목록에 추가 (Optimistic Update)
-        const saved = response.data; // { id, content, writerNickname, createdAt, ... }
-
-        const nicknameFromSaved = saved.writerNickname || saved.nickname;
-
+        const saved = response.data;
+        const rawCreated = saved.createdAt || new Date().toISOString();
         const newlyAdded = {
           id: saved.id,
           content: saved.content,
-          author: nicknameFromSaved,
-          createdAt: formatDate(saved.createdAt),
+          author: saved.writerNickname || saved.nickname,
+          createdAt: formatDate(rawCreated),
+          writerUsername: saved.writerUsername,
         };
-
         setComments((prev) => [newlyAdded, ...prev]);
         setNewComment(''); // 입력창 비우기
       })
       .catch((err) => {
         console.error('댓글 작성 실패:', err);
         alert('댓글 등록 중 오류가 발생했습니다.');
+      });
+  };
+
+  // ──────────────────────────────────────────────────────
+  // 4) 댓글 수정 핸들러
+  const handleCommentEdit = (commentId, oldContent) => {
+    const newContent = window.prompt('댓글을 수정하세요.', oldContent);
+    if (newContent == null) return; // 취소
+    if (!newContent.trim()) {
+      alert('빈 댓글로 수정할 수 없습니다.');
+      return;
+    }
+
+    const token =
+      localStorage.getItem('accessToken') ||
+      sessionStorage.getItem('accessToken');
+
+    axios
+      .put(
+        `http://localhost:8080/api/posts/${id}/comments/${commentId}`,
+        { content: newContent.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((response) => {
+        const returned = response.data;
+        const formattedTime = returned.createdAt
+          ? formatDate(returned.createdAt)
+          : '방금 전';
+
+        setComments((prev) =>
+          prev.map((c) =>
+            c.id === commentId
+              ? {
+                  ...c,
+                  content: newContent.trim(),
+                  createdAt: formattedTime,
+                }
+              : c
+          )
+        );
+        alert('수정이 완료되었습니다.');
+      })
+      .catch((err) => {
+        console.error('댓글 수정 실패:', err);
+        const msg = err.response?.data?.message || '댓글 수정 중 오류가 발생했습니다.';
+        alert(msg);
+      });
+  };
+
+  // ──────────────────────────────────────────────────────
+  // 5) 댓글 삭제 핸들러
+  const handleCommentDelete = (commentId) => {
+    if (!window.confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
+
+    const token =
+      localStorage.getItem('accessToken') ||
+      sessionStorage.getItem('accessToken');
+
+    axios
+      .delete(`http://localhost:8080/api/posts/${id}/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        setComments((prev) => prev.filter((c) => c.id !== commentId));
+        alert('삭제가 완료되었습니다.');
+      })
+      .catch((err) => {
+        console.error('댓글 삭제 실패:', err);
+        const msg = err.response?.data?.message || '댓글 삭제 중 오류가 발생했습니다.';
+        alert(msg);
       });
   };
 
@@ -205,7 +286,6 @@ export default function CommunityDetailPage() {
             <h3 className="post-title">{post.title}</h3>
 
             <div className="post-meta">
-              {/* “작성자:” 텍스트 제거, 아이콘+닉네임만 표시 */}
               <span className="meta-author">{post.author}</span>
               <span className="meta-views">{post.views}</span>
               <span className="meta-date">{post.createdAt}</span>
@@ -213,21 +293,36 @@ export default function CommunityDetailPage() {
 
             <div className="post-content">{post.content}</div>
 
+            {/* =====================  이미지 갤러리 영역  ===================== */}
+            {post.imageUrls && post.imageUrls.length > 0 && (
+              <div className="image-gallery">
+                {post.imageUrls.map((imgUrl, idx) => (
+                  <img
+                    key={idx}
+                    src={`http://localhost:8080${imgUrl}`}
+                    alt={`post-img-${idx}`}
+                    className="post-image"
+                  />
+                ))}
+              </div>
+            )}
+
             <div className="button-group">
               <button className="btn-back" onClick={handleBack}>
                 목록으로
               </button>
-              {/* 포스트 작성자와 현재 유저가 일치하는 경우에만 수정/삭제 버튼 보이기 */}
-              {currentUserNickname && post.author && currentUserNickname === post.author && (
-                <>
-                  <button className="btn-edit" onClick={handleEdit}>
-                    수정
-                  </button>
-                  <button className="btn-delete" onClick={handleDelete}>
-                    삭제
-                  </button>
-                </>
-              )}
+              {currentUserNickname &&
+                post.author &&
+                currentUserNickname === post.author && (
+                  <>
+                    <button className="btn-edit" onClick={handleEdit}>
+                      수정
+                    </button>
+                    <button className="btn-delete" onClick={handleDelete}>
+                      삭제
+                    </button>
+                  </>
+                )}
             </div>
 
             {/* =====================  댓글 입력 영역  ===================== */}
@@ -255,9 +350,7 @@ export default function CommunityDetailPage() {
 
             {/* =====================  댓글 목록 영역  ===================== */}
             <div className="comments-section">
-              <h4 className="comments-title">
-                댓글 ({comments.length})
-              </h4>
+              <h4 className="comments-title">댓글 ({comments.length})</h4>
               {commentsError && (
                 <div className="error-message">{commentsError}</div>
               )}
@@ -268,16 +361,34 @@ export default function CommunityDetailPage() {
                   {comments.map((c) => (
                     <li key={c.id} className="comment-item">
                       <div className="comment-header">
-                        <span className="comment-author">
-                          {c.author}
-                        </span>
-                        <span className="comment-date">
-                          {c.createdAt}
-                        </span>
+                        <span className="comment-author">{c.author}</span>
+
+                        {currentUserNickname === c.author ? (
+                          <div className="comment-meta-right">
+                            <div className="comment-button-group">
+                              <button
+                                className="comment-edit-btn"
+                                onClick={() =>
+                                  handleCommentEdit(c.id, c.content)
+                                }
+                              >
+                                수정
+                              </button>
+                              <button
+                                className="comment-delete-btn"
+                                onClick={() => handleCommentDelete(c.id)}
+                              >
+                                삭제
+                              </button>
+                            </div>
+                            <span className="comment-date">{c.createdAt}</span>
+                          </div>
+                        ) : (
+                          <span className="comment-date">{c.createdAt}</span>
+                        )}
                       </div>
-                      <div className="comment-content">
-                        {c.content}
-                      </div>
+
+                      <div className="comment-content">{c.content}</div>
                     </li>
                   ))}
                 </ul>

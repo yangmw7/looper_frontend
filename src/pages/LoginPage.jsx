@@ -34,48 +34,46 @@ const LoginPage = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const payload = {
-        username: credentials.username,
-        password: credentials.password,
-      };
-      const response = await axios.post('http://localhost:8080/api/login', payload);
+  try {
+    const payload = {
+      username: credentials.username,
+      password: credentials.password,
+    };
+    const response = await axios.post('http://localhost:8080/api/login', payload);
 
-      // 2) 백엔드가 토큰만 리턴하는 케이스(response.data가 문자열 JWT)인 경우:
-      let token;
-      if (typeof response.data === 'string') {
-        token = response.data;
-      } else {
-        // 3) `{ token: "..." }` 형태로 리턴하는 케이스:
-        token = response.data.token;
-      }
-
-      // 4) “로그인 상태 유지” 체크 여부에 따라 localStorage or sessionStorage에 저장
-      if (credentials.remember) {
-        localStorage.setItem('accessToken', token);
-      } else {
-        sessionStorage.setItem('accessToken', token);
-      }
-
-      // 5) axios 기본 헤더에 Authorization을 설정 (앞으로 모든 요청에 자동으로 첨부)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      // 6) 로그인 성공 후 "/"(메인)으로 이동
-      navigate('/');
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
-      } else {
-        alert('서버에 연결할 수 없습니다.');
-      }
-    } finally {
-      setLoading(false);
+    // (로그인 성공 로직은 그대로)
+    let token;
+    if (typeof response.data === 'string') {
+      token = response.data;
+    } else {
+      token = response.data.token;
     }
-  };
+
+    if (credentials.remember) {
+      localStorage.setItem('accessToken', token);
+    } else {
+      sessionStorage.setItem('accessToken', token);
+    }
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    navigate('/');
+  } catch (err) {
+    // 1) 서버가 “응답(response)”을 줬으면 (401, 404, 500 등) 모두 아이디/비밀번호 오류 메시지
+    if (err.response) {
+      alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+    } 
+    // 2) 응답 없이 요청 자체가 실패한 경우(서버가 아예 안 뜨거나 CORS 에러 등)
+    else {
+      alert('서버에 연결할 수 없습니다.');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="login-background">
