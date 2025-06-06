@@ -1,4 +1,3 @@
-// src/pages/CommunityCreatePage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -44,14 +43,24 @@ export default function CommunityCreatePage() {
   // 2) 입력 상태를 관리할 state
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [error, setError] = useState(null); // 폼 검증 또는 서버 오류 메시지
+  const [imageFiles, setImageFiles] = useState([]); // 파일 배열 상태
+  const [error, setError] = useState(null);
 
   // 3) 뒤로 가기 버튼 핸들러
   const handleBack = () => {
     navigate('/community');
   };
 
-  // 4) 폼 제출 핸들러
+  // 4) 파일(input[type="file"])이 변경되었을 때 호출될 핸들러
+  const handleFileChange = (e) => {
+    const newFiles = Array.from(e.target.files);
+    setImageFiles((prevFiles) => [...prevFiles, ...newFiles]);
+
+    // 같은 파일을 다시 선택해도 onChange가 발생하도록 value 초기화
+    e.target.value = null;
+  };
+
+  // 5) 폼 제출 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -71,18 +80,28 @@ export default function CommunityCreatePage() {
     }
 
     try {
-      // API 호출: POST /api/posts
+      // FormData 사용
+      const formData = new FormData();
+      formData.append('title', title.trim());
+      formData.append('content', content.trim());
+
+      // name="imageFiles"로 서버에 보낼 때, 키가 여러 번 중복되면 배열 형태로 바인딩
+      imageFiles.forEach((file) => {
+        formData.append('imageFiles', file);
+      });
+
       const response = await axios.post(
         'http://localhost:8080/api/posts',
-        { title: title.trim(), content: content.trim() }, // PostRequest DTO 형태
+        formData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Content-Type은 생략: 브라우저가 자동으로 multipart/form-data로 세팅
+          },
         }
       );
 
-      const newPostId = response.data; // 성공 시 반환된 게시글 ID
-
-      // 생성된 게시글 상세 페이지로 이동
+      const newPostId = response.data; // 반환된 게시글 ID
       navigate(`/community/${newPostId}`);
     } catch (err) {
       console.error('게시글 작성 실패:', err);
@@ -106,7 +125,7 @@ export default function CommunityCreatePage() {
           <form className="create-form" onSubmit={handleSubmit}>
             {error && <div className="create-error">{error}</div>}
 
-            {/* 제목 입력 */}
+            {/* 7) 제목 입력 */}
             <label className="create-label" htmlFor="post-title">
               제목
             </label>
@@ -120,7 +139,7 @@ export default function CommunityCreatePage() {
               maxLength={100}
             />
 
-            {/* 내용 입력 */}
+            {/* 9) 내용 입력 */}
             <label className="create-label" htmlFor="post-content">
               내용
             </label>
@@ -133,7 +152,30 @@ export default function CommunityCreatePage() {
               rows={10}
             />
 
-            {/* 버튼 그룹 */}
+            {/* 9.1) 이미지 첨부 */}
+            <label className="create-label" htmlFor="post-images">
+              사진 첨부 (여러 장 가능)
+            </label>
+            <input
+              id="post-images"
+              type="file"
+              name="imageFiles"        /* 백엔드의 DTO 필드명과 동일해야 합니다 */
+              className="create-file-input"
+              multiple                  /* 여러 장 선택 가능 */
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            {/* 9.2) 선택된 파일명 미리보기 */}
+            {imageFiles.length > 0 && (
+              <div className="selected-files">
+                <strong>선택된 사진:</strong>{' '}
+                {imageFiles
+                  .map((file, idx) => file.name + (idx < imageFiles.length - 1 ? ', ' : ''))
+                  .join('')}
+              </div>
+            )}
+
+            {/* 10) 버튼 그룹 */}
             <div className="create-button-group">
               <button
                 type="button"
