@@ -323,10 +323,11 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* 댓글 헤더: 작성자 · 작성일 */
+/* 댓글 헤더: 작성자 · (버튼그룹 + 날짜) or 날짜 */
 .comment-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;   /* 왼쪽 작성자와 오른쪽 메타(버튼+날짜) 세로 중앙 정렬 */
   margin-bottom: 8px;
   font-size: 0.9rem;
   color: #ccc;
@@ -338,6 +339,14 @@
   color: #2a7cff;   /* 파란색 포인트 */
 }
 
+/* 본인 댓글인 경우: 버튼 그룹 + 날짜를 함께 묶는 컨테이너 */
+.comment-meta-right {
+  display: flex;
+  align-items: center; /* 버튼과 날짜를 세로 중앙 정렬 */
+  gap: 8px;            /* 버튼과 날짜 사이 간격 */
+}
+
+/* 날짜 스타일 */
 .comment-date {
   color: #aaa;
   font-size: 0.85rem;
@@ -349,6 +358,33 @@
   color: #eee;
   line-height: 1.6;
   white-space: pre-wrap;
+  margin-bottom: 8px; /* 아래 버튼 그룹과 간격 확보 */
+}
+
+/* ======== 댓글 수정·삭제 버튼 그룹 ======== */
+.comment-button-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* ========= 수정/삭제 버튼을 텍스트처럼 보이도록 변경 ========= */
+/* 글꼴 크기는 .comment-date와 동일하게 맞추고, 기본 색은 날짜와 비슷하게 설정 */
+.comment-edit-btn,
+.comment-delete-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;      /* .comment-date와 동일 */
+  color: #aaa;             /* 날짜 텍스트와 비슷한 회색 */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* 호버 시 색 변화: 날짜보다 밝은 흰색 또는 팀 포인트 컬러 */
+.comment-edit-btn:hover,
+.comment-delete-btn:hover {
+  color: #fff;
 }
 
 /* ────────────────────────────────────────────────────── */
@@ -401,5 +437,44 @@
 
   .comment-item {
     padding: 12px;
+  }
+
+  /* 모바일에서 버튼그룹과 날짜 간격 축소 */
+  .comment-meta-right {
+    gap: 4px;
+  }
+
+  .comment-edit-btn,
+  .comment-delete-btn {
+    font-size: 0.75rem;
+  }
+
+  
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 12) 업로드된 이미지 표시를 위한 갤러리 스타일 (수정) */
+.image-gallery {
+  display: block;        /* flex → block 으로 바꿔서 전체 너비 사용 */
+  margin-top: 16px;      /* 본문과의 간격 */
+}
+
+.post-image {
+  width: 100%;           /* 부모(.image-gallery 또는 .detail-container) 너비 100% */
+  height: auto;          /* 가로 세로 비율 유지 */
+  object-fit: cover;     /* 비율을 유지하며 잘라서 보여줌 */
+  border-radius: 8px;    /* 모서리 둥글게 */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  background-color: #222;/* 로딩 전에 보일 배경색 */
+  margin-bottom: 16px;   /* 이미지와 이후 요소 간 간격 */
+}
+
+/* ────────────────────────────────────────────────────── */
+/* 13) 반응형: 모바일에서 너무 크지 않게 */
+@media (max-width: 768px) {
+  .post-image {
+    /* 모바일에서도 부모 너비에 꽉 차되, 특정 최대너비를 주고 싶다면 아래 속성 추가 가능 */
+    /* max-width: 100%; */
+    /* height: auto; */
   }
 }
