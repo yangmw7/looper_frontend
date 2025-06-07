@@ -1,5 +1,3 @@
-// src/pages/CommunityListPage.jsx
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CommunityListPage.css';
@@ -8,34 +6,30 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function CommunityListPage() {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-
-  // ──────────────────────────────────────────────────────
-  // 페이징 상태
+  const [posts, setPosts]       = useState([]);
+  const [error, setError]       = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
 
+  // ─── 검색 상태 ─────────────────────────
+  const [searchField, setSearchField] = useState('title');
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
-    // 백엔드에서 게시글 목록 가져오기 (인증 필요 없는 공개 API)
     axios
       .get('http://localhost:8080/api/posts')
       .then((response) => {
-        // 1) 원본 데이터를 createdAt(ISO) 기준으로 내림차순 정렬
-        const sortedByDate = response.data.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-
-        // 2) 정렬된 결과를 map 하여 화면에 필요한 형태로 가공
+        const sortedByDate = response.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
         const apiPosts = sortedByDate.map((p) => ({
           id: p.id,
           title: p.title,
-          author: p.writer,       // writer → author
-          comments: 0,            // TODO: 댓글 API 연동 시 교체
+          author: p.writer,
+          comments: 0, // TODO: 댓글 API 연동 시 교체
           views: p.viewCount,
-          createdAt: formatDate(p.createdAt), // “n초 전 / n분 전 / n시간 전 / n일 전” 형식
+          createdAt: formatDate(p.createdAt),
         }));
-
         setPosts(apiPosts);
       })
       .catch((err) => {
@@ -44,7 +38,6 @@ export default function CommunityListPage() {
       });
   }, []);
 
-  // ISO 문자열 → “n초 전 / n분 전 / n시간 전 / n일 전” 로 간단 포맷팅
   function formatDate(isoString) {
     const created = new Date(isoString);
     const now = new Date();
@@ -59,25 +52,22 @@ export default function CommunityListPage() {
     return `${diffDay}일 전`;
   }
 
-  // ──────────────────────────────────────────────────────
-  // 페이징 로직
-  const indexOfLastPost = currentPage * postsPerPage;            // 예: 1페이지면 1*10=10
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;       // 예: 10-10=0
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  // ─── 검색 & 필터링 ───────────────────────
+  const filteredPosts = posts.filter((post) => {
+    if (!searchQuery.trim()) return true;
+    const fieldValue = String(post[searchField] || '').toLowerCase();
+    return fieldValue.includes(searchQuery.trim().toLowerCase());
+  });
 
-  const totalPages = Math.ceil(posts.length / postsPerPage);
+  // ─── 페이징 로직 ─────────────────────────
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const idxLast  = currentPage * postsPerPage;
+  const idxFirst = idxLast - postsPerPage;
+  const currentPosts = filteredPosts.slice(idxFirst, idxLast);
 
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handlePrev = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : 1));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : totalPages));
-  };
+  const handlePageClick = (num) => setCurrentPage(num);
+  const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
+  const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
 
   return (
     <div className="community-background">
@@ -93,8 +83,26 @@ export default function CommunityListPage() {
 
         {error && <div className="error-message">{error}</div>}
 
+        {/* ─── 검색 바 ───────────────────────── */}
+        <div className="community-search">
+          <select
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+          >
+            <option value="title">제목</option>
+            <option value="author">작성자</option>
+          </select>
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && setCurrentPage(1)}
+          />
+          <button onClick={() => setCurrentPage(1)}>검색</button>
+        </div>
+
         <div className="post-table">
-          {/* 그리드 헤더 (눈에는 보이지 않지만 칼럼 너비를 잡기 위해 남겨둡니다). */}
           <div className="post-header">
             <span className="col-title">제목</span>
             <span className="col-author">작성자</span>
@@ -106,31 +114,20 @@ export default function CommunityListPage() {
           <ul className="post-list">
             {currentPosts.map((post) => (
               <li key={post.id} className="post-row">
-                {/* 1) 제목 */}
                 <a href={`/community/${post.id}`} className="col-title">
                   {post.title}
                 </a>
-
-                {/* 2) 작성자 */}
                 <span className="col-author">{post.author}</span>
-
-                {/* 3) 댓글(더미) */}
                 <span className="col-comments">💬 {post.comments}</span>
-
-                {/* 4) 조회수 */}
                 <span className="col-views">👁️ {post.views}</span>
-
-                {/* 5) 작성일 */}
                 <span className="col-date">{post.createdAt}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* 페이지네이션 + 글쓰기 버튼을 같은 줄에 */}
         <div className="pagination-wrapper">
           <div className="pagination">
-            {/* 이전 버튼 */}
             <button
               className="page-button prev-button"
               onClick={handlePrev}
@@ -138,9 +135,7 @@ export default function CommunityListPage() {
             >
               &lt;
             </button>
-
-            {/* 페이지 번호 */}
-            {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((num) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
               <button
                 key={num}
                 className={`page-button ${currentPage === num ? 'active' : ''}`}
@@ -149,8 +144,6 @@ export default function CommunityListPage() {
                 {num}
               </button>
             ))}
-
-            {/* 다음 버튼 */}
             <button
               className="page-button next-button"
               onClick={handleNext}

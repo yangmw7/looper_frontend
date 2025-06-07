@@ -1,84 +1,67 @@
 /* src/pages/CommunityEditPage.css */
 
-/* ────────────────────────────────────────────────────── */
-/* (1) 기본 배경은 상세 페이지와 동일하게 재사용 */
-/* (CommunityDetailPage.css의 .community-background를 그대로 활용합니다) */
+/* (1) 기본 배경은 상세 페이지와 동일 */
+.create-background {
+  background-image: url('../assets/main.png');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
 
-/* ────────────────────────────────────────────────────── */
-/* (2) 수정 페이지 전체 레이아웃 */
-/* CommunityCreatePage.css의 .create-page와 동일하게 적용 */
+/* (2) 수정 페이지 레이아웃 */
 .community-edit-page {
   flex: 1;
   width: 100%;
-  max-width: 800px;          /* 중앙 최대 넓이 */
-  margin: 0 auto;
-  margin-top: 100px;
-  padding: 20px 16px 200px;  /* 모바일 여유 포함 */
+  max-width: 800px;
+  margin: 100px auto 0;
+  padding: 20px 16px 200px;
   color: #f0f0f0;
   font-family: 'Noto Sans KR', sans-serif;
   box-sizing: border-box;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* (3) 상단 제목 및 서브타이틀 */
+/* (3) 제목/서브타이틀 */
 .edit-title {
   font-size: 2.4rem;
   font-weight: 700;
   color: #fff;
   margin-bottom: 8px;
-  letter-spacing: 1px;
   text-align: center;
 }
-
 .edit-subtitle {
   font-size: 1rem;
   color: #ccc;
   margin-bottom: 32px;
-  letter-spacing: 0.5px;
   text-align: center;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* (4) 로그인 필요 안내문 (필요하다면) */
-.edit-login-prompt {
-  margin-top: 40px;
-  font-size: 1rem;
-  color: #bbb;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* ────────────────────────────────────────────────────── */
-/* (5) 수정 폼 컨테이너 */
-/* CommunityCreatePage.css의 .create-form 스타일을 그대로 복사 */
+/* (5) 폼 컨테이너 */
 .edit-form {
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0,0,0,0.75);
   border-radius: 12px;
   padding: 32px 24px 40px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
   backdrop-filter: blur(4px);
-  box-sizing: border-box;
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* ────────────────────────────────────────────────────── */
 /* (6) 에러 메시지 */
 .edit-error {
   color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.15);
+  background: rgba(255,107,107,0.15);
   padding: 12px;
   margin-bottom: 20px;
   border-radius: 6px;
   text-align: center;
-  font-size: 0.95rem;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* ────────────────────────────────────────────────────── */
-/* (7) 입력 라벨 */
+/* (7) 라벨 */
 .edit-label {
   display: block;
   margin-top: 16px;
@@ -88,150 +71,146 @@
   font-weight: 500;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* (8) 제목 입력창 */
-.edit-input {
+/* (8) 입력창 */
+.edit-input, .edit-textarea {
   width: 100%;
   padding: 12px;
   font-size: 1rem;
   border: none;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255,255,255,0.05);
   color: #eee;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+  transition: background-color .2s, box-shadow .2s;
   box-sizing: border-box;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-
-.edit-input:focus {
+.edit-input:focus, .edit-textarea:focus {
   outline: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  background-color: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
 }
-
-.edit-input::placeholder {
+.edit-input::placeholder, .edit-textarea::placeholder {
   color: #aaa;
 }
-
-/* ────────────────────────────────────────────────────── */
-/* (9) 내용 입력창(텍스트 에어리어) */
 .edit-textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 4px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #eee;
-  line-height: 1.6;
   resize: vertical;
   min-height: 200px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
-  box-sizing: border-box;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1.6;
+  margin-top: 4px;
 }
 
-.edit-textarea:focus {
-  outline: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+/* (11) 이미지 리스트 */
+.edit-image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+.edit-image-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+.edit-image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.edit-image-item button {
+  position: absolute;
+  top: 4px; right: 4px;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-.edit-textarea::placeholder {
-  color: #aaa;
+/* (11) 파일 선택 버튼 */
+.edit-file-picker {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  position: relative;
+}
+.edit-file-picker input[type="file"] {
+  position: absolute;
+  width: 100%; height: 100%;
+  top: 0; left: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* (10) 버튼 그룹: 취소, 수정 완료 */
+/* (10) 버튼 그룹 */
 .edit-button-group {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
-  flex-wrap: wrap;
 }
-
-/* 버튼 공통 스타일 */
-/* CommunityCreatePage.css의 .create-button-group 내부 버튼 스타일과 동일 */
-.edit-button-group button {
+.btn-cancel, .btn-submit {
   padding: 10px 24px;
   font-size: 1rem;
   font-weight: 500;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  min-width: 100px;
-  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: background-color .2s, transform .1s;
 }
-
-/* “취소” 버튼 스타일 */
-/* CommunityCreatePage.css의 .btn-create-back에서 클래스 이름만 변경 */
 .btn-cancel {
   background-color: #444;
   color: #fff;
 }
-
 .btn-cancel:hover {
   background-color: #555;
   transform: translateY(-1px);
 }
-
-/* “수정 완료” 버튼 스타일 */
-/* CommunityCreatePage.css의 .btn-create-submit에서 클래스 이름만 변경 */
 .btn-submit {
-  background-color: #ffc947;   /* 노란색 포인트 */
+  background-color: #ffc947;
   color: #222;
 }
-
 .btn-submit:hover {
-  background-color: #e6b337;   /* 호버 시 어두운 노란색 */
+  background-color: #e6b337;
   transform: translateY(-1px);
 }
-
-/* 버튼 비활성화 상태 */
 .btn-submit:disabled {
-  background-color: rgba(255, 201, 71, 0.5);
+  background-color: rgba(255,201,71,0.5);
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* (11) 반응형(Responsive) */
+/* 반응형 */
 @media (max-width: 768px) {
   .community-edit-page {
     margin-top: 80px;
-    padding: 16px 16px 200px;
+    padding: 16px;
   }
-
   .edit-form {
     padding: 24px 16px 32px;
   }
-
   .edit-title {
     font-size: 1.8rem;
   }
-
   .edit-subtitle {
     font-size: 0.9rem;
   }
-
-  .edit-input,
-  .edit-textarea {
-    font-size: 0.95rem;
-  }
-
   .edit-button-group {
     flex-direction: column;
-    gap: 12px;
     align-items: stretch;
   }
-
   .edit-button-group button {
     width: 100%;
-    text-align: center;
   }
 }
