@@ -15,14 +15,14 @@ const LoginPage = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // 1) 컴포넌트가 마운트될 때, 로컬/세션 스토리지에 이미 토큰이 있으면
-  //    axios 기본 헤더에 Authorization을 설정해 두고, 바로 홈으로 리다이렉트
+  // 이미 토큰이 있으면 axios 헤더 세팅 후 이동
   useEffect(() => {
     const storedToken =
-      localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
+      localStorage.getItem('accessToken') ||
+      sessionStorage.getItem('accessToken');
     if (storedToken) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
-      navigate('/'); // 이미 로그인된 상태라면 메인으로 이동
+      navigate('/');
     }
   }, [navigate]);
 
@@ -34,46 +34,66 @@ const LoginPage = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const payload = {
-      username: credentials.username,
-      password: credentials.password,
-    };
-    const response = await axios.post('http://localhost:8080/api/login', payload);
+    try {
+      // 로그인 요청
+      const response = await axios.post(
+        'http://localhost:8080/api/login',
+        {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      );
 
-    // (로그인 성공 로직은 그대로)
-    let token;
-    if (typeof response.data === 'string') {
-      token = response.data;
-    } else {
-      token = response.data.token;
+      // token 문자열 추출
+      let token;
+      if (typeof response.data === 'string') {
+        token = response.data;
+      } else {
+        token = response.data.token;
+      }
+
+      // 1) 토큰 저장
+      if (credentials.remember) {
+        localStorage.setItem('accessToken', token);
+      } else {
+        sessionStorage.setItem('accessToken', token);
+      }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      // 2) 페이로드 디코딩해서 roles 저장
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+        const payload = JSON.parse(jsonPayload);
+        const roles = payload.roles || [];
+        // 항상 로컬에 저장해서 AdminRoute가 읽게 함
+        localStorage.setItem('roles', JSON.stringify(roles));
+      } catch (err) {
+        console.error('JWT 디코딩 실패:', err);
+      }
+
+      // 로그인 후 메인 페이지로
+      navigate('/');
+    } catch (err) {
+      if (err.response) {
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+      } else {
+        alert('서버에 연결할 수 없습니다.');
+      }
+    } finally {
+      setLoading(false);
     }
-
-    if (credentials.remember) {
-      localStorage.setItem('accessToken', token);
-    } else {
-      sessionStorage.setItem('accessToken', token);
-    }
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    navigate('/');
-  } catch (err) {
-    // 1) 서버가 “응답(response)”을 줬으면 (401, 404, 500 등) 모두 아이디/비밀번호 오류 메시지
-    if (err.response) {
-      alert('아이디 또는 비밀번호가 올바르지 않습니다.');
-    } 
-    // 2) 응답 없이 요청 자체가 실패한 경우(서버가 아예 안 뜨거나 CORS 에러 등)
-    else {
-      alert('서버에 연결할 수 없습니다.');
-    }
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className="login-background">
