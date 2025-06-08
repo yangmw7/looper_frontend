@@ -1,7 +1,6 @@
 /* src/pages/CommunityCreatePage.css */
 
-/* ────────────────────────────────────────────────────── */
-/* 1) 최상위 배경 컨테이너 */
+/* 1) 배경 컨테이너 */
 .create-background {
   background-image: url('../assets/main.png');
   background-size: cover;
@@ -15,77 +14,67 @@
   align-items: center;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 2) 페이지 전체 레이아웃 */
+/* 2) 페이지 레이아웃 */
 .create-page {
   flex: 1;
   width: 100%;
-  max-width: 800px;         /* 중앙 최대 넓이 */
-  margin: 0 auto;
-  margin-top: 100px;
-  padding: 20px 16px 200px; /* 모바일 여유 포함 */
+  max-width: 800px;
+  margin: 100px auto 0;
+  padding: 20px 16px 200px;
   color: #f0f0f0;
   font-family: 'Noto Sans KR', sans-serif;
   box-sizing: border-box;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 3) 상단 제목 및 서브타이틀 */
+/* 3) 제목/서브타이틀 */
 .create-title {
   font-size: 2.4rem;
   font-weight: 700;
   color: #fff;
   margin-bottom: 8px;
-  letter-spacing: 1px;
+  text-align: left;
 }
-
 .create-subtitle {
   font-size: 1rem;
   color: #ccc;
   margin-bottom: 32px;
-  letter-spacing: 0.5px;
+  text-align: left;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 4) 로그인 필요 안내문 */
+/* 4) 로그인 안내 */
 .create-login-prompt {
   margin-top: 40px;
   font-size: 1rem;
   color: #bbb;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255,255,255,0.05);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 5) 작성 폼 컨테이너 */
+/* 5) 폼 컨테이너 */
 .create-form {
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0,0,0,0.75);
   border-radius: 12px;
   padding: 32px 24px 40px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
   backdrop-filter: blur(4px);
-  box-sizing: border-box;
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* ────────────────────────────────────────────────────── */
 /* 6) 에러 메시지 */
 .create-error {
   color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.15);
+  background: rgba(255,107,107,0.15);
   padding: 12px;
   margin-bottom: 20px;
   border-radius: 6px;
   text-align: center;
-  font-size: 0.95rem;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 7) 입력 라벨 */
+/* 7) 라벨 */
 .create-label {
   display: block;
   margin-top: 16px;
@@ -95,230 +84,110 @@
   font-weight: 500;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 8) 제목 입력창 */
-.create-input {
+/* 8) 입력 필드 */
+.create-input, .create-textarea {
   width: 100%;
   padding: 12px;
   font-size: 1rem;
   border: none;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255,255,255,0.05);
   color: #eee;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
   box-sizing: border-box;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color .2s, box-shadow .2s;
 }
-
-.create-input:focus {
+.create-input:focus, .create-textarea:focus {
   outline: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  background-color: rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
 }
-
-.create-input::placeholder {
+.create-input::placeholder, .create-textarea::placeholder {
   color: #aaa;
 }
+.create-textarea { resize: vertical; min-height: 200px; line-height: 1.6; margin-top: 4px; }
 
-/* ────────────────────────────────────────────────────── */
-/* 9) 내용 입력창(텍스트 에어리어) */
-.create-textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 4px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #eee;
-  line-height: 1.6;
-  resize: vertical;
-  min-height: 200px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
-  box-sizing: border-box;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.create-textarea:focus {
-  outline: none;
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-}
-
-.create-textarea::placeholder {
-  color: #aaa;
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 9.1) 파일 첨부(input[type="file"]) 스타일 */
-.create-file-input {
-  display: block;
-  width: 100%;
-  margin-top: 4px;
-  padding: 10px 12px;
-  font-size: 0.95rem;
-  color: #eee;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: none;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  box-sizing: border-box;
-}
-
-/* input[type="file"] 버튼 부분 꾸미기 (WebKit 브라우저) */
-.create-file-input::-webkit-file-upload-button {
-  background-color: #444;          /* 어두운 회색 버튼 배경 */
-  color: #fff;                     /* 버튼 텍스트는 흰색 */
-  padding: 6px 12px;
-  margin-right: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
-}
-
-.create-file-input::-webkit-file-upload-button:hover {
-  background-color: #555;          /* 호버 시 밝은 회색 */
-}
-
-/* input[type="file"] 버튼 부분 꾸미기 (Firefox) */
-.create-file-input::file-selector-button {
-  background-color: #444;
-  color: #fff;
-  padding: 6px 12px;
-  margin-right: 8px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
-}
-
-.create-file-input::file-selector-button:hover {
-  background-color: #555;
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 9.2) 선택된 파일명 표시 영역 */
-.selected-files {
+/* 9) 이미지 리스트 */
+.create-image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 8px;
-  font-size: 0.95rem;
-  color: #ccc;
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 8px 12px;
+}
+.create-image-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
   border-radius: 6px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
-  word-break: break-all;  /* 긴 파일명도 줄바꿈 처리 */
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+.create-image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.create-image-item button {
+  position: absolute;
+  top: 4px; right: 4px;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 9.3) 반응형: 모바일에서 입력창 크기 맞추기 */
-@media (max-width: 768px) {
-  .create-file-input {
-    font-size: 0.9rem;
-    padding: 8px 10px;
-  }
-  .create-file-input::-webkit-file-upload-button,
-  .create-file-input::file-selector-button {
-    font-size: 0.9rem;
-    padding: 4px 10px;
-  }
-  .selected-files {
-    font-size: 0.9rem;
-    padding: 6px 10px;
-  }
+/* 10) 파일 선택 버튼 */
+.create-file-picker {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  position: relative;
+}
+.create-file-picker input[type="file"] {
+  position: absolute;
+  width: 100%; height: 100%;
+  top: 0; left: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 10) 버튼 그룹: 취소, 등록 */
+/* 11) 버튼 그룹 */
 .create-button-group {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
-  flex-wrap: wrap;
 }
-
-/* 버튼 공통 스타일 */
-.create-button-group button {
+.btn-create-back, .btn-create-submit {
   padding: 10px 24px;
   font-size: 1rem;
   font-weight: 500;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  min-width: 100px;
-  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: background-color .2s, transform .1s;
 }
+.btn-create-back { background-color: #444; color: #fff; }
+.btn-create-back:hover { background-color: #555; transform: translateY(-1px); }
+.btn-create-submit { background-color: #ffc947; color: #222; }
+.btn-create-submit:hover { background-color: #e6b337; transform: translateY(-1px); }
+.btn-create-submit:disabled { background-color: rgba(255,201,71,0.5); cursor: not-allowed; box-shadow: none; transform: none; }
 
-/* “취소” 버튼 스타일 */
-.btn-create-back {
-  background-color: #444;
-  color: #fff;
-}
-
-.btn-create-back:hover {
-  background-color: #555;
-  transform: translateY(-1px);
-}
-
-/* “게시글 등록” 버튼 스타일 */
-.btn-create-submit {
-  background-color: #ffc947;   /* 노란색 포인트 */
-  color: #222;
-}
-
-.btn-create-submit:hover {
-  background-color: #e6b337;   /* 호버 시 어두운 노란색 */
-  transform: translateY(-1px);
-}
-
-/* 버튼 비활성화 상태 */
-.btn-create-submit:disabled {
-  background-color: rgba(255, 201, 71, 0.5);
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 11) 반응형(Responsive) */
+/* 반응형 */
 @media (max-width: 768px) {
-  .create-page {
-    margin-top: 80px;
-    padding: 16px 16px 200px;
-  }
-
-  .create-form {
-    padding: 24px 16px 32px;
-  }
-
-  .create-title {
-    font-size: 1.8rem;
-  }
-
-  .create-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .create-input,
-  .create-textarea {
-    font-size: 0.95rem;
-  }
-
-  .create-button-group {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .create-button-group button {
-    width: 100%;
-    text-align: center;
-  }
+  .create-page { margin-top: 80px; padding: 16px; }
+  .create-form { padding: 24px 16px 32px; }
+  .create-title { font-size: 1.8rem; }
+  .create-subtitle { font-size: 0.9rem; }
+  .create-button-group { flex-direction: column; align-items: stretch; }
+  .create-button-group button { width: 100%; }
 }
