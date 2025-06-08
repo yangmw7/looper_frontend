@@ -1,3 +1,4 @@
+// src/pages/CommunityListPage.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CommunityListPage.css';
@@ -19,6 +20,8 @@ export default function CommunityListPage() {
     axios
       .get('http://localhost:8080/api/posts')
       .then((response) => {
+        // 'commentCount' 필드 기준으로도 이미 내려오지만, 
+        // 최근 글(tab)이니까 createdAt 으로 정렬합니다.
         const sortedByDate = response.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -26,7 +29,7 @@ export default function CommunityListPage() {
           id: p.id,
           title: p.title,
           author: p.writer,
-          comments: 0, // TODO: 댓글 API 연동 시 교체
+          comments: p.commentCount,    // 백엔드에서 내려주는 실제 댓글 수
           views: p.viewCount,
           createdAt: formatDate(p.createdAt),
         }));
