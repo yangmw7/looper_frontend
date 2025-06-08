@@ -1,7 +1,5 @@
-/* src/pages/CommunityEditPage.css */
-
-/* (1) 기본 배경은 상세 페이지와 동일 */
-.create-background {
+/* (1) 기본 배경 */
+.edit-background {
   background-image: url('../assets/main.png');
   background-size: cover;
   background-position: center center;
@@ -31,13 +29,13 @@
   font-weight: 700;
   color: #fff;
   margin-bottom: 8px;
-  text-align: center;
+  text-align: left;
 }
 .edit-subtitle {
   font-size: 1rem;
   color: #ccc;
   margin-bottom: 32px;
-  text-align: center;
+  text-align: left;
 }
 
 /* (5) 폼 컨테이너 */
