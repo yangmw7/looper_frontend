@@ -201,6 +201,9 @@ List<String> keepUrls = request.getKeepImageUrls() != null
     ? request.getKeepImageUrls()
     : new ArrayList<>();
 post.getImages().removeIf(img -> !keepUrls.contains(img.getFilePath()));
+```
+
+---
 
 
 ### 2025.06.08 
