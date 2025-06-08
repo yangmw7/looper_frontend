@@ -181,6 +181,42 @@
 
 ---
 
+
+### 2025.06.07
+
+✅ **커뮤니티 글 수정 페이지 구현 (`CommunityEditPage.jsx` / `CommunityEditPage.css`)**  
+→ 기존 게시글 제목·내용·이미지 불러오기  
+→ “사진 첨부” 섹션에서  
+  - 기존 이미지 유지·삭제 기능  
+  - 새 이미지 추가 기능  
+→ `FormData` + `axios.put(‘/api/posts/{id}`, …)` 로 백엔드 연동  
+→ 수정 완료 후 상세 페이지로 리다이렉트  
+
+✅ **커뮤니티 글 수정 시 이미지 처리 오류 해결**  
+→ 이미지 삭제가 반영되지 않던 원인:  
+  - `keepImageUrls` 가 null 이면 삭제 로직이 동작하지 않음  
+→ **해결**: `updatePost()` 내에서  
+```java
+List<String> keepUrls = request.getKeepImageUrls() != null
+    ? request.getKeepImageUrls()
+    : new ArrayList<>();
+post.getImages().removeIf(img -> !keepUrls.contains(img.getFilePath()));
+
+
+### 2025.06.08 
+
+✅ **ADMIN 권한으로 다른 사용자 댓글·게시글 삭제 기능 오류 수정**  
+→ 원인: 인증 필터에서 `UsernamePasswordAuthenticationToken` 생성 시 권한(roles)이 비어 있어, SecurityContext 의 `getAuthorities()` 검사에서 “ROLE_ADMIN”이 감지되지 않음  
+→ **해결**:  
+1. `JwtAuthenticationFilter` 에서 토큰 파싱 후 `new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority("ROLE_"+role)))` 로 권한 정보까지 함께 설정  
+2. `CommentServiceImpl.deleteComment()` 와 `PostController.delete()` 에서 `auth.getAuthorities().anyMatch(…)` 로 ADMIN 검사 정상 동작  
+
+✅ **댓글 수 카운팅 오류 수정**  
+→ 원인: 상세 페이지 마운트 시 댓글 목록 조회(`fetchComments`)가 완료되기 전에 렌더링이 일어나, `comments.length`가 0으로 고정됨  
+→ **해결**:  
+1. 댓글 불러오기 요청 성공 후 `setComments(...)` 다음에 `setLoading(false)` 추가  
+2. 로딩 상태 (`loading` state) 가 false 일 때만 본문과 댓글 수를 렌더링하도록 조건부 렌더링 적용  
+
 (추후 작업 예정)  
 - **게시글 좋아요(Like) 기능**: 게시글 상세에서 토큰 포함 `POST /api/posts/{id}/like` 호출, 좋아요 개수 렌더링  
 - **게시글 신고(Report) 기능**: 신고 모달 UI 추가, `POST /api/posts/{id}/report` 호출  
