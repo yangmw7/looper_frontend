@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import './FindPasswordPage.css';
 
 const FindPasswordPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const FindPasswordPage = () => {
     try {
       // 1단계: 아이디+이메일 확인
       const response = await axios.post(
-        'http://localhost:8080/api/reset-password/request',
+        `${API_BASE_URL}/api/reset-password/request`,
         { username: userId, email: email }
       );
 

@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import './FindIDPage.css';
 
 const FindIDPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
@@ -16,7 +17,7 @@ const FindIDPage = () => {
     try {
       // 백엔드에 { email } 형태로 POST 요청
       const response = await axios.post(
-        'http://localhost:8080/api/find-id',
+        '/find-id',
         { email: email }
       );
 

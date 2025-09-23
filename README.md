@@ -30,7 +30,7 @@
 ### 2025.06.02
 
 ✅ **회원가입 페이지 백엔드 연동**  
-→ `SignupPage.jsx`에서 폼 입력 시 `axios.post('http://localhost:8080/api/join', payload)`를 통해 백엔드 API 호출  
+→ `SignupPage.jsx`에서 폼 입력 시 `axios.post('${API_BASE_URL}/api/join', payload)`를 통해 백엔드 API 호출  
 → 백엔드 응답 확인 후, 회원정보가 MySQL DB에 정상 저장됨을 검증  
 
 ---
@@ -38,7 +38,7 @@
 ### 2025.06.03
 
 ✅ **로그인 페이지 기능 개선**  
-→ `LoginPage.jsx`에서 폼 입력 후 `axios.post('http://localhost:8080/api/login', payload)` 호출  
+→ `LoginPage.jsx`에서 폼 입력 후 `axios.post('${API_BASE_URL}/api/login', payload)` 호출  
   - 로그인 성공 시 `navigate('/')`를 이용해 `MainPage`로 이동  
   - 로그인 실패 시, 에러 코드에 따라 적절한 `alert` 메시지 표시 (“아이디 또는 비밀번호가 올바르지 않습니다.” 등)  
 
@@ -54,7 +54,7 @@
 
 ✅ **아이디 찾기 페이지 구현 및 백엔드 연동**  
 → `FindIDPage.jsx`, `ShowIDPage.jsx`, `FailIDPage.jsx` 파일 생성  
-  - 사용자가 이메일 입력 후 `axios.post('http://localhost:8080/api/find-id', { email })` 호출  
+  - 사용자가 이메일 입력 후 `axios.post('${API_BASE_URL}/api/find-id', { email })` 호출  
   - 성공 시 `/find-id/success`로 이동하며, `ShowIDPage`에서 아이디 노출  
   - 실패 시 `/find-id/fail`로 이동하며, `FailIDPage`에서 에러 메시지 표시  
 → 라우팅 설정(`App.jsx`)에 `/find-id`, `/find-id/success`, `/find-id/fail` 경로 추가  
@@ -62,10 +62,10 @@
 
 ✅ **비밀번호 찾기 페이지 구현 및 백엔드 연동**  
 → `FindPasswordPage.jsx`, `ResetPasswordPage.jsx`, `FailPasswordPage.jsx` 파일 생성  
-  - `FindPasswordPage`에서 아이디+이메일 입력 후 `axios.post('http://localhost:8080/api/reset-password/request', { username, email })` 호출  
+  - `FindPasswordPage`에서 아이디+이메일 입력 후 `axios.post('${API_BASE_URL}/api/reset-password/request', { username, email })` 호출  
     • 성공 시 `/reset-password`로 이동하며 `ResetPasswordPage`에서 새 비밀번호 입력 폼 노출  
     • 실패 시 `/find-password/fail`로 이동하며 `FailPasswordPage`에서 에러 메시지 표시  
-  - `ResetPasswordPage`에서 새 비밀번호/확인비밀번호 입력 후 `axios.post('http://localhost:8080/api/reset-password', { username, newPassword, confirmPassword })` 호출  
+  - `ResetPasswordPage`에서 새 비밀번호/확인비밀번호 입력 후 `axios.post('${API_BASE_URL}/api/reset-password', { username, newPassword, confirmPassword })` 호출  
     • 성공 시 알림창(“비밀번호가 변경이 완료되었습니다!”) 후 `/login`으로 이동  
     • 실패 시 페이지 내에 오류 메시지 표시  
 → 라우팅 설정(`App.jsx`)에 `/find-password`, `/reset-password`, `/find-password/fail` 경로 추가  
@@ -73,7 +73,7 @@
 
 ✅ **커뮤니티 목록 페이지 구현 (`CommunityListPage.jsx` / `CommunityListPage.css`)**  
 → `CommunityListPage.jsx` 파일 생성  
-  - 컴포넌트가 마운트될 때 `axios.get('http://localhost:8080/api/posts')` 호출  
+  - 컴포넌트가 마운트될 때 `axios.get('${API_BASE_URL}/api/posts')` 호출  
   - 응답받은 게시글 배열을 `useState`로 관리하고 `useEffect`로 초기 로드  
   - 각 게시글을 카드 형태로 렌더링 (`제목`, `작성자`, `작성일` 표시)  
   - 게시글 클릭 시 `navigate(`/community/${post.id}`)`를 이용해 상세 페이지로 라우팅  
@@ -84,15 +84,15 @@
 
 ✅ **커뮤니티 상세 페이지 구현 (`CommunityDetailPage.jsx` / `CommunityDetailPage.css`)**  
 → `CommunityDetailPage.jsx` 파일 생성  
-  - URL 파라미터 (`useParams().id`)를 받아 `axios.get('http://localhost:8080/api/posts/' + id)` 호출  
+  - URL 파라미터 (`useParams().id`)를 받아 `axios.get('${API_BASE_URL}/api/posts/' + id)` 호출  
   - 게시글 정보(`제목`, `작성자`, `내용`, `작성일`)를 `useState`로 관리  
   - 댓글 목록: GET `/api/posts/{id}/comments` 호출해 `댓글 배열` 조회 후 렌더링  
   - 로그인 여부 확인 (`localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken')`)  
    • 로그인 상태일 때만 댓글 작성 입력창(`textarea` + “댓글 작성” 버튼) 표시  
-   • 댓글 작성 시 `axios.post('http://localhost:8080/api/posts/' + id + '/comments', { body }, { headers: { Authorization: `Bearer ${token}` } })`  
+   • 댓글 작성 시 `axios.post('${API_BASE_URL}/api/posts/' + id + '/comments', { body }, { headers: { Authorization: `Bearer ${token}` } })`  
   - 게시글 작성자 권한 확인: `post.authorId === 현재 로그인된 사용자 ID` 일 경우에만 ‘수정’, ‘삭제’ 버튼 표시  
    • 수정 클릭 시 `/community/edit/${id}`로 이동  
-   • 삭제 클릭 시 `axios.delete('http://localhost:8080/api/posts/' + id, { headers: { Authorization: `Bearer ${token}` } })` 후 목록으로 리다이렉트  
+   • 삭제 클릭 시 `axios.delete('${API_BASE_URL}/api/posts/' + id, { headers: { Authorization: `Bearer ${token}` } })` 후 목록으로 리다이렉트  
   - 향후 예정: `좋아요(Like)`, `신고(Report)` 버튼 UI 자리만 미리 추가 (onClick 핸들러는 추후 구현)  
 → `CommunityDetailPage.css` 파일 생성  
   - 전체 컨테이너: max-width 800px, margin: 50px auto  
@@ -108,7 +108,7 @@
   - 제목(`input type="text"`), 내용(`textarea`) 입력 form 구성  
   - “작성하기” 버튼 클릭 시 유효성 검사(제목/내용 빈 값 체크) 후:  
    `const payload = { title, body };`  
-   `axios.post('http://localhost:8080/api/posts', payload, { headers: { Authorization: `Bearer ${token}` } })`  
+   `axios.post('${API_BASE_URL}/api/posts', payload, { headers: { Authorization: `Bearer ${token}` } })`  
    - 요청 성공 시 `navigate('/community')` (목록 페이지)로 이동  
   - “취소” 버튼 클릭 시 `navigate('/community')`  
 → `CommunityCreatePage.css` 파일 생성  
@@ -139,7 +139,7 @@
   - `handleCommentDelete` 구현:  
     ```js
     axios
-      .delete(`http://localhost:8080/api/posts/${id}/comments/${commentId}`, {
+      .delete(`${API_BASE_URL}/api/posts/${id}/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {

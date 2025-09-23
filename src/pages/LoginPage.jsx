@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import './LoginPage.css';
 
 const LoginPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     username: '',
@@ -41,7 +42,7 @@ const LoginPage = () => {
     try {
       // 로그인 요청
       const response = await axios.post(
-        'http://localhost:8080/api/login',
+        `${API_BASE_URL}/api/login`,
         {
           username: credentials.username,
           password: credentials.password,

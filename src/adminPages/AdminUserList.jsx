@@ -18,7 +18,7 @@ function AdminUserList() {
     const token = localStorage.getItem('accessToken') ||
                   sessionStorage.getItem('accessToken');
 
-    axios.get('http://localhost:8080/api/admin/users', {
+    axios.get('${API_BASE_URL}/api/admin/users', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
@@ -39,7 +39,7 @@ function AdminUserList() {
     if (!window.confirm('이 사용자를 정말 삭제하시겠습니까?')) return;
     const token = localStorage.getItem('accessToken') ||
                   sessionStorage.getItem('accessToken');
-    axios.delete(`http://localhost:8080/api/admin/users/${userId}`, {
+    axios.delete(`${API_BASE_URL}/api/admin/users/${userId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(() => {

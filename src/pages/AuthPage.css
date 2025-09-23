@@ -1,0 +1,391 @@
+/* AuthPage.css */
+
+.auth-background {
+  min-height: 100vh;
+  background: #000;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 40px 20px;
+  gap: 50px;
+}
+
+/* 상단 토글 영역 */
+.toggle-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.toggle-labels {
+  display: flex;
+  gap: 80px;
+  margin-bottom: 10px;
+}
+
+.toggle-label {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #888;
+}
+
+.toggle-label.active {
+  color: #e91e63;
+  text-shadow: 0 0 10px rgba(233, 30, 99, 0.5);
+}
+
+.toggle-switch {
+  width: 80px;
+  height: 40px;
+  background: #444;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.toggle-slider {
+  width: 36px;
+  height: 36px;
+  background: #e91e63;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.toggle-slider.signup {
+  left: 42px;
+}
+
+.arrow-icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  transition: all 0.3s ease;
+}
+
+/* 북서쪽 화살표 (LOGIN) */
+.toggle-slider.login .arrow-icon {
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid white;
+  transform: rotate(-45deg);
+  margin-left: -3px;
+  margin-top: 3px;
+}
+
+/* 북동쪽 화살표 (SIGNUP) */
+.toggle-slider.signup .arrow-icon {
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid white;
+  transform: rotate(45deg);
+  margin-left: 3px;
+  margin-top: 3px;
+}
+
+/* 카드 컨테이너 */
+.card-wrapper {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.card-container {
+  width: 100%;
+  height: 580px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  transform-origin: center center;
+}
+
+.card-container.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: #1a1a1a;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  left: 0;
+  transform-origin: center center;
+  box-sizing: border-box;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+.auth-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  color: white;
+}
+
+/* 입력 필드 스타일 */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #e91e63;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  background: #2a2a2a;
+  border: 2px solid #404040;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.auth-input:focus {
+  border-color: #e91e63;
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+}
+
+.auth-input::placeholder {
+  color: #888;
+}
+
+/* 체크박스 스타일 */
+.remember-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.remember-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #e91e63;
+}
+
+.remember-checkbox label {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 제출 버튼 */
+.auth-submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: #e91e63;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+
+.auth-submit-btn:hover {
+  background: #c2185b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+}
+
+.auth-submit-btn:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 비밀번호 찾기 */
+.forgot-password {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.forgot-password a {
+  color: #888;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+  color: #e91e63;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px 15px;
+    gap: 30px;
+  }
+  
+  .toggle-labels {
+    gap: 60px;
+    font-size: 16px;
+  }
+  
+  .toggle-switch {
+    width: 70px;
+    height: 35px;
+    padding: 2px;
+    border-radius: 17px;
+  }
+  
+  .toggle-slider {
+    width: 31px;
+    height: 31px;
+  }
+  
+  .toggle-slider.signup {
+    left: 37px;
+  }
+  
+  .card-wrapper {
+    max-width: 350px;
+  }
+  
+  .card-front,
+  .card-back {
+    padding: 30px 25px;
+  }
+  
+  .card-container {
+    height: 520px;
+  }
+  
+  .auth-title {
+    font-size: 24px;
+    margin-bottom: 25px;
+  }
+  
+  .input-group {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toggle-labels {
+    gap: 40px;
+    font-size: 14px;
+  }
+  
+  .toggle-switch {
+    width: 60px;
+    height: 30px;
+    padding: 2px;
+    border-radius: 15px;
+  }
+  
+  .toggle-slider {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .toggle-slider.signup {
+    left: 32px;
+  }
+  
+  .arrow-icon {
+    transform: scale(0.8);
+  }
+  
+  .card-wrapper {
+    max-width: 300px;
+  }
+  
+  .card-front,
+  .card-back {
+    padding: 25px 20px;
+  }
+  
+  .auth-title {
+    font-size: 22px;
+  }
+  
+  .auth-input {
+    font-size: 14px;
+    padding: 12px 12px 12px 40px;
+  }
+  
+  .input-icon {
+    font-size: 14px;
+    left: 12px;
+  }
+}
+
+/* 애니메이션 효과 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-container > * {
+  animation: slideIn 0.6s ease-out;
+}
+
+.toggle-header {
+  animation-delay: 0.1s;
+}
+
+.card-wrapper {
+  animation-delay: 0.2s;
+}
