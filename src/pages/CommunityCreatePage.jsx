@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function CommunityCreatePage() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const fileInputKey = useRef(0);
 
@@ -63,7 +64,7 @@ export default function CommunityCreatePage() {
         .forEach(f => formData.append('imageFiles', f));
 
       const res = await axios.post(
-        'http://localhost:8080/api/posts',
+        `${API_BASE_URL}/api/posts`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import './FailPasswordPage.css';
 
 const FailPasswordPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const navigate = useNavigate();
 

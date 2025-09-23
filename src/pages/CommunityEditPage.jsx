@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function CommunityEditPage() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const fileInputKey = useRef(0);
@@ -19,7 +20,7 @@ export default function CommunityEditPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/posts/${id}`)
+    axios.get(`${API_BASE_URL}/api/posts/${id}`)
       .then(res => {
         setTitle(res.data.title);
         setContent(res.data.content);
@@ -62,7 +63,7 @@ export default function CommunityEditPage() {
     newFiles.forEach(f => formData.append('imageFiles', f));
 
     axios.put(
-      `http://localhost:8080/api/posts/${id}`,
+      `${API_BASE_URL}/api/posts/${id}`,
       formData,
       { headers: { Authorization: `Bearer ${token}` } }
     )
@@ -117,7 +118,7 @@ export default function CommunityEditPage() {
           <div className="edit-image-list">
             {existingImages.map((url, i) => (
               <div key={i} className="edit-image-item">
-                <img src={`http://localhost:8080${url}`} alt={`thumb-${i}`} />
+                <img src={`${API_BASE_URL}${url}`} alt={`thumb-${i}`} />
                 <button type="button" onClick={() => removeExistingImage(url)}>×</button>
               </div>
             ))}

@@ -102,7 +102,7 @@
 /* ─── 게시글 행 ───────────────────────────────────── */
 .post-row {
   display: grid;
-  grid-template-columns: 6fr 0.5fr 0.5fr 0.5fr 0.5fr;
+  grid-template-columns: 6fr 0.8fr 0.8fr 0.8fr 0.5fr;
   align-items: center;
   padding: 16px 0;
   border-bottom: 1px solid rgba(255,255,255,0.1);
