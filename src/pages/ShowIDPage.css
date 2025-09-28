@@ -1,62 +1,101 @@
-/* src/pages/ShowIDPage.css */
-
 .showid-background {
   background-image: url('../assets/main.png');
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
   min-height: 100vh;
-  width: 100%;
-  margin: 0;
   display: flex;
   flex-direction: column;
+  color: white;
+}
+
+.showid-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  padding: 40px 20px;
 }
 
 .showid-box {
-  background-color: #ffffff;
+  background: rgba(26, 26, 26, 0.95);
+  border-radius: 15px;
   padding: 40px 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 420px;
   text-align: center;
-  margin-top: 200px;
-  margin-bottom: 80px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid #333;
+  animation: slideIn 0.6s ease-out;
 }
 
 .showid-title {
-  color: #333333;
-  font-size: 1.5rem;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #cccccc;
-  padding-bottom: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #fff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
 }
 
 .showid-text {
-  color: #444444;
-  font-size: 1rem;
-  margin: 16px 0 8px 0;
+  color: #ccc;
+  font-size: 15px;
+  margin: 12px 0 8px 0;
 }
 
 .showid-username {
-  color: #f26323; /* looper 오렌지 */
+  color: #e91e63; /* 포인트 컬러 */
   font-size: 1.5rem;
   font-weight: bold;
-  margin: 0 0 16px 0;
+  margin: 5px 0 20px 0;
 }
 
 .showid-button {
-  background-color: #f26323;
-  color: #ffffff;
-  border: none;
-  padding: 12px 0;
   width: 100%;
-  font-size: 1rem;
-  border-radius: 4px;
+  padding: 15px;
+  background: #e91e63;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
 }
 
 .showid-button:hover {
-  background-color: #c65528;
+  background: #c2185b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .showid-box {
+    padding: 30px 20px;
+  }
+  .showid-title {
+    font-size: 20px;
+  }
+  .showid-username {
+    font-size: 1.2rem;
+  }
+  .showid-button {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
+
+/* 애니메이션 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

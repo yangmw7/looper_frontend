@@ -1,103 +1,141 @@
-/* src/pages/FindIDPage.css */
-
 .findid-background {
-  /* 로그인 페이지와 동일한 배경 처리 */
   background-image: url('../assets/main.png');
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
   min-height: 100vh;
-  width: 100%;
-  margin: 0;
   display: flex;
-  flex-direction: column;    /* Header → Box → Footer 순서로 쌓이도록 */
+  flex-direction: column;
+  color: white;
+}
+
+.findid-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  padding: 40px 20px;
 }
 
-/* 박스 모양을 로그인 박스처럼 흰색 배경 + 부드러운 그림자로 만듭니다 */
 .findid-box {
-  background-color: #ffffff;         /* 흰색 배경 */
-  padding: 40px 30px;                
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+  background: rgba(26, 26, 26, 0.95); /* 어두운 반투명 카드 */
+  border-radius: 15px;
+  padding: 40px 30px;
   width: 100%;
-  max-width: 380px;                  /* 너비 제한 */
+  max-width: 400px;
   text-align: center;
-  margin-top: 200px;                  /* Header 밑으로 내려주기 위한 여백 */
-  margin-bottom: 80px;               /* Footer 위로 내려주기 위한 여백 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid #333;
+  animation: slideIn 0.6s ease-out;
 }
 
-/* 제목 부분: 검정 계열 텍스트, 아래에 얇은 회색 선 */
 .findid-title {
-  color: #333333;                    /* 진한 회색(거의 검정) */
-  font-size: 1.5rem;                  /* 로그인 페이지와 비슷한 크기 */
-  margin-bottom: 16px;
-  border-bottom: 1px solid #cccccc;  /* 연한 회색 선 */
-  padding-bottom: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #fff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
 }
 
-/* form 내부 */
 .findid-form {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  gap: 20px;
+  margin-top: 20px;
 }
 
-/* 각 라벨 텍스트 */
 .findid-label {
-  color: #444444;     /* 중간 정도 검정(라이트 톤) */
+  color: #ccc;
   text-align: left;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
-/* 인풋 박스: 투명 배경, 밑줄 스타일 */
 .findid-input {
   width: 100%;
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #cccccc;  /* 회색 밑줄 */
-  color: #333333;                    /* 진한 회색 글자 */
-  padding: 10px 5px;
-  margin-bottom: 24px;
-  font-size: 1rem;
+  background: #2a2a2a;
+  border: 2px solid #404040;
+  border-radius: 8px;
+  color: white;
+  padding: 14px 12px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
-/* placeholder 색상 */
+.findid-input:focus {
+  border-color: #e91e63;
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+}
+
 .findid-input::placeholder {
-  color: #aaaaaa;   /* 연한 회색 */
+  color: #888;
 }
 
-/* 버튼: 주황 계열, 흰색 글자, 로그인 페이지와 동일한 색상 사용 */
 .findid-button {
   width: 100%;
-  height: 48px;
-  background-color: #f26323; /* looper 오렌지 */
-  color: #ffffff;
+  padding: 15px;
+  background: #e91e63;
+  border: none;
+  border-radius: 8px;
+  color: white;
   font-size: 16px;
   font-weight: 600;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
 }
 
 .findid-button:hover {
-  background-color: #c65528; /* 버튼 호버 시 살짝 더 진하게 */
+  background: #c2185b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
 }
 
-/* “로그인으로 돌아가기” 링크 스타일 */
 .findid-footer-links {
   margin-top: 20px;
 }
 
 .findid-link {
-  color: #555555;                 /* 보통 회색 */
-  font-size: 0.9rem;
+  color: #888;
+  font-size: 14px;
   text-decoration: none;
-  margin: 0 10px;
   transition: color 0.2s ease-in-out;
 }
 
 .findid-link:hover {
-  color: #333333;                 /* 호버하면 진한 회색 */
+  color: #e91e63;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .findid-box {
+    padding: 30px 20px;
+  }
+  .findid-title {
+    font-size: 20px;
+  }
+  .findid-input {
+    font-size: 14px;
+    padding: 12px 10px;
+  }
+  .findid-button {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
+
+/* 애니메이션 */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
