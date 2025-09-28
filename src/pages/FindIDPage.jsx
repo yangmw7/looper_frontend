@@ -67,7 +67,7 @@ const FindIDPage = () => {
           </form>
 
           <div className="findid-footer-links">
-            <a href="/login" className="findid-link">
+            <a href="/auth" className="findid-link">
               로그인으로 돌아가기
             </a>
           </div>
