@@ -6,7 +6,6 @@ import Footer from '../components/Footer';
 import './FailIDPage.css';
 
 const FailIDPage = () => {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,15 +21,17 @@ const FailIDPage = () => {
   return (
     <div className="failid-background">
       <Header />
-      <div className="failid-box">
-        <h2 className="failid-title">ID 찾기 실패</h2>
-        <p className="failid-text">{errorMessage}</p>
-        <button
-          className="failid-button"
-          onClick={() => navigate('/find-id')}
-        >
-          다시 시도하기
-        </button>
+      <div className="failid-container">
+        <div className="failid-box">
+          <h2 className="failid-title">ID 찾기 실패</h2>
+          <p className="failid-text">{errorMessage}</p>
+          <button
+            className="failid-button"
+            onClick={() => navigate('/find-id')}
+          >
+            다시 시도하기
+          </button>
+        </div>
       </div>
       <Footer />
     </div>

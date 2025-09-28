@@ -30,8 +30,7 @@ function App() {
       <Routes>
         {/* 일반 유저 라우트 */}
         <Route path="/"                       element={<MainPage />} />
-        <Route path="/login"                  element={<AuthPage />} />
-        <Route path="/signup"                 element={<AuthPage />} />
+        <Route path="/auth"                  element={<AuthPage />} />
 
         {/* ID 찾기 */}
         <Route path="/find-id"                element={<FindIDPage />} />

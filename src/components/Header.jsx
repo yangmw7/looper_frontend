@@ -25,7 +25,7 @@ function Header() {
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
           .join('')
       );
       const payload = JSON.parse(jsonPayload);
@@ -78,12 +78,17 @@ function Header() {
           </>
         ) : (
           <>
-            <Link to="/login">로그인</Link>
-            <Link to="/signup">회원가입</Link>
+            <Link to="/auth">로그인</Link>
+            <Link to="/auth">회원가입</Link>
           </>
         )}
 
-        <button className="play-button">지금 플레이</button>
+        <button
+          className="play-button"
+          onClick={() => navigate('/play')}
+        >
+          지금 플레이
+        </button>
       </div>
     </header>
   );
