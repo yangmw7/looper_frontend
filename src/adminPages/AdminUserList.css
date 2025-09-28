@@ -54,6 +54,37 @@
   border-radius: 2px;
 }
 
+/* ─── 탭 네비게이션 스타일 ───────────────────────── */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0;
+}
+
+.admin-tabs button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.admin-tabs button:hover {
+  color: #fff;
+}
+
+.admin-tabs button.active {
+  color: #ffe07a;
+  border-bottom-color: #ffe07a;
+  font-weight: 600;
+}
+
 /* 5) 로딩/에러 메시지 */
 .loading {
   display: flex;
@@ -219,6 +250,13 @@
   .admin-title {
     font-size: 1.6rem;
   }
+  .admin-tabs {
+    flex-wrap: wrap;
+  }
+  .admin-tabs button {
+    flex: 1;
+    min-width: 120px;
+  }
   .admin-table th,
   .admin-table td {
     padding: 10px 12px;
@@ -240,68 +278,4 @@
     width: 100%;
     height: 36px;
   }
-}
-
-/* 클릭 가능한 행 */
-.clickable-row td {
-  cursor: pointer;
-}
-.clickable-row:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* 모달 오버레이 & 내용 */
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: rgba(0,0,0,0.9);
-  padding: 20px;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 600px;
-  max-height: 80%;
-  overflow-y: auto;
-  color: #fff;
-}
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.modal-close {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* 게시글 리스트 (모달) */
-.post-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.post-item {
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-.post-item strong {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 4px;
-}
-.post-date {
-  font-size: 0.85rem;
-  color: #bbb;
 }

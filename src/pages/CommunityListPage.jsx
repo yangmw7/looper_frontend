@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function CommunityListPage() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [posts, setPosts]       = useState([]);
   const [error, setError]       = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +19,7 @@ export default function CommunityListPage() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/posts')
+      .get(`${API_BASE_URL}/api/posts`)
       .then((response) => {
         // 'commentCount' 필드 기준으로도 이미 내려오지만, 
         // 최근 글(tab)이니까 createdAt 으로 정렬합니다.

@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import './FailIDPage.css';
 
 const FailIDPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const navigate = useNavigate();
 

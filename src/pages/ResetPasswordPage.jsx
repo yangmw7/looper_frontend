@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import './ResetPasswordPage.css';
 
 const ResetPasswordPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ const ResetPasswordPage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/reset-password',
+        `${API_BASE_URL}/api/reset-password`,
         {
           username: username,
           newPassword: newPassword,

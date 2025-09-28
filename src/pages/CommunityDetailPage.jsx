@@ -7,9 +7,11 @@ import './CommunityDetailPage.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+
 export default function CommunityDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // 게시물 데이터
   const [post, setPost] = useState(null);
@@ -63,7 +65,7 @@ export default function CommunityDetailPage() {
 
   // 1) 게시물 상세 조회
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/posts/${id}`)
+    axios.get(`${API_BASE_URL}/api/posts/${id}`)
       .then(res => {
         const d = res.data;
         setPost({
@@ -100,7 +102,7 @@ export default function CommunityDetailPage() {
   const handleDelete = () => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
-    axios.delete(`http://localhost:8080/api/posts/${id}`, {
+    axios.delete(`${API_BASE_URL}/api/posts/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(() => { alert('삭제되었습니다.'); navigate('/community'); })
@@ -109,7 +111,7 @@ export default function CommunityDetailPage() {
 
   // 2) 댓글 목록 조회
   const fetchComments = () => {
-    axios.get(`http://localhost:8080/api/posts/${id}/comments`)
+    axios.get(`${API_BASE_URL}/api/posts/${id}/comments`)
       .then(res => {
         setComments(res.data.map(c => ({
           id: c.id,
@@ -127,7 +129,7 @@ export default function CommunityDetailPage() {
     if (!newComment.trim()) return;
     const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
     axios.post(
-      `http://localhost:8080/api/posts/${id}/comments`,
+      `${API_BASE_URL}/api/posts/${id}/comments`,
       { content: newComment.trim() },
       { headers: { Authorization: `Bearer ${token}` } }
     )
@@ -150,7 +152,7 @@ export default function CommunityDetailPage() {
     if (!newText?.trim()) return;
     const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
     axios.put(
-      `http://localhost:8080/api/posts/${id}/comments/${commentId}`,
+      `${API_BASE_URL}/api/posts/${id}/comments/${commentId}`,
       { content: newText.trim() },
       { headers: { Authorization: `Bearer ${token}` } }
     )
@@ -169,7 +171,7 @@ export default function CommunityDetailPage() {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
     axios.delete(
-      `http://localhost:8080/api/posts/${id}/comments/${commentId}`,
+      `${API_BASE_URL}/api/posts/${id}/comments/${commentId}`,
       { headers: { Authorization: `Bearer ${token}` } }
     )
     .then(() => {
@@ -209,7 +211,7 @@ export default function CommunityDetailPage() {
               {post.imageUrls.map((url, idx) => (
                 <img
                   key={idx}
-                  src={`http://localhost:8080${url}`}
+                  src={`${API_BASE_URL}${url}`}
                   alt={`img-${idx}`}
                   className="post-image"
                 />
