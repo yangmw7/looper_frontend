@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 function SignupPage() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -38,7 +39,7 @@ function SignupPage() {
         password: form.password
       };
       const response = await axios.post(
-        'http://localhost:8080/api/join',
+        `${API_BASE_URL}/api/join`,
         payload
       );
       const message = response.data; // 백엔드에서 넘어온 순수 문자열

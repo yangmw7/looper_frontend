@@ -1,8 +1,6 @@
-/* Header.css 전체 예시 */
-
 .navbar {
   position: fixed;
-  top: 30px;
+  top: 20px;
   left: 0;
   right: 0;
   z-index: 1000;
@@ -12,7 +10,7 @@
   align-items: center;
 
   padding: 1rem 3rem;
-  background-color: rgba(58, 47, 40, 0.85);
+  background-color: rgba(20, 20, 20, 0.85);
   color: #f0f0f0;
 
   border-radius: 12px;
@@ -20,6 +18,7 @@
   margin: 0 auto;
 
   box-sizing: border-box;
+  backdrop-filter: blur(8px);
 }
 
 /* 좌측 네비게이션 */
@@ -31,10 +30,10 @@
   transition: color 0.2s;
 }
 .nav-left a:hover {
-  color: #6fd59a;
+  color: #ff003c;
 }
 
-/* 우측(로그인/회원가입/내 정보 보기) 링크 */
+/* 우측 링크 */
 .nav-right a {
   margin: 0 0.8rem;
   text-decoration: none;
@@ -43,26 +42,26 @@
   transition: color 0.2s;
 }
 .nav-right a:hover {
-  color: #6fd59a;
+  color: #ff003c;
 }
 
 .greeting-text {
   margin-right: 1rem;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #f0f0f0;
 }
 
-/* “내 정보 보기” */
+/* 내 정보 / 관리자 페이지 */
 .profile-link {
   margin-right: 1rem;
   text-decoration: none;
-  color: #a0eac4;
+  color: #ff809c;
   font-weight: 500;
   transition: color 0.2s;
 }
 .profile-link:hover {
-  color: #6fd59a;
+  color: #ff003c;
 }
 
 .logout-button {
@@ -78,11 +77,12 @@
 }
 .logout-button:hover {
   background-color: #f0f0f0;
-  color: #3a2f28;
+  color: #111;
 }
 
+/* 지금 플레이 버튼 */
 .play-button {
-  background-color: #3b82f6;
+  background-color: #ff003c;
   color: white;
   border: none;
   border-radius: 6px;
@@ -92,16 +92,5 @@
   transition: background-color 0.2s;
 }
 .play-button:hover {
-  background-color: #2563eb;
-}
-
-/* (필요하다면) 헤더 로고 등 추가 스타일 */
-.header-logo-container {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.header-logo {
-  width: 200px;
-  height: auto;
+  background-color: #d80034;
 }

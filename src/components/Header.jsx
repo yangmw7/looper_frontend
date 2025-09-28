@@ -7,10 +7,9 @@ import './Header.css';
 function Header() {
   const navigate = useNavigate();
   const [nickname, setNickname] = useState(null);
-  const [roles, setRoles] = useState([]);  // 관리자 권한 체크용
+  const [roles, setRoles] = useState([]);
 
   useEffect(() => {
-    // 1) 저장소에서 토큰 불러오기
     const token =
       localStorage.getItem('accessToken') ||
       sessionStorage.getItem('accessToken');
@@ -21,11 +20,8 @@ function Header() {
     }
 
     try {
-      // 2) JWT 페이로드 디코딩 (Base64URL → Base64)
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-
-      // 3) atob → Latin1 → percent-encoding → UTF-8 디코딩
       const jsonPayload = decodeURIComponent(
         atob(base64)
           .split('')
@@ -34,7 +30,6 @@ function Header() {
       );
       const payload = JSON.parse(jsonPayload);
 
-      // 4) nickname, roles 추출
       setNickname(payload.nickname || payload.sub || payload.username);
       setRoles(payload.roles || []);
     } catch (e) {
@@ -45,7 +40,6 @@ function Header() {
   }, []);
 
   const handleLogout = () => {
-    // 5) 토큰 삭제
     localStorage.removeItem('accessToken');
     sessionStorage.removeItem('accessToken');
     delete axios.defaults.headers.common['Authorization'];
@@ -66,7 +60,7 @@ function Header() {
       <div className="nav-right">
         {nickname ? (
           <>
-            <span className="greeting-text">{nickname}님, 반갑습니다!</span>
+            <span className="greeting-text">{nickname}님, 환영합니다!</span>
 
             {roles.includes('ADMIN') ? (
               <Link to="/admin" className="profile-link">
@@ -74,7 +68,7 @@ function Header() {
               </Link>
             ) : (
               <Link to="/profile" className="profile-link">
-                내 정보 보기
+                내 정보
               </Link>
             )}
 
