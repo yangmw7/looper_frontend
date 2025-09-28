@@ -6,7 +6,6 @@ import Footer from '../components/Footer';
 import './FailPasswordPage.css';
 
 const FailPasswordPage = () => {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -24,15 +23,17 @@ const FailPasswordPage = () => {
     <div className="failpw-background">
       <Header />
 
-      <div className="failpw-box">
-        <h2 className="failpw-title">비밀번호 찾기 실패</h2>
-        <p className="failpw-text">{errorMessage}</p>
-        <button
-          className="failpw-button"
-          onClick={() => navigate('/find-password')}
-        >
-          다시 시도하기
-        </button>
+      <div className="failpw-container">
+        <div className="failpw-box">
+          <h2 className="failpw-title">비밀번호 찾기 실패</h2>
+          <p className="failpw-text">{errorMessage}</p>
+          <button
+            className="failpw-button"
+            onClick={() => navigate('/find-password')}
+          >
+            다시 시도하기
+          </button>
+        </div>
       </div>
 
       <Footer />

@@ -1,17 +1,23 @@
-/* src/pages/MainPage.css */
-
 .main-page {
+  position: relative;
   background-image: url('../assets/main.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
   min-height: 100vh;
-  width: 100%;
-  margin: 0;
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+/* 어두운 반투명 오버레이 */
+.overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
 }
 
 .hero {
@@ -22,48 +28,62 @@
   justify-content: center;
   text-align: center;
   padding: 5vh 2rem;
+  z-index: 1;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 1) 히어로 텍스트(전체 줄 단위로 fade-in) */
+/* ─────────────────────────────── */
+/* 히어로 텍스트 */
 .hero-text {
   margin-bottom: 2rem;
 }
 
-/* typing-line: 기본적으로 투명(opacity:0) 상태입니다. */
 .typing-line {
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  margin: 0.6rem 0;
-  font-weight: 500;
+  font-size: clamp(1rem, 2vw, 1.6rem);
+  margin: 0.8rem 0;
+  font-weight: 700;
   color: #fff;
   opacity: 0;
-  /* 애니메이션 play 시 한번만 실행되어, opacity:1과 translateY(0) 상태를 유지합니다 */
   transition: opacity 0.5s ease;
+  letter-spacing: 1px;
+  position: relative;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 2) 무료 다운로드 버튼 */
+/* 글리치 효과 */
+.glitch {
+  animation: glitch 2s infinite;
+}
+@keyframes glitch {
+  0% { text-shadow: 2px 2px #e91e63, -2px -2px #00fff2; }
+  20% { text-shadow: -2px -2px #e91e63, 2px 2px #00fff2; }
+  40% { text-shadow: 2px -2px #00fff2, -2px 2px #e91e63; }
+  60% { text-shadow: -2px 2px #e91e63, 2px -2px #00fff2; }
+  100% { text-shadow: 2px 2px #e91e63, -2px -2px #00fff2; }
+}
+
+/* ─────────────────────────────── */
+/* 무료 다운로드 버튼 */
 .download-button {
   margin-top: 2rem;
-  padding: 0.8rem 2rem;
+  padding: 1rem 2.4rem;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
-  background-color: #1d5e49;
+  background-color: #e91e63;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   color: white;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, opacity 0.5s ease;
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.6);
+  transition: all 0.3s ease;
   opacity: 0;
 }
-
 .download-button:hover {
-  background-color: #148267;
+  background-color: #c2185b;
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(233, 30, 99, 0.8);
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 3) 서브텍스트 (2D 로그라이크 게임 · 무료 플레이) */
+/* ─────────────────────────────── */
+/* 서브텍스트 */
 .sub-text {
   margin-top: 1.5rem;
   font-size: clamp(0.9rem, 1.2vw, 1rem);
@@ -72,34 +92,49 @@
   transition: opacity 0.5s ease;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 4) fade-in 애니메이션 (버튼과 텍스트, 텍스트 줄 모두 공통으로 사용) */
+/* ─────────────────────────────── */
+/* fade-in 애니메이션 */
 .fade-in {
-  animation: fadeInText 0.5s forwards;
+  animation: fadeInText 0.6s forwards;
 }
-
 @keyframes fadeInText {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 5) 반응형 (모바일) */
+/* ─────────────────────────────── */
+/* Scroll down 애니메이션 */
+.scroll-down {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.scroll-down span {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  transform: rotate(-45deg);
+  margin: 0 auto;
+  animation: bounce 1.5s infinite;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(-45deg); }
+  40% { transform: translateY(8px) rotate(-45deg); }
+  60% { transform: translateY(4px) rotate(-45deg); }
+}
+
+/* ─────────────────────────────── */
+/* 반응형 */
 @media (max-width: 768px) {
   .hero {
     padding: 3vh 1rem;
   }
-
   .hero-text .typing-line {
     font-size: 1.1rem;
   }
-
   .download-button {
     width: 100%;
   }

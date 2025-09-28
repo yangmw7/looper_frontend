@@ -248,10 +248,27 @@
   box-shadow: none;
 }
 
+/* 아이디 찾기 */
+.forgot-id {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.forgot-id a {
+  color: #888;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.forgot-id a:hover {
+  color: #e91e63;
+}
+
 /* 비밀번호 찾기 */
 .forgot-password {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .forgot-password a {

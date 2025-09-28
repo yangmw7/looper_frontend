@@ -220,6 +220,9 @@ const AuthPage = () => {
                   {loading ? '로그인 중...' : '로그인'}
                 </button>
 
+                <div className="forgot-id">
+                  <a href="/find-id">아이디를 잊으셨나요?</a>
+                </div>  
                 <div className="forgot-password">
                   <a href="/find-password">비밀번호를 잊으셨나요?</a>
                 </div>
