@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import ChatWidgetButton from '../components/ChatWidgetButton'; // ✅ 챗봇 버튼 임포트
 import './MainPage.css';
 
 export default function MainPage() {
@@ -44,11 +43,6 @@ export default function MainPage() {
           2D 로그라이크 게임 · 무료 플레이
         </p>
       </main>
-
-      <Footer />
-
-      {/* ✅ 챗봇 버튼 추가 */}
-      <ChatWidgetButton onToggle={() => console.log("챗봇 열기")} />
     </div>
   );
 }

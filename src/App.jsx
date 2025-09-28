@@ -1,9 +1,9 @@
 // src/App.jsx
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import MainPage              from './pages/MainPage';
-import AuthPage              from './pages/AuthPage'; // 새로운 통합 페이지
+import AuthPage              from './pages/AuthPage';
 import FindIDPage            from './pages/FindIDPage';
 import ShowIDPage            from './pages/ShowIDPage';
 import FailIDPage            from './pages/FailIDPage';
@@ -17,9 +17,9 @@ import CommunityEditPage     from './pages/CommunityEditPage';
 
 import AdminRoute            from './components/AdminRoute';
 import AdminUserList         from './adminPages/AdminUserList';
-
-import ChatWidget from './components/ChatWidget';
-import ChatWidgetButton from './components/ChatWidgetButton';
+import AdminItemList         from './adminPages/AdminItemList';
+import AdminItemDetail       from './adminPages/AdminItemDetail';
+import AdminItemCreate       from './adminPages/AdminItemCreate';   // 추가
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -51,13 +51,18 @@ function App() {
 
         {/* 관리자 전용 라우트 */}
         <Route path="/admin" element={<AdminRoute />}>
-          <Route index element={<AdminUserList />} />
+          {/* /admin 접속 시 /admin/users로 리다이렉트 */}
+          <Route index element={<Navigate to="/admin/users" replace />} />
+          
+          {/* 회원 관리 */}
+          <Route path="users" element={<AdminUserList />} />
+          
+          {/* 아이템 관리 */}
+          <Route path="items" element={<AdminItemList />} />
+          <Route path="items/new" element={<AdminItemCreate />} />
+          <Route path="items/:id" element={<AdminItemDetail />} />
         </Route>
       </Routes>
-
-      {/* 챗봇 위젯 (모든 페이지에서 항상 표시됨) */}
-      {open && <ChatWidget onClose={() => setOpen(false)} />}
-      <ChatWidgetButton onToggle={() => setOpen(!open)} />
     </>
   );
 }
