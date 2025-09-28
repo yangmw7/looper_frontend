@@ -79,7 +79,7 @@ const FindPasswordPage = () => {
           </form>
 
           <div className="findpw-footer-links">
-            <a href="/login" className="findpw-link">로그인으로 돌아가기</a>
+            <a href="/auth" className="findpw-link">로그인으로 돌아가기</a>
           </div>
         </div>
       </div>

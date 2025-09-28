@@ -30,7 +30,7 @@ const ShowIDPage = () => {
 
           <button
             className="showid-button"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/auth')}
           >
             로그인으로 이동
           </button>
