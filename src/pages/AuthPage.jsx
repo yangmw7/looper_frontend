@@ -298,7 +298,7 @@ const AuthPage = () => {
                 </div>
 
                 <button type="submit" className="auth-submit-btn">
-                  SUBMIT
+                  회원가입
                 </button>
               </form>
             </div>

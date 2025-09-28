@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './AdminUserList.css';
 
 function AdminUserList() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const navigate = useNavigate();
+  const location = useLocation();
   const [users, setUsers]             = useState([]);
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState(null);
@@ -18,7 +22,7 @@ function AdminUserList() {
     const token = localStorage.getItem('accessToken') ||
                   sessionStorage.getItem('accessToken');
 
-    axios.get('${API_BASE_URL}/api/admin/users', {
+    axios.get(`${API_BASE_URL}/api/admin/users`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
@@ -68,7 +72,23 @@ function AdminUserList() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <h2 className="admin-title">회원 관리</h2>
+            <h2 className="admin-title">관리자 페이지</h2>
+            
+            {/* ─── 탭 네비게이션 추가 ───────────────────────── */}
+            <div className="admin-tabs">
+              <button 
+                className={location.pathname === '/admin/users' ? 'active' : ''} 
+                onClick={() => navigate('/admin/users')}
+              >
+                회원 관리
+              </button>
+              <button 
+                className={location.pathname === '/admin/items' ? 'active' : ''} 
+                onClick={() => navigate('/admin/items')}
+              >
+                아이템 관리
+              </button>
+            </div>
 
             {/* ─── 검색 바 (커뮤니티와 동일하게) ───────────────────────── */}
             <div className="admin-search">
