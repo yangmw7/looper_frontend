@@ -114,7 +114,7 @@ function AdminItemDetail() {
   const handleAttributeChange = (index, field, value) => {
     const updated = [...editData.attributes];
     if (field === "value") {
-      const numericValue = value.replace(/[^0-9.]/g, "");
+      const numericValue = value.replace(/[^0-9.\-]/g, "");
       updated[index][field] = numericValue;
     } else {
       updated[index][field] = value;

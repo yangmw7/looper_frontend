@@ -23,12 +23,10 @@ function AdminNpcDetail() {
     features: [],
   });
 
-  // 이미지 (임시)
   const getNpcImage = () => {
     return "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA0MjBfMjcy%2FMDAxNzEzNjE4MDk2NDMy.TJo5oSAsFzMeDKScAZZZWxLGY_Xj4QbTK_VPMcmgmrgg.MWbdnjNykHVl4kc0sv8hGD-Ju5GeaeCM5EmUmgKQcQsg.PNG%2F12.PNG&type=a340";
   };
 
-  // 데이터 불러오기
   useEffect(() => {
     const token =
       localStorage.getItem('accessToken') ||
@@ -41,7 +39,6 @@ function AdminNpcDetail() {
       .then((res) => {
         const data = res.data;
 
-        // 이름 처리 (안전하게)
         let parsedName = ['', ''];
         if (Array.isArray(data.name)) {
           parsedName = data.name;
@@ -55,7 +52,6 @@ function AdminNpcDetail() {
           }
         }
 
-        // 특징 처리
         const parsedFeatures = Array.isArray(data.features)
           ? data.features
           : JSON.parse(data.features || '[]');
@@ -77,6 +73,12 @@ function AdminNpcDetail() {
   }, [id]);
 
   const handleSave = async () => {
+    // 이름 검증
+    if (!editData.name[0].trim() || !editData.name[1].trim()) {
+      alert("모든 값을 입력해야 합니다.");
+      return;
+    }
+
     const token =
       localStorage.getItem('accessToken') ||
       sessionStorage.getItem('accessToken');
@@ -129,7 +131,6 @@ function AdminNpcDetail() {
             </div>
 
             <div className="npc-detail-content">
-              {/* 왼쪽: 이미지 */}
               <div className="npc-detail-left">
                 <div className="npc-detail-image">
                   <img
@@ -139,7 +140,6 @@ function AdminNpcDetail() {
                 </div>
               </div>
 
-              {/* 오른쪽: 상세 */}
               <div className="npc-detail-right">
                 {!isEditing ? (
                   <>
@@ -147,7 +147,6 @@ function AdminNpcDetail() {
                     <div className="detail-row"><label>이름 (영문):</label><span>{npc.name[0]}</span></div>
                     <div className="detail-row"><label>이름 (한글):</label><span>{npc.name[1]}</span></div>
 
-                    {/* 속성 박스 */}
                     <div className="detail-section">
                       <h3>속성 (Attributes)</h3>
                       <div className="attributes-grid">
@@ -158,7 +157,6 @@ function AdminNpcDetail() {
                       </div>
                     </div>
 
-                    {/* 특징 */}
                     <div className="detail-section">
                       <h3>특징 (Features)</h3>
                       <div className="skills-list">
@@ -189,7 +187,6 @@ function AdminNpcDetail() {
                         onChange={(e) => setEditData({ ...editData, name: [editData.name[0], e.target.value] })} />
                     </div>
 
-                    {/* 속성 편집 */}
                     <div className="detail-section">
                       <h3>속성 (Attributes)</h3>
                       <div className="attributes-grid">
@@ -203,16 +200,19 @@ function AdminNpcDetail() {
                       </div>
                     </div>
 
-                    {/* 특징 편집 */}
-                    <div className="detail-row">
-                      <label>특징 (콤마 구분):</label>
-                      <input type="text" value={editData.features.join(', ')}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            features: e.target.value.split(',').map((f) => f.trim()).filter((f) => f),
-                          })
-                        } />
+                    <div className="detail-section">
+                      <h3>특징 (Features)</h3>
+                      <div className="detail-row">
+                        <input type="text" value={editData.features.join(', ')}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              features: e.target.value.split(',').map((f) => f.trim()).filter((f) => f),
+                            })
+                          }
+                          placeholder="예: 불속성, 보스, 원거리"
+                        />
+                      </div>
                     </div>
 
                     <div className="button-group">
