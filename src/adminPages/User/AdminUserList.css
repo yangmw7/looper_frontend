@@ -1,6 +1,6 @@
 /* 1) 전체 배경 */
 .admin-background {
-  background-image: url('../assets/main.png');
+  background-image: url('../../assets/main.png');
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;

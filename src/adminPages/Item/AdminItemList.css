@@ -1,5 +1,5 @@
 /* AdminItemList.css - AdminUserList.css의 공통 스타일 상속 */
-@import './AdminUserList.css';
+@import '../User/AdminUserList.css';
 
 /* 아이템 그리드 레이아웃 (5x4) */
 .items-grid {

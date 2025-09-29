@@ -39,7 +39,7 @@ const ResetPasswordPage = () => {
 
       if (data.message) {
         alert('비밀번호가 변경되었습니다.');
-        navigate('/login');
+        navigate('/auth');
       } else {
         setErrorMsg(data.error);
       }

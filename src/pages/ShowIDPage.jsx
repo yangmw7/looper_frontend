@@ -14,7 +14,7 @@ const ShowIDPage = () => {
 
   // state가 없으면 다시 /find-id로
   if (!username) {
-    navigate('/find-id');
+    navigate('/api/find-id');
     return null;
   }
 
@@ -30,7 +30,7 @@ const ShowIDPage = () => {
 
           <button
             className="showid-button"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/auth')}
           >
             로그인으로 이동
           </button>
