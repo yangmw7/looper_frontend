@@ -1,5 +1,6 @@
-@import './AdminUserList.css';
+@import '../User/AdminUserList.css';
 
+/* 상세 페이지 헤더 */
 .detail-header {
   display: flex;
   align-items: center;
@@ -22,11 +23,13 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* 아이템 상세 콘텐츠 레이아웃 */
 .item-detail-content {
   display: flex;
   gap: 40px;
 }
 
+/* 왼쪽 영역 - 이미지 */
 .item-detail-left {
   flex: 0 0 300px;
   position: relative;
@@ -83,10 +86,12 @@
   box-shadow: 0 4px 20px rgba(255, 128, 0, 0.4);
 }
 
+/* 오른쪽 영역 - 정보 */
 .item-detail-right {
   flex: 1;
 }
 
+/* 상세 정보 행 */
 .detail-row {
   display: flex;
   align-items: center;
@@ -98,6 +103,30 @@
   flex: 0 0 140px;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+}
+
+.detail-row span {
+  flex: 1;
+  color: #fff;
+  word-break: break-word;
+}
+
+/* 드롭다운 (select) 스타일 */
+.detail-row select {
+  background: rgba(30, 30, 30, 0.95);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* 드롭다운 옵션 (option) 스타일 */
+.detail-row select option {
+  background: #222;
+  color: #ffe07a;
 }
 
 .detail-row input,
@@ -125,6 +154,46 @@
   min-height: 60px;
 }
 
+.detail-row input::placeholder,
+.detail-row textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* 레어도 텍스트 스타일 */
+.rarity-text {
+  padding: 4px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rarity-text.common {
+  background: rgba(176, 176, 176, 0.2);
+  color: #b0b0b0;
+}
+
+.rarity-text.uncommon {
+  background: rgba(30, 255, 0, 0.2);
+  color: #1eff00;
+}
+
+.rarity-text.rare {
+  background: rgba(0, 112, 255, 0.2);
+  color: #0070ff;
+}
+
+.rarity-text.epic {
+  background: rgba(163, 53, 238, 0.2);
+  color: #a335ee;
+}
+
+.rarity-text.legendary {
+  background: rgba(255, 128, 0, 0.2);
+  color: #ff8000;
+}
+
+/* 섹션 스타일 */
 .detail-section {
   margin-top: 30px;
   padding-top: 20px;
@@ -137,6 +206,7 @@
   font-size: 1.1rem;
 }
 
+/* 속성 그리드 */
 .attributes-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -154,6 +224,12 @@
   gap: 6px;
 }
 
+.attribute-item label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 입력 필드 */
 .attribute-item input {
   width: 100%;
   box-sizing: border-box;
@@ -166,12 +242,15 @@
   text-align: left;
 }
 
+/* 체크박스 스타일 */
 .checkbox-label {
   display: flex;
   align-items: center;
+  justify-content: center; /* 가운데 정렬 */
   gap: 8px;
   cursor: pointer;
   width: 100%;
+  height: 100%;
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -179,8 +258,10 @@
   height: 20px;
   accent-color: #28a745;
   cursor: pointer;
+  margin: 0; /* 불필요한 margin 제거 */
 }
 
+/* 버튼 그룹 */
 .button-group {
   margin-top: 20px;
   display: flex;
@@ -188,15 +269,39 @@
   margin-bottom: 40px;
 }
 
-.save-button {
-  background: #28a745;
-  color: #fff;
+.edit-button,
+.delete-button,
+.save-button,
+.cancel-button {
   padding: 8px 16px;
   border-radius: 4px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: 0.2s;
+}
+
+.edit-button {
+  background: #0070ff;
+  color: #fff;
+}
+
+.edit-button:hover {
+  background: #0057cc;
+}
+
+.delete-button {
+  background: #ff4444;
+  color: #fff;
+}
+
+.delete-button:hover {
+  background: #cc0000;
+}
+
+.save-button {
+  background: #28a745;
+  color: #fff;
 }
 
 .save-button:hover {
@@ -206,17 +311,13 @@
 .cancel-button {
   background: #6c757d;
   color: #fff;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
 }
 
 .cancel-button:hover {
   background: #565e64;
 }
 
+/* 목록으로 버튼 위치 */
 .back-button.bottom-left {
   display: inline-block;
 }

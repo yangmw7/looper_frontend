@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import "./AdminItemCreate.css";
 
 function AdminItemCreate() {
@@ -21,16 +21,14 @@ function AdminItemCreate() {
       crid: 0,
       spd: 0,
       jmp: 0,
+      jcnt: 0,
       twoHander: false,
+      stackable: false,
     },
     skills: [],
   });
 
   const handleSave = async () => {
-    console.log("=== HANDLE SAVE START ===");
-    console.log("editData:", editData);
-    
-    // 필수 값 검증
     if (!editData.id.trim()) {
       alert("아이템 ID를 입력해주세요.");
       return;
@@ -39,9 +37,6 @@ function AdminItemCreate() {
     const token =
       localStorage.getItem("accessToken") ||
       sessionStorage.getItem("accessToken");
-
-    console.log("Token:", token ? "존재함" : "없음");
-    console.log("API_BASE_URL:", API_BASE_URL);
 
     try {
       const payload = {
@@ -52,58 +47,15 @@ function AdminItemCreate() {
         skills: editData.skills,
       };
 
-      console.log("Request payload:", payload);
-      console.log("Request URL:", `${API_BASE_URL}/api/items`);
-
-      const response = await axios.post(`${API_BASE_URL}/api/items`, payload, {
+      await axios.post(`${API_BASE_URL}/api/items`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("Success response:", response);
       alert("아이템이 추가되었습니다.");
       navigate("/admin/items");
     } catch (err) {
-      console.error("=== ERROR DETAILS ===");
-      console.error("Full error:", err);
-      console.error("Response status:", err.response?.status);
-      console.error("Response data:", err.response?.data);
-      console.error("Request config:", err.config);
-      
-      // 에러 응답 상태 코드에 따른 구체적인 처리
-      if (err.response) {
-        switch (err.response.status) {
-          case 409:
-            // 중복 ID 에러 (Conflict)
-            alert(`${err.response.data.error || err.response.data || '이미 존재하는 아이템 ID입니다.'}`);
-            break;
-          case 400:
-            // 잘못된 요청 (Bad Request)
-            alert("잘못된 요청입니다. 입력 값을 확인해주세요.");
-            break;
-          case 401:
-            // 권한 없음 (Unauthorized)
-            alert("인증이 필요합니다. 다시 로그인해주세요.");
-            navigate("/login");
-            break;
-          case 403:
-            // 접근 금지 (Forbidden)
-            alert("관리자 권한이 필요합니다.");
-            break;
-          case 500:
-            // 서버 내부 오류
-            alert("서버 오류가 발생했습니다. 관리자에게 문의하세요.");
-            break;
-          default:
-            // 기타 HTTP 에러
-            alert(`오류가 발생했습니다. (${err.response.status})`);
-        }
-      } else if (err.request) {
-        // 네트워크 오류
-        alert("네트워크 연결을 확인해주세요.");
-      } else {
-        // 기타 오류
-        alert("알 수 없는 오류가 발생했습니다.");
-      }
+      console.error(err);
+      alert("아이템 추가 중 오류가 발생했습니다.");
     }
   };
 
@@ -219,7 +171,7 @@ function AdminItemCreate() {
                 <div className="detail-section">
                   <h3>속성 (Attributes)</h3>
                   <div className="attributes-grid">
-                    {["atk", "ats", "def", "cri", "crid", "spd", "jmp"].map(
+                    {["atk", "ats", "def", "cri", "crid", "spd", "jmp", "jcnt"].map(
                       (attr) => (
                         <div key={attr} className="attribute-item">
                           <label>{attr.toUpperCase()}:</label>
@@ -251,6 +203,24 @@ function AdminItemCreate() {
                               attributes: {
                                 ...editData.attributes,
                                 twoHander: e.target.checked,
+                              },
+                            })
+                          }
+                        />
+                      </label>
+                    </div>
+                    <div className="attribute-item">
+                      <label className="checkbox-label">
+                        Stackable:
+                        <input
+                          type="checkbox"
+                          checked={editData.attributes.stackable}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              attributes: {
+                                ...editData.attributes,
+                                stackable: e.target.checked,
                               },
                             })
                           }

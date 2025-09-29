@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import "./AdminItemDetail.css";
 
 function AdminItemDetail() {
@@ -26,7 +26,9 @@ function AdminItemDetail() {
       crid: 0,
       spd: 0,
       jmp: 0,
+      jcnt: 0,
       twoHander: false,
+      stackable: false,
     },
     skills: [],
   });
@@ -66,7 +68,9 @@ function AdminItemDetail() {
           crid: parsedAttributes.crid || 0,
           spd: parsedAttributes.spd || 0,
           jmp: parsedAttributes.jmp || 0,
+          jcnt: parsedAttributes.jcnt || 0,
           twoHander: parsedAttributes.twoHander || false,
+          stackable: parsedAttributes.stackable || false,
         };
 
         const formattedData = {
@@ -167,6 +171,7 @@ function AdminItemDetail() {
               <div className="item-detail-right">
                 {!isEditing ? (
                   <>
+                    {/* 읽기 모드 */}
                     <div className="detail-row">
                       <label>ID:</label>
                       <span>{item.id}</span>
@@ -241,6 +246,7 @@ function AdminItemDetail() {
                   </>
                 ) : (
                   <>
+                    {/* 수정 모드 */}
                     <div className="detail-row">
                       <label>ID:</label>
                       <input type="text" value={editData.id} disabled />
@@ -314,7 +320,7 @@ function AdminItemDetail() {
                     <div className="detail-section">
                       <h3>속성 (Attributes)</h3>
                       <div className="attributes-grid">
-                        {["atk", "ats", "def", "cri", "crid", "spd", "jmp"].map(
+                        {["atk", "ats", "def", "cri", "crid", "spd", "jmp", "jcnt"].map(
                           (attr) => (
                             <div key={attr} className="attribute-item">
                               <label>{attr.toUpperCase()}:</label>
@@ -346,6 +352,24 @@ function AdminItemDetail() {
                                   attributes: {
                                     ...editData.attributes,
                                     twoHander: e.target.checked,
+                                  },
+                                })
+                              }
+                            />
+                          </label>
+                        </div>
+                        <div className="attribute-item">
+                          <label className="checkbox-label">
+                            Stackable:
+                            <input
+                              type="checkbox"
+                              checked={editData.attributes.stackable}
+                              onChange={(e) =>
+                                setEditData({
+                                  ...editData,
+                                  attributes: {
+                                    ...editData.attributes,
+                                    stackable: e.target.checked,
                                   },
                                 })
                               }
@@ -391,7 +415,7 @@ function AdminItemDetail() {
               </div>
             </div>
 
-            {/* 목록으로 버튼 왼쪽 하단 */}
+            {/* 목록으로 버튼 */}
             <button
               className="back-button bottom-left"
               onClick={() => navigate("/admin/items")}

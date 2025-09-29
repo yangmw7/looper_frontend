@@ -1,8 +1,9 @@
+// src/adminPages/Item/AdminItemList.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import './AdminItemList.css';
 
 function AdminItemList() {
@@ -102,6 +103,12 @@ function AdminItemList() {
                 onClick={() => navigate('/admin/items')}
               >
                 아이템 관리
+              </button>
+              <button
+                className={location.pathname === '/admin/npcs' ? 'active' : ''}
+                onClick={() => navigate('/admin/npcs')}
+              >
+                NPC 관리
               </button>
             </div>
 
