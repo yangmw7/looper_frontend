@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import './AdminUserList.css';
 
 function AdminUserList() {
@@ -88,9 +88,15 @@ function AdminUserList() {
               >
                 아이템 관리
               </button>
+              <button 
+                className={location.pathname === '/admin/npcs' ? 'active' : ''} 
+                onClick={() => navigate('/admin/npcs')}
+              >
+                NPC 관리
+              </button>
             </div>
 
-            {/* ─── 검색 바 (커뮤니티와 동일하게) ───────────────────────── */}
+            {/* ─── 검색 바 ───────────────────────── */}
             <div className="admin-search">
               <select
                 value={searchField}
