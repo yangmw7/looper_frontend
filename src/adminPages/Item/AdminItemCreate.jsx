@@ -22,7 +22,7 @@ function AdminItemCreate() {
   });
 
   const handleIdChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
+    const value = e.target.value.replace(/[^0-9.\-]/g, "");
     setEditData({ ...editData, id: value });
   };
 
@@ -156,7 +156,7 @@ function AdminItemCreate() {
                     type="text"
                     value={editData.id}
                     onChange={handleIdChange}
-                    placeholder="ex) 01001"
+                    placeholder="예) 01001"
                   />
                 </div>
 

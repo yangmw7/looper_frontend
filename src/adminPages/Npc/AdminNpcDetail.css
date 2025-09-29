@@ -1,6 +1,5 @@
 @import '../User/AdminUserList.css';
 
-/* 상세 페이지 헤더 */
 .detail-header {
   display: flex;
   align-items: center;
@@ -23,13 +22,11 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* NPC 상세 콘텐츠 레이아웃 */
 .npc-detail-content {
   display: flex;
   gap: 40px;
 }
 
-/* 왼쪽 영역 - 이미지 */
 .npc-detail-left {
   flex: 0 0 300px;
   position: relative;
@@ -50,12 +47,10 @@
   object-fit: cover;
 }
 
-/* 오른쪽 영역 - 정보 */
 .npc-detail-right {
   flex: 1;
 }
 
-/* 상세 정보 행 */
 .detail-row {
   display: flex;
   align-items: center;
@@ -75,7 +70,6 @@
   word-break: break-word;
 }
 
-/* 입력 및 수정 모드 */
 .detail-row input,
 .detail-row select,
 .detail-row textarea {
@@ -106,7 +100,6 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
-/* 섹션 스타일 */
 .detail-section {
   margin-top: 30px;
   padding-top: 20px;
@@ -119,7 +112,6 @@
   font-size: 1.1rem;
 }
 
-/* 속성 그리드 */
 .attributes-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -145,9 +137,21 @@
 .attribute-item span {
   color: #fff;
   font-weight: 500;
+  font-size: 0.95rem;
 }
 
-/* 특징 리스트 (아이템 스킬과 동일) */
+.attribute-item input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
 .skills-list {
   display: flex;
   flex-wrap: wrap;
@@ -157,19 +161,19 @@
 .skill-tag {
   background: rgba(0, 112, 255, 0.2);
   color: #0070ff;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 4px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .no-data {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
 }
 
-/* 버튼 그룹 */
 .button-group {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   gap: 12px;
   margin-bottom: 40px;
@@ -179,27 +183,56 @@
 .delete-button,
 .save-button,
 .cancel-button {
-  padding: 8px 16px;
+  padding: 10px 24px;
   border-radius: 4px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   border: none;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
-.edit-button { background: #0070ff; color: #fff; }
-.edit-button:hover { background: #0057cc; }
+.edit-button {
+  background: #0070ff;
+  color: #fff;
+}
 
-.delete-button { background: #ff4444; color: #fff; }
-.delete-button:hover { background: #cc0000; }
+.edit-button:hover {
+  background: #0057cc;
+  transform: translateY(-1px);
+}
 
-.save-button { background: #28a745; color: #fff; }
-.save-button:hover { background: #1e7e34; }
+.delete-button {
+  background: #ff4444;
+  color: #fff;
+}
 
-.cancel-button { background: #6c757d; color: #fff; }
-.cancel-button:hover { background: #565e64; }
+.delete-button:hover {
+  background: #cc0000;
+  transform: translateY(-1px);
+}
 
-/* 목록으로 버튼 */
+.save-button {
+  background: #28a745;
+  color: #fff;
+}
+
+.save-button:hover {
+  background: #1e7e34;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: #fff;
+}
+
+.cancel-button:hover {
+  background: #565e64;
+  transform: translateY(-1px);
+}
+
 .back-button.bottom-left {
   display: inline-block;
 }

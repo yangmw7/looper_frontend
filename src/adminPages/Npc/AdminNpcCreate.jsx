@@ -10,7 +10,7 @@ function AdminNpcCreate() {
   const navigate = useNavigate();
   const [editData, setEditData] = useState({
     id: "",
-    name: ["", ""], // [영문, 한글]
+    name: ["", ""],
     hp: 0,
     atk: 0,
     def: 0,
@@ -19,8 +19,15 @@ function AdminNpcCreate() {
   });
 
   const handleSave = async () => {
+    // ID 검증
     if (!editData.id.trim()) {
       alert("NPC ID를 입력해주세요.");
+      return;
+    }
+
+    // 이름 검증
+    if (!editData.name[0].trim() || !editData.name[1].trim()) {
+      alert("모든 값을 입력해야 합니다.");
       return;
     }
 
@@ -39,29 +46,32 @@ function AdminNpcCreate() {
       navigate("/admin/npcs");
     } catch (err) {
       console.error("NPC 생성 에러:", err);
-      if (err.response) {
-        switch (err.response.status) {
-          case 409:
-            alert("이미 존재하는 NPC ID입니다.");
-            break;
-          case 401:
-            alert("인증이 필요합니다. 다시 로그인해주세요.");
-            navigate("/login");
-            break;
-          case 403:
-            alert("관리자 권한이 필요합니다.");
-            break;
-          default:
-            alert(`오류가 발생했습니다. (${err.response.status})`);
+      if (err.response?.status === 400) {
+        const errorMessage = err.response?.data?.message || err.response?.data?.error || "";
+        
+        if (errorMessage.includes("duplicate") || 
+            errorMessage.includes("already exists") || 
+            errorMessage.includes("중복") ||
+            errorMessage.includes("이미 존재")) {
+          alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
+        } else {
+          alert("잘못된 요청입니다. 입력 내용을 확인해주세요.");
         }
+      } else if (err.response?.status === 409) {
+        alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
+      } else if (err.response?.status === 401) {
+        alert("인증이 필요합니다. 다시 로그인해주세요.");
+        navigate("/login");
+      } else if (err.response?.status === 403) {
+        alert("관리자 권한이 필요합니다.");
       } else {
-        alert("네트워크 오류 또는 알 수 없는 오류가 발생했습니다.");
+        alert("NPC 추가 중 오류가 발생했습니다.");
       }
     }
   };
 
   const getNpcImage = () => {
-    return "https://i.namu.wiki/i/xpQatdbCF5G0mhclJgY0oNQU3UtAFhh8nL2McgZh1K-4i7a-IXgMN3BknUrnAq2Y6o7LQae2ZV7avX6Rt0MDiQ.webp";
+    return "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA0MjBfMjcy%2FMDAxNzEzNjE4MDk2NDMy.TJo5oSAsFzMeDKScAZZZWxLGY_Xj4QbTK_VPMcmgmrgg.MWbdnjNykHVl4kc0sv8hGD-Ju5GeaeCM5EmUmgKQcQsg.PNG%2F12.PNG&type=a340";
   };
 
   return (
@@ -93,7 +103,7 @@ function AdminNpcCreate() {
                     onChange={(e) =>
                       setEditData({ ...editData, id: e.target.value })
                     }
-                    placeholder="예: npc_001"
+                    placeholder="예: 10001"
                   />
                 </div>
                 <div className="detail-row">
@@ -124,62 +134,71 @@ function AdminNpcCreate() {
                     placeholder="한글 이름"
                   />
                 </div>
-                <div className="detail-row">
-                  <label>HP:</label>
-                  <input
-                    type="number"
-                    value={editData.hp}
-                    onChange={(e) =>
-                      setEditData({ ...editData, hp: parseFloat(e.target.value) || 0 })
-                    }
-                  />
+
+                <div className="detail-section">
+                  <h3>속성 (Attributes)</h3>
+                  <div className="attributes-grid">
+                    <div className="attribute-item">
+                      <label>HP:</label>
+                      <input
+                        type="number"
+                        value={editData.hp}
+                        onChange={(e) =>
+                          setEditData({ ...editData, hp: parseFloat(e.target.value) || 0 })
+                        }
+                      />
+                    </div>
+                    <div className="attribute-item">
+                      <label>ATK:</label>
+                      <input
+                        type="number"
+                        value={editData.atk}
+                        onChange={(e) =>
+                          setEditData({ ...editData, atk: parseFloat(e.target.value) || 0 })
+                        }
+                      />
+                    </div>
+                    <div className="attribute-item">
+                      <label>DEF:</label>
+                      <input
+                        type="number"
+                        value={editData.def}
+                        onChange={(e) =>
+                          setEditData({ ...editData, def: parseFloat(e.target.value) || 0 })
+                        }
+                      />
+                    </div>
+                    <div className="attribute-item">
+                      <label>SPD:</label>
+                      <input
+                        type="number"
+                        value={editData.spd}
+                        onChange={(e) =>
+                          setEditData({ ...editData, spd: parseFloat(e.target.value) || 0 })
+                        }
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="detail-row">
-                  <label>ATK:</label>
-                  <input
-                    type="number"
-                    value={editData.atk}
-                    onChange={(e) =>
-                      setEditData({ ...editData, atk: parseFloat(e.target.value) || 0 })
-                    }
-                  />
-                </div>
-                <div className="detail-row">
-                  <label>DEF:</label>
-                  <input
-                    type="number"
-                    value={editData.def}
-                    onChange={(e) =>
-                      setEditData({ ...editData, def: parseFloat(e.target.value) || 0 })
-                    }
-                  />
-                </div>
-                <div className="detail-row">
-                  <label>SPD:</label>
-                  <input
-                    type="number"
-                    value={editData.spd}
-                    onChange={(e) =>
-                      setEditData({ ...editData, spd: parseFloat(e.target.value) || 0 })
-                    }
-                  />
-                </div>
-                <div className="detail-row">
-                  <label>특징 (콤마 구분):</label>
-                  <input
-                    type="text"
-                    value={editData.features.join(", ")}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        features: e.target.value
-                          .split(",")
-                          .map((f) => f.trim())
-                          .filter((f) => f),
-                      })
-                    }
-                    placeholder="예: 불속성, 보스, 원거리"
-                  />
+
+                <div className="detail-section">
+                  <h3>특징 (Features)</h3>
+                  <div className="detail-row">
+                    <input
+                      type="text"
+                      value={editData.features.join(", ")}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          features: e.target.value
+                            .split(",")
+                            .map((f) => f.trim())
+                            .filter((f) => f),
+                        })
+                      }
+                      placeholder="예: 불속성, 보스, 원거리"
+                    />
+                  </div>
                 </div>
 
                 <div className="button-group">
