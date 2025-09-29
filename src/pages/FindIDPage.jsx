@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import './FindIDPage.css';
 
 const FindIDPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
@@ -15,7 +16,7 @@ const FindIDPage = () => {
 
     try {
       // 백엔드에 { email } 형태로 POST 요청
-      const response = await axios.post('/find-id', { email });
+      const response = await axios.post(`${API_BASE_URL}/api/find-id`, { email });
 
       const data = response.data;
 
@@ -67,7 +68,7 @@ const FindIDPage = () => {
           </form>
 
           <div className="findid-footer-links">
-            <a href="/login" className="findid-link">
+            <a href="/auth" className="findid-link">
               로그인으로 돌아가기
             </a>
           </div>

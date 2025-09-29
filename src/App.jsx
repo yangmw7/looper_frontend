@@ -16,10 +16,16 @@ import CommunityCreatePage   from './pages/CommunityCreatePage';
 import CommunityEditPage     from './pages/CommunityEditPage';
 
 import AdminRoute            from './components/AdminRoute';
-import AdminUserList         from './adminPages/AdminUserList';
-import AdminItemList         from './adminPages/AdminItemList';
-import AdminItemDetail       from './adminPages/AdminItemDetail';
-import AdminItemCreate       from './adminPages/AdminItemCreate';   // 추가
+import AdminUserList         from './adminPages/User/AdminUserList';
+import AdminItemList         from './adminPages/Item/AdminItemList';
+import AdminItemDetail       from './adminPages/Item/AdminItemDetail';
+import AdminItemCreate       from './adminPages/Item/AdminItemCreate';
+
+// === NPC 관리 추가 ===
+import AdminNpcList          from './adminPages/Npc/AdminNpcList';
+import AdminNpcDetail        from './adminPages/Npc/AdminNpcDetail';
+import AdminNpcCreate        from './adminPages/Npc/AdminNpcCreate';
+
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -60,6 +66,11 @@ function App() {
           <Route path="items" element={<AdminItemList />} />
           <Route path="items/new" element={<AdminItemCreate />} />
           <Route path="items/:id" element={<AdminItemDetail />} />
+
+          {/* NPC 관리 추가 */}
+          <Route path="npcs" element={<AdminNpcList />} />
+          <Route path="npcs/new" element={<AdminNpcCreate />} />
+          <Route path="npcs/:id" element={<AdminNpcDetail />} />       
         </Route>
       </Routes>
     </>
