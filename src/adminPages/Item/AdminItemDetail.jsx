@@ -18,22 +18,14 @@ function AdminItemDetail() {
     rarity: "common",
     name: ["", ""],
     description: ["", ""],
-    attributes: {
-      atk: 0,
-      ats: 0,
-      def: 0,
-      cri: 0,
-      crid: 0,
-      spd: 0,
-      jmp: 0,
-      jcnt: 0,
-      twoHander: false,
-      stackable: false,
-    },
+    attributes: [
+      { stat: "HP", op: "ADD", value: "" }
+    ],
+    twoHander: false,
+    stackable: false,
     skills: [],
   });
 
-  // 아이템 데이터 불러오기
   useEffect(() => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -45,6 +37,9 @@ function AdminItemDetail() {
       })
       .then((res) => {
         const data = res.data;
+        console.log("Raw data from API:", data);
+        console.log("data.attributes type:", typeof data.attributes);
+        console.log("data.attributes value:", data.attributes);
 
         const parsedName = Array.isArray(data.name)
           ? data.name
@@ -52,32 +47,57 @@ function AdminItemDetail() {
         const parsedDescription = Array.isArray(data.description)
           ? data.description
           : JSON.parse(data.description || "[]");
-        const parsedAttributes =
-          typeof data.attributes === "object"
-            ? data.attributes
-            : JSON.parse(data.attributes || "{}");
+        
+        let parsedAttributes;
+        
+        // 먼저 문자열인 경우 파싱
+        let attrData = data.attributes;
+        if (typeof attrData === "string") {
+          try {
+            attrData = JSON.parse(attrData);
+            console.log("Parsed attributes from string:", attrData);
+          } catch (e) {
+            console.error("Failed to parse attributes:", e);
+            attrData = {};
+          }
+        }
+
+        // 파싱된 데이터가 배열인지 객체인지 확인
+        if (Array.isArray(attrData)) {
+          // 배열인 경우 stat을 대문자로 변환
+          parsedAttributes = attrData.map(attr => ({
+            ...attr,
+            stat: attr.stat.toUpperCase()
+          }));
+        } else if (typeof attrData === "object" && attrData !== null) {
+          // 객체 형태를 배열 형태로 변환
+          parsedAttributes = Object.entries(attrData)
+            .filter(([key, value]) => 
+              !["twoHander", "stackable"].includes(key) && 
+              (typeof value === "number" && value !== 0)
+            )
+            .map(([key, value]) => ({
+              stat: key.toUpperCase(),
+              op: "ADD",
+              value: value
+            }));
+        } else {
+          parsedAttributes = [];
+        }
+        
+        console.log("Final parsedAttributes:", parsedAttributes);
+
         const parsedSkills = Array.isArray(data.skills)
           ? data.skills
           : JSON.parse(data.skills || "[]");
-
-        const mergedAttributes = {
-          atk: parsedAttributes.atk || 0,
-          ats: parsedAttributes.ats || 0,
-          def: parsedAttributes.def || 0,
-          cri: parsedAttributes.cri || 0,
-          crid: parsedAttributes.crid || 0,
-          spd: parsedAttributes.spd || 0,
-          jmp: parsedAttributes.jmp || 0,
-          jcnt: parsedAttributes.jcnt || 0,
-          twoHander: parsedAttributes.twoHander || false,
-          stackable: parsedAttributes.stackable || false,
-        };
 
         const formattedData = {
           ...data,
           name: parsedName,
           description: parsedDescription,
-          attributes: mergedAttributes,
+          attributes: parsedAttributes.length > 0 ? parsedAttributes : [{ stat: "HP", op: "ADD", value: "" }],
+          twoHander: data.twoHander || data.attributes?.twoHander || false,
+          stackable: data.stackable || data.attributes?.stackable || false,
           skills: parsedSkills,
         };
 
@@ -91,7 +111,53 @@ function AdminItemDetail() {
       });
   }, [id]);
 
+  const handleAttributeChange = (index, field, value) => {
+    const updated = [...editData.attributes];
+    if (field === "value") {
+      const numericValue = value.replace(/[^0-9.]/g, "");
+      updated[index][field] = numericValue;
+    } else {
+      updated[index][field] = value;
+    }
+    setEditData({ ...editData, attributes: updated });
+  };
+
+  const handleAddAttribute = () => {
+    setEditData({
+      ...editData,
+      attributes: [...editData.attributes, { stat: "HP", op: "ADD", value: "" }],
+    });
+  };
+
+  const handleRemoveAttribute = (index) => {
+    if (editData.attributes.length <= 1) return;
+    const updated = [...editData.attributes];
+    updated.splice(index, 1);
+    setEditData({ ...editData, attributes: updated });
+  };
+
   const handleSave = async () => {
+    // 이름 검증
+    if (!editData.name[0].trim() || !editData.name[1].trim()) {
+      alert("모든 값을 입력해야 합니다.");
+      return;
+    }
+
+    // 설명 검증
+    if (!editData.description[0].trim() || !editData.description[1].trim()) {
+      alert("모든 값을 입력해야 합니다.");
+      return;
+    }
+
+    // Attributes 검증
+    for (let i = 0; i < editData.attributes.length; i++) {
+      const attr = editData.attributes[i];
+      if (!attr.value || attr.value.toString().trim() === "") {
+        alert("모든 값을 입력해야 합니다.");
+        return;
+      }
+    }
+
     const token =
       localStorage.getItem("accessToken") ||
       sessionStorage.getItem("accessToken");
@@ -99,10 +165,10 @@ function AdminItemDetail() {
     try {
       const payload = {
         ...editData,
-        name: editData.name,
-        description: editData.description,
-        attributes: JSON.stringify(editData.attributes),
-        skills: editData.skills,
+        attributes: editData.attributes.map((attr) => ({
+          ...attr,
+          value: parseFloat(attr.value) || 0,
+        })),
       };
 
       await axios.put(`${API_BASE_URL}/api/items/${id}`, payload, {
@@ -171,7 +237,6 @@ function AdminItemDetail() {
               <div className="item-detail-right">
                 {!isEditing ? (
                   <>
-                    {/* 읽기 모드 */}
                     <div className="detail-row">
                       <label>ID:</label>
                       <span>{item.id}</span>
@@ -201,19 +266,36 @@ function AdminItemDetail() {
 
                     <div className="detail-section">
                       <h3>속성 (Attributes)</h3>
-                      <div className="attributes-grid">
-                        {Object.entries(item.attributes).map(([key, value]) => (
-                          <div key={key} className="attribute-item">
-                            <span className="attr-key">{key.toUpperCase()}:</span>
-                            <span className="attr-value">
-                              {typeof value === "boolean"
-                                ? value
-                                  ? "Yes"
-                                  : "No"
-                                : value}
-                            </span>
+                      {item.attributes && item.attributes.length > 0 ? (
+                        <>
+                          <div className="attribute-header">
+                            <span>STAT</span>
+                            <span>OP</span>
+                            <span>VALUE</span>
                           </div>
-                        ))}
+                          {item.attributes.map((attr, idx) => (
+                            <div key={idx} className="attribute-display">
+                              <span className="attr-stat">{attr.stat}</span>
+                              <span className="attr-op">{attr.op}</span>
+                              <span className="attr-value">{attr.value}</span>
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <span className="no-data">속성 없음</span>
+                      )}
+                    </div>
+
+                    <div className="checkbox-section">
+                      <div className="checkbox-item">
+                        <label className="checkbox-label-display">
+                          Two-Hander: {item.twoHander ? "Yes" : "No"}
+                        </label>
+                      </div>
+                      <div className="checkbox-item">
+                        <label className="checkbox-label-display">
+                          Stackable: {item.stackable ? "Yes" : "No"}
+                        </label>
                       </div>
                     </div>
 
@@ -246,7 +328,6 @@ function AdminItemDetail() {
                   </>
                 ) : (
                   <>
-                    {/* 수정 모드 */}
                     <div className="detail-row">
                       <label>ID:</label>
                       <input type="text" value={editData.id} disabled />
@@ -254,6 +335,7 @@ function AdminItemDetail() {
                     <div className="detail-row">
                       <label>레어도:</label>
                       <select
+                        className="rarity-select"
                         value={editData.rarity}
                         onChange={(e) =>
                           setEditData({ ...editData, rarity: e.target.value })
@@ -319,81 +401,113 @@ function AdminItemDetail() {
 
                     <div className="detail-section">
                       <h3>속성 (Attributes)</h3>
-                      <div className="attributes-grid">
-                        {["atk", "ats", "def", "cri", "crid", "spd", "jmp", "jcnt"].map(
-                          (attr) => (
-                            <div key={attr} className="attribute-item">
-                              <label>{attr.toUpperCase()}:</label>
-                              <input
-                                type="number"
-                                value={editData.attributes[attr]}
-                                onChange={(e) =>
-                                  setEditData({
-                                    ...editData,
-                                    attributes: {
-                                      ...editData.attributes,
-                                      [attr]: parseFloat(e.target.value) || 0,
-                                    },
-                                  })
-                                }
-                              />
-                            </div>
-                          )
-                        )}
-                        <div className="attribute-item">
-                          <label className="checkbox-label">
-                            Two-Hander:
-                            <input
-                              type="checkbox"
-                              checked={editData.attributes.twoHander}
-                              onChange={(e) =>
-                                setEditData({
-                                  ...editData,
-                                  attributes: {
-                                    ...editData.attributes,
-                                    twoHander: e.target.checked,
-                                  },
-                                })
-                              }
-                            />
-                          </label>
+                      <div className="attribute-header">
+                        <span>STAT</span>
+                        <span>OP</span>
+                        <span>VALUE</span>
+                      </div>
+
+                      {editData.attributes.map((attr, index) => (
+                        <div key={index} className="attribute-row">
+                          <select
+                            value={attr.stat}
+                            onChange={(e) =>
+                              handleAttributeChange(index, "stat", e.target.value)
+                            }
+                          >
+                            {["HP", "ATK", "ATS", "DEF", "CRI", "CRID", "SPD", "JMP", "JCNT"].map(
+                              (s) => (
+                                <option key={s} value={s}>
+                                  {s}
+                                </option>
+                              )
+                            )}
+                          </select>
+
+                          <select
+                            value={attr.op}
+                            onChange={(e) =>
+                              handleAttributeChange(index, "op", e.target.value)
+                            }
+                          >
+                            <option value="ADD">ADD</option>
+                            <option value="MUL">MUL</option>
+                          </select>
+
+                          <input
+                            type="text"
+                            placeholder="123.456"
+                            value={attr.value}
+                            onChange={(e) =>
+                              handleAttributeChange(index, "value", e.target.value)
+                            }
+                          />
+
+                          <div className="attr-btn-group">
+                            <button
+                              type="button"
+                              className="remove-attr-btn"
+                              onClick={() => handleRemoveAttribute(index)}
+                            >
+                              −
+                            </button>
+                            <button
+                              type="button"
+                              className="add-attr-btn"
+                              onClick={handleAddAttribute}
+                            >
+                              ＋
+                            </button>
+                          </div>
                         </div>
-                        <div className="attribute-item">
-                          <label className="checkbox-label">
-                            Stackable:
-                            <input
-                              type="checkbox"
-                              checked={editData.attributes.stackable}
-                              onChange={(e) =>
-                                setEditData({
-                                  ...editData,
-                                  attributes: {
-                                    ...editData.attributes,
-                                    stackable: e.target.checked,
-                                  },
-                                })
-                              }
-                            />
-                          </label>
-                        </div>
+                      ))}
+                    </div>
+
+                    <div className="checkbox-section">
+                      <div className="checkbox-item">
+                        <label className="checkbox-label">
+                          Two-Hander:
+                          <input
+                            type="checkbox"
+                            checked={editData.twoHander}
+                            onChange={(e) =>
+                              setEditData({ ...editData, twoHander: e.target.checked })
+                            }
+                          />
+                        </label>
+                      </div>
+                      <div className="checkbox-item">
+                        <label className="checkbox-label">
+                          Stackable:
+                          <input
+                            type="checkbox"
+                            checked={editData.stackable}
+                            onChange={(e) =>
+                              setEditData({ ...editData, stackable: e.target.checked })
+                            }
+                          />
+                        </label>
                       </div>
                     </div>
 
-                    <div className="detail-row">
-                      <label>스킬 (콤마 구분):</label>
-                      <input
-                        type="text"
-                        value={editData.skills.join(", ")}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            skills: e.target.value
-                              .split(",")
-                              .map((s) => s.trim())
-                              .filter((s) => s),
-                          })
-                        }
-                      />
+                    <div className="detail-section">
+                      <h3>스킬 (Skills)</h3>
+                      <div className="detail-row">
+                        <input
+                          type="text"
+                          value={editData.skills.join(", ")}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              skills: e.target.value
+                                .split(",")
+                                .map((s) => s.trim())
+                                .filter((s) => s),
+                            })
+                          }
+                          placeholder="스킬1, 스킬2, 스킬3"
+                        />
+                      </div>
                     </div>
 
                     <div className="button-group">
@@ -415,7 +529,6 @@ function AdminItemDetail() {
               </div>
             </div>
 
-            {/* 목록으로 버튼 */}
             <button
               className="back-button bottom-left"
               onClick={() => navigate("/admin/items")}

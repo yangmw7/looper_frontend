@@ -1,6 +1,5 @@
 @import '../User/AdminUserList.css';
 
-/* 상세 페이지 헤더 */
 .detail-header {
   display: flex;
   align-items: center;
@@ -23,13 +22,11 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* 아이템 상세 콘텐츠 레이아웃 */
 .item-detail-content {
   display: flex;
   gap: 40px;
 }
 
-/* 왼쪽 영역 - 이미지 */
 .item-detail-left {
   flex: 0 0 300px;
   position: relative;
@@ -86,12 +83,10 @@
   box-shadow: 0 4px 20px rgba(255, 128, 0, 0.4);
 }
 
-/* 오른쪽 영역 - 정보 */
 .item-detail-right {
   flex: 1;
 }
 
-/* 상세 정보 행 */
 .detail-row {
   display: flex;
   align-items: center;
@@ -111,26 +106,7 @@
   word-break: break-word;
 }
 
-/* 드롭다운 (select) 스타일 */
-.detail-row select {
-  background: rgba(30, 30, 30, 0.95);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 0.95rem;
-  appearance: none;
-  cursor: pointer;
-}
-
-/* 드롭다운 옵션 (option) 스타일 */
-.detail-row select option {
-  background: #222;
-  color: #ffe07a;
-}
-
 .detail-row input,
-.detail-row select,
 .detail-row textarea {
   flex: 1;
   max-width: 500px;
@@ -145,6 +121,33 @@
   text-align: left;
 }
 
+.detail-row select.rarity-select {
+  flex: 1;
+  max-width: 500px;
+  background: rgba(30, 30, 30, 0.95);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 32px 10px 12px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  line-height: 1.4;
+  height: auto;
+  min-height: 38px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.detail-row select.rarity-select option {
+  background: #222;
+  color: #ffe07a;
+}
+
 .detail-row input[type="number"] {
   max-width: 150px;
 }
@@ -154,12 +157,6 @@
   min-height: 60px;
 }
 
-.detail-row input::placeholder,
-.detail-row textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* 레어도 텍스트 스타일 */
 .rarity-text {
   padding: 4px 12px;
   border-radius: 4px;
@@ -193,7 +190,6 @@
   color: #ff8000;
 }
 
-/* 섹션 스타일 */
 .detail-section {
   margin-top: 30px;
   padding-top: 20px;
@@ -206,51 +202,244 @@
   font-size: 1.1rem;
 }
 
-/* 속성 그리드 */
-.attributes-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-top: 12px;
-  margin-bottom: 35px;
-}
-
-.attribute-item {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 10px;
-  border-radius: 4px;
+.attribute-display {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 12px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 490px;
+  transition: all 0.2s;
 }
 
-.attribute-item label {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+.attribute-display:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* 입력 필드 */
-.attribute-item input {
-  width: 100%;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 0.9rem;
+.attr-stat {
+  flex: 0 0 80px;
+  color: #ffe07a;
+  font-weight: 600;
+  font-size: 0.95rem;
   text-align: left;
 }
 
-/* 체크박스 스타일 */
+.attr-op {
+  flex: 0 0 80px;
+  color: #80d8ff;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.attr-value {
+  flex: 0 0 100px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.attribute-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+  max-width: 490px;
+}
+
+.attribute-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.attribute-row select:first-of-type {
+  flex: 0 0 80px;
+  color: #ffe07a;
+  font-weight: 600;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 24px 8px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  appearance: none;
+  line-height: 1.4;
+  height: auto;
+  min-height: 36px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffe07a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 14px;
+}
+
+.attribute-row select:nth-of-type(2) {
+  flex: 0 0 80px;
+  color: #80d8ff;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 24px 8px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  line-height: 1.4;
+  height: auto;
+  min-height: 36px;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2380d8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 14px;
+}
+
+.attribute-row select option {
+  background: #222;
+}
+
+.attribute-row input[type="text"] {
+  flex: 0 0 100px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.attribute-row input::-webkit-outer-spin-button,
+.attribute-row input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.attribute-row input[type="number"] {
+  -moz-appearance: textfield;
+  flex: 0 0 100px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.attr-btn-group {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.add-attr-btn,
+.remove-attr-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.add-attr-btn:hover {
+  background: #28a745;
+  border-color: #28a745;
+  transform: scale(1.05);
+}
+
+.remove-attr-btn:hover {
+  background: #dc3545;
+  border-color: #dc3545;
+  transform: scale(1.05);
+}
+
+.attribute-header {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #ffe07a;
+  max-width: 500px;
+  padding-left: 14px;
+}
+
+.attribute-header span:nth-child(1) {
+  flex: 0 0 80px;
+  text-align: left;
+}
+
+.attribute-header span:nth-child(2) {
+  flex: 0 0 80px;
+  text-align: left;
+}
+
+.attribute-header span:nth-child(3) {
+  flex: 0 0 100px;
+  text-align: center;
+}
+
+.checkbox-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.checkbox-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.checkbox-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
 .checkbox-label {
   display: flex;
   align-items: center;
-  justify-content: center; /* 가운데 정렬 */
+  justify-content: center;
   gap: 8px;
   cursor: pointer;
   width: 100%;
-  height: 100%;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -258,12 +447,38 @@
   height: 20px;
   accent-color: #28a745;
   cursor: pointer;
-  margin: 0; /* 불필요한 margin 제거 */
+  margin: 0;
 }
 
-/* 버튼 그룹 */
+.checkbox-label-display {
+  font-size: 0.9rem;
+  color: #fff;
+  text-align: center;
+  font-weight: 500;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  background: rgba(0, 112, 255, 0.2);
+  color: #0070ff;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.no-data {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
 .button-group {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   gap: 12px;
   margin-bottom: 40px;
@@ -273,12 +488,13 @@
 .delete-button,
 .save-button,
 .cancel-button {
-  padding: 8px 16px;
+  padding: 10px 24px;
   border-radius: 4px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   border: none;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
 .edit-button {
@@ -288,6 +504,7 @@
 
 .edit-button:hover {
   background: #0057cc;
+  transform: translateY(-1px);
 }
 
 .delete-button {
@@ -297,6 +514,7 @@
 
 .delete-button:hover {
   background: #cc0000;
+  transform: translateY(-1px);
 }
 
 .save-button {
@@ -306,6 +524,8 @@
 
 .save-button:hover {
   background: #1e7e34;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
 .cancel-button {
@@ -315,9 +535,9 @@
 
 .cancel-button:hover {
   background: #565e64;
+  transform: translateY(-1px);
 }
 
-/* 목록으로 버튼 위치 */
 .back-button.bottom-left {
   display: inline-block;
 }

@@ -13,25 +13,70 @@ function AdminItemCreate() {
     rarity: "common",
     name: ["", ""],
     description: ["", ""],
-    attributes: {
-      atk: 0,
-      ats: 0,
-      def: 0,
-      cri: 0,
-      crid: 0,
-      spd: 0,
-      jmp: 0,
-      jcnt: 0,
-      twoHander: false,
-      stackable: false,
-    },
+    attributes: [
+      { stat: "HP", op: "ADD", value: "" }
+    ],
+    twoHander: false,
+    stackable: false,
     skills: [],
   });
 
+  const handleIdChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    setEditData({ ...editData, id: value });
+  };
+
+  const handleAttributeChange = (index, field, value) => {
+    const updated = [...editData.attributes];
+    if (field === "value") {
+      const numericValue = value.replace(/[^0-9.]/g, "");
+      updated[index][field] = numericValue;
+    } else {
+      updated[index][field] = value;
+    }
+    setEditData({ ...editData, attributes: updated });
+  };
+
+  const handleAddAttribute = () => {
+    setEditData({
+      ...editData,
+      attributes: [...editData.attributes, { stat: "HP", op: "ADD", value: "" }],
+    });
+  };
+
+  const handleRemoveAttribute = (index) => {
+    if (editData.attributes.length <= 1) return;
+    const updated = [...editData.attributes];
+    updated.splice(index, 1);
+    setEditData({ ...editData, attributes: updated });
+  };
+
   const handleSave = async () => {
+    // ID 검증
     if (!editData.id.trim()) {
       alert("아이템 ID를 입력해주세요.");
       return;
+    }
+
+    // 이름 검증
+    if (!editData.name[0].trim() || !editData.name[1].trim()) {
+      alert("모든 값을 입력해야 합니다.");
+      return;
+    }
+
+    // 설명 검증
+    if (!editData.description[0].trim() || !editData.description[1].trim()) {
+      alert("모든 값을 입력해야 합니다.");
+      return;
+    }
+
+    // Attributes 검증
+    for (let i = 0; i < editData.attributes.length; i++) {
+      const attr = editData.attributes[i];
+      if (!attr.value || attr.value.trim() === "") {
+        alert("모든 값을 입력해야 합니다.");
+        return;
+      }
     }
 
     const token =
@@ -41,10 +86,10 @@ function AdminItemCreate() {
     try {
       const payload = {
         ...editData,
-        name: editData.name,
-        description: editData.description,
-        attributes: JSON.stringify(editData.attributes),
-        skills: editData.skills,
+        attributes: editData.attributes.map((attr) => ({
+          ...attr,
+          value: parseFloat(attr.value) || 0,
+        })),
       };
 
       await axios.post(`${API_BASE_URL}/api/items`, payload, {
@@ -55,12 +100,30 @@ function AdminItemCreate() {
       navigate("/admin/items");
     } catch (err) {
       console.error(err);
-      alert("아이템 추가 중 오류가 발생했습니다.");
+      if (err.response?.status === 400) {
+        // 백엔드에서 보내는 에러 메시지 확인
+        const errorMessage = err.response?.data?.message || err.response?.data?.error || "";
+        
+        // ID 중복 관련 키워드 확인
+        if (errorMessage.includes("duplicate") || 
+            errorMessage.includes("already exists") || 
+            errorMessage.includes("중복") ||
+            errorMessage.includes("이미 존재")) {
+          alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
+        } else {
+          alert("잘못된 요청입니다. 입력 내용을 확인해주세요.");
+        }
+      } else if (err.response?.status === 409) {
+        // 409 Conflict는 일반적으로 중복을 나타냄
+        alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
+      } else {
+        alert("아이템 추가 중 오류가 발생했습니다.");
+      }
     }
   };
 
   const getItemImage = () => {
-    return "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2F77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp&type=sc960_832";
+    return "https://i.namu.wiki/i/77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp";
   };
 
   return (
@@ -92,15 +155,15 @@ function AdminItemCreate() {
                   <input
                     type="text"
                     value={editData.id}
-                    onChange={(e) =>
-                      setEditData({ ...editData, id: e.target.value })
-                    }
-                    placeholder="예: 01002"
+                    onChange={handleIdChange}
+                    placeholder="ex) 01001"
                   />
                 </div>
+
                 <div className="detail-row">
                   <label>레어도:</label>
                   <select
+                    className="rarity-select"
                     value={editData.rarity}
                     onChange={(e) =>
                       setEditData({ ...editData, rarity: e.target.value })
@@ -113,6 +176,7 @@ function AdminItemCreate() {
                     <option value="legendary">Legendary</option>
                   </select>
                 </div>
+
                 <div className="detail-row">
                   <label>이름 (영문):</label>
                   <input
@@ -141,6 +205,7 @@ function AdminItemCreate() {
                     placeholder="한글 이름"
                   />
                 </div>
+
                 <div className="detail-row">
                   <label>설명 (영문):</label>
                   <textarea
@@ -170,82 +235,113 @@ function AdminItemCreate() {
 
                 <div className="detail-section">
                   <h3>속성 (Attributes)</h3>
-                  <div className="attributes-grid">
-                    {["atk", "ats", "def", "cri", "crid", "spd", "jmp", "jcnt"].map(
-                      (attr) => (
-                        <div key={attr} className="attribute-item">
-                          <label>{attr.toUpperCase()}:</label>
-                          <input
-                            type="number"
-                            value={editData.attributes[attr]}
-                            onChange={(e) =>
-                              setEditData({
-                                ...editData,
-                                attributes: {
-                                  ...editData.attributes,
-                                  [attr]: parseFloat(e.target.value) || 0,
-                                },
-                              })
-                            }
-                          />
-                        </div>
-                      )
-                    )}
-                    <div className="attribute-item">
-                      <label className="checkbox-label">
-                        Two-Hander:
-                        <input
-                          type="checkbox"
-                          checked={editData.attributes.twoHander}
-                          onChange={(e) =>
-                            setEditData({
-                              ...editData,
-                              attributes: {
-                                ...editData.attributes,
-                                twoHander: e.target.checked,
-                              },
-                            })
-                          }
-                        />
-                      </label>
+                  <div className="attribute-header">
+                    <span>STAT</span>
+                    <span>OP</span>
+                    <span>VALUE</span>
+                  </div>
+
+                  {editData.attributes.map((attr, index) => (
+                    <div key={index} className="attribute-row">
+                      <select
+                        value={attr.stat}
+                        onChange={(e) =>
+                          handleAttributeChange(index, "stat", e.target.value)
+                        }
+                      >
+                        {["HP", "ATK", "ATS", "DEF", "CRI", "CRID", "SPD", "JMP", "JCNT"].map(
+                          (s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          )
+                        )}
+                      </select>
+
+                      <select
+                        value={attr.op}
+                        onChange={(e) =>
+                          handleAttributeChange(index, "op", e.target.value)
+                        }
+                      >
+                        <option value="ADD">ADD</option>
+                        <option value="MUL">MUL</option>
+                      </select>
+
+                      <input
+                        type="text"
+                        placeholder="123.456"
+                        value={attr.value}
+                        onChange={(e) =>
+                          handleAttributeChange(index, "value", e.target.value)
+                        }
+                      />
+
+                      <div className="attr-btn-group">
+                        <button
+                          type="button"
+                          className="remove-attr-btn"
+                          onClick={() => handleRemoveAttribute(index)}
+                        >
+                          −
+                        </button>
+                        <button
+                          type="button"
+                          className="add-attr-btn"
+                          onClick={handleAddAttribute}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
-                    <div className="attribute-item">
-                      <label className="checkbox-label">
-                        Stackable:
-                        <input
-                          type="checkbox"
-                          checked={editData.attributes.stackable}
-                          onChange={(e) =>
-                            setEditData({
-                              ...editData,
-                              attributes: {
-                                ...editData.attributes,
-                                stackable: e.target.checked,
-                              },
-                            })
-                          }
-                        />
-                      </label>
-                    </div>
+                  ))}
+                </div>
+
+                <div className="checkbox-section">
+                  <div className="checkbox-item">
+                    <label className="checkbox-label">
+                      Two-Hander:
+                      <input
+                        type="checkbox"
+                        checked={editData.twoHander}
+                        onChange={(e) =>
+                          setEditData({ ...editData, twoHander: e.target.checked })
+                        }
+                      />
+                    </label>
+                  </div>
+                  <div className="checkbox-item">
+                    <label className="checkbox-label">
+                      Stackable:
+                      <input
+                        type="checkbox"
+                        checked={editData.stackable}
+                        onChange={(e) =>
+                          setEditData({ ...editData, stackable: e.target.checked })
+                        }
+                      />
+                    </label>
                   </div>
                 </div>
 
-                <div className="detail-row">
-                  <label>스킬 (콤마 구분):</label>
-                  <input
-                    type="text"
-                    value={editData.skills.join(", ")}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        skills: e.target.value
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter((s) => s),
-                      })
-                    }
-                    placeholder="스킬1, 스킬2, 스킬3"
-                  />
+                <div className="detail-section">
+                  <h3>스킬 (Skills)</h3>
+                  <div className="detail-row">
+                    <input
+                      type="text"
+                      value={editData.skills.join(", ")}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          skills: e.target.value
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter((s) => s),
+                        })
+                      }
+                      placeholder="스킬1, 스킬2, 스킬3"
+                    />
+                  </div>
                 </div>
 
                 <div className="button-group">

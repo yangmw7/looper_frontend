@@ -101,7 +101,6 @@
 }
 
 .detail-row input,
-.detail-row select,
 .detail-row textarea {
   flex: 1;
   max-width: 500px;
@@ -114,6 +113,30 @@
   font-family: inherit;
   box-sizing: border-box;
   text-align: left;
+}
+
+.detail-row select.rarity-select {
+  flex: 1;
+  max-width: 500px;
+  background: rgba(30, 30, 30, 0.95);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 32px 8px 12px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.detail-row select.rarity-select option {
+  background: #222;
+  color: #ffe07a;
 }
 
 .detail-row input[type="number"] {
@@ -137,41 +160,186 @@
   font-size: 1.1rem;
 }
 
-.attributes-grid {
+.attribute-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+  max-width: 490px;
+}
+
+.attribute-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.attribute-row select:first-of-type {
+  flex: 0 0 80px;
+  color: #ffe07a;
+  font-weight: 600;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 24px 6px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffe07a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 14px;
+}
+
+.attribute-row select:nth-of-type(2) {
+  flex: 0 0 80px;
+  color: #80d8ff;
+  background: rgba(30, 30, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 24px 6px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2380d8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 14px;
+}
+
+.attribute-row select option {
+  background: #222;
+}
+
+.attribute-row input[type="text"] {
+  flex: 0 0 100px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.attribute-row input::-webkit-outer-spin-button,
+.attribute-row input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.attribute-row input[type="number"] {
+  -moz-appearance: textfield;
+  flex: 0 0 100px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.attr-btn-group {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.add-attr-btn,
+.remove-attr-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.add-attr-btn:hover {
+  background: #28a745;
+  border-color: #28a745;
+  transform: scale(1.05);
+}
+
+.remove-attr-btn:hover {
+  background: #dc3545;
+  border-color: #dc3545;
+  transform: scale(1.05);
+}
+
+.attribute-header {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #ffe07a;
+  max-width: 500px;
+  padding-left: 14px;
+}
+
+.attribute-header span:nth-child(1) {
+  flex: 0 0 77px;
+  text-align: left;
+}
+
+.attribute-header span:nth-child(2) {
+  flex: 0 0 79px;
+  text-align: left;
+}
+
+.attribute-header span:nth-child(3) {
+  flex: 0 0 49px;
+  text-align: center;
+}
+
+.checkbox-section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-top: 12px;
-  margin-bottom: 35px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.attribute-item {
+.checkbox-item {
   background: rgba(255, 255, 255, 0.05);
   padding: 10px;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
-
-.attribute-item input {
-  width: 100%;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 0.9rem;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   cursor: pointer;
   width: 100%;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -179,10 +347,11 @@
   height: 20px;
   accent-color: #28a745;
   cursor: pointer;
+  margin: 0;
 }
 
 .button-group {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   gap: 12px;
   margin-bottom: 40px;
@@ -191,30 +360,36 @@
 .save-button {
   background: #28a745;
   color: #fff;
-  padding: 8px 16px;
+  padding: 10px 24px;
   border-radius: 4px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   border: none;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
 .save-button:hover {
   background: #1e7e34;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
 .cancel-button {
   background: #6c757d;
   color: #fff;
-  padding: 8px 16px;
+  padding: 10px 24px;
   border-radius: 4px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   border: none;
+  transition: all 0.2s;
 }
 
 .cancel-button:hover {
   background: #565e64;
+  transform: translateY(-1px);
 }
 
 .back-button.bottom-left {
