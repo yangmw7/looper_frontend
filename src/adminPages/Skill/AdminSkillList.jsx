@@ -1,34 +1,28 @@
-// src/adminPages/Item/AdminItemList.jsx
+// src/adminPages/Skill/AdminSkillList.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import './AdminItemList.css';
+import './AdminSkillList.css';
 
-function AdminItemList() {
+function AdminSkillList() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const location = useLocation();
-  const [items, setItems] = useState([]);
+  const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const itemsPerPage = 20; // 5x4 그리드
+  const skillsPerPage = 20; // 5x4 그리드
 
-  // 1) 아이템 데이터 불러오기
+  // 1) 스킬 데이터 불러오기
   useEffect(() => {
-    const token =
-      localStorage.getItem('accessToken') ||
-      sessionStorage.getItem('accessToken');
-
     axios
-      .get(`${API_BASE_URL}/api/items`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get(`${API_BASE_URL}/api/skills`)
       .then((res) => {
-        setItems(res.data);
+        setSkills(res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -37,21 +31,19 @@ function AdminItemList() {
       });
   }, []);
 
-  // 2) 검색 필터링 (name, description은 배열)
-  const filtered = items.filter((item) => {
+  // 2) 검색 필터링 (id, name[], description[])
+  const filtered = skills.filter((skill) => {
     if (!searchQuery.trim()) return true;
     const searchLower = searchQuery.toLowerCase();
 
     try {
-      const names = Array.isArray(item.name) ? item.name : [];
-      const descriptions = Array.isArray(item.description)
-        ? item.description
-        : [];
+      const names = Array.isArray(skill.name) ? skill.name : [];
+      const descs = Array.isArray(skill.description) ? skill.description : [];
 
       return (
-        names.some((n) => n.toLowerCase().includes(searchLower)) ||
-        descriptions.some((d) => d.toLowerCase().includes(searchLower)) ||
-        item.id.toLowerCase().includes(searchLower)
+        (skill.id && skill.id.toLowerCase().includes(searchLower)) ||
+        names.some((n) => n && n.toLowerCase().includes(searchLower)) ||
+        descs.some((d) => d && d.toLowerCase().includes(searchLower))
       );
     } catch {
       return false;
@@ -59,27 +51,27 @@ function AdminItemList() {
   });
 
   // 3) 페이징
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const currentItems = filtered.slice(startIdx, startIdx + itemsPerPage);
+  const totalPages = Math.ceil(filtered.length / skillsPerPage);
+  const startIdx = (currentPage - 1) * skillsPerPage;
+  const currentSkills = filtered.slice(startIdx, startIdx + skillsPerPage);
 
-  // 4) 아이템 클릭 핸들러
-  const handleItemClick = (itemId) => {
-    navigate(`/admin/items/${itemId}`);
+  // 4) 스킬 클릭 핸들러
+  const handleSkillClick = (skillId) => {
+    navigate(`/admin/skills/${skillId}`);
   };
 
-  // 5) 아이템 이름 가져오기 (한글 우선)
-  const getItemName = (item) => {
-    if (!item.name) return 'Unknown Item';
-    if (Array.isArray(item.name)) {
-      return item.name[1] || item.name[0] || 'Unknown Item';
+  // 5) 스킬 이름 (한글 우선 표시)
+  const getSkillName = (skill) => {
+    if (!skill.name) return 'Unknown Skill';
+    if (Array.isArray(skill.name)) {
+      return skill.name[1] || skill.name[0] || 'Unknown Skill';
     }
-    return item.name; // 문자열일 경우 fallback
+    return skill.name; // 혹시 문자열로 내려오면 그대로 출력
   };
 
-  // 6) 아이템 이미지 경로 생성 (임시 공통 이미지)
-  const getItemImage = (itemId) => {
-    return "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2F77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp&type=sc960_832";
+  // 6) 스킬 이미지 (임시)
+  const getSkillImage = () => {
+    return "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMTZfNDAg%2FMDAxNjM5NjQxNzUxMDc5.8Z45VaLbczbt6T0CnwI5852sOiWcu9zqPby1vdSSVJ0g.wFZHYWgSfK9TsAXqEPG71DPVaz1USCDCw0aImGSBhAcg.PNG.glory8743%2F1231312.png&type=sc960_832";
   };
 
   return (
@@ -88,7 +80,7 @@ function AdminItemList() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <h2 className="admin-title">아이템 관리</h2>
+            <h2 className="admin-title">스킬 관리</h2>
 
             {/* ─── 탭 네비게이션 ───────────────────────── */}
             <div className="admin-tabs">
@@ -122,7 +114,7 @@ function AdminItemList() {
             <div className="admin-search">
               <input
                 type="text"
-                placeholder="아이템 검색 (이름, ID)"
+                placeholder="스킬 검색 (이름, ID, 설명)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && setCurrentPage(1)}
@@ -130,43 +122,38 @@ function AdminItemList() {
               <button onClick={() => setCurrentPage(1)}>검색</button>
               <button
                 className="create-button"
-                onClick={() => navigate('/admin/items/new')}
+                onClick={() => navigate('/admin/skills/new')}
               >
-                아이템 추가
+                스킬 추가
               </button>
             </div>
 
             {loading && <p className="loading">로딩 중...</p>}
-            {error && (
-              <p className="error-message">에러 발생: {error.message}</p>
-            )}
+            {error && <p className="error-message">에러 발생: {error.message}</p>}
 
             {!loading && !error && (
               <>
-                {/* 아이템 그리드 (5x4) */}
-                <div className="items-grid">
-                  {currentItems.map((item) => (
+                {/* 스킬 그리드 (5x4) */}
+                <div className="skills-grid">
+                  {currentSkills.map((skill) => (
                     <div
-                      key={item.id}
-                      className="item-card"
-                      onClick={() => handleItemClick(item.id)}
+                      key={skill.id}
+                      className="skill-card"
+                      onClick={() => handleSkillClick(skill.id)}
                     >
-                      <div className="item-image-wrapper">
+                      <div className="skill-image-wrapper">
                         <img
-                          src={getItemImage(item.id)}
-                          alt={getItemName(item)}
+                          src={getSkillImage(skill.id)}
+                          alt={getSkillName(skill)}
                           onError={(e) => {
                             e.target.src =
-                              "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2F77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp&type=sc960_832";
+                              'https://cdn-icons-png.flaticon.com/512/616/616408.png';
                           }}
                         />
-                        <div className={`item-rarity ${item.rarity}`}>
-                          {item.rarity}
-                        </div>
                       </div>
-                      <div className="item-info">
-                        <div className="item-id">{item.id}</div>
-                        <div className="item-name">{getItemName(item)}</div>
+                      <div className="skill-info">
+                        <div className="skill-id">{skill.id}</div>
+                        <div className="skill-name">{getSkillName(skill)}</div>
                       </div>
                     </div>
                   ))}
@@ -210,4 +197,4 @@ function AdminItemList() {
   );
 }
 
-export default AdminItemList;
+export default AdminSkillList;

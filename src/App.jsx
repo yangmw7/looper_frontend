@@ -17,15 +17,19 @@ import CommunityEditPage     from './pages/CommunityEditPage';
 
 import AdminRoute            from './components/AdminRoute';
 import AdminUserList         from './adminPages/User/AdminUserList';
+
 import AdminItemList         from './adminPages/Item/AdminItemList';
 import AdminItemDetail       from './adminPages/Item/AdminItemDetail';
 import AdminItemCreate       from './adminPages/Item/AdminItemCreate';
 
-// === NPC 관리 추가 ===
 import AdminNpcList          from './adminPages/Npc/AdminNpcList';
 import AdminNpcDetail        from './adminPages/Npc/AdminNpcDetail';
 import AdminNpcCreate        from './adminPages/Npc/AdminNpcCreate';
 
+// === Skill 관리 추가 ===
+import AdminSkillList        from './adminPages/Skill/AdminSkillList';
+import AdminSkillDetail      from './adminPages/Skill/AdminSkillDetail';
+import AdminSkillCreate      from './adminPages/Skill/AdminSkillCreate';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -36,7 +40,7 @@ function App() {
       <Routes>
         {/* 일반 유저 라우트 */}
         <Route path="/"                       element={<MainPage />} />
-        <Route path="/auth"                  element={<AuthPage />} />
+        <Route path="/auth"                   element={<AuthPage />} />
 
         {/* ID 찾기 */}
         <Route path="/find-id"                element={<FindIDPage />} />
@@ -67,10 +71,15 @@ function App() {
           <Route path="items/new" element={<AdminItemCreate />} />
           <Route path="items/:id" element={<AdminItemDetail />} />
 
-          {/* NPC 관리 추가 */}
+          {/* NPC 관리 */}
           <Route path="npcs" element={<AdminNpcList />} />
           <Route path="npcs/new" element={<AdminNpcCreate />} />
-          <Route path="npcs/:id" element={<AdminNpcDetail />} />       
+          <Route path="npcs/:id" element={<AdminNpcDetail />} />  
+
+          {/* Skill 관리 */}
+          <Route path="skills" element={<AdminSkillList />} />
+          <Route path="skills/new" element={<AdminSkillCreate />} />
+          <Route path="skills/:id" element={<AdminSkillDetail />} />
         </Route>
       </Routes>
     </>
