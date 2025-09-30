@@ -72,7 +72,7 @@ function AdminUserList() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <h2 className="admin-title">관리자 페이지</h2>
+            <h2 className="admin-title">회원 관리</h2>
             
             {/* ─── 탭 네비게이션 추가 ───────────────────────── */}
             <div className="admin-tabs">

@@ -6,9 +6,11 @@ import './Header.css';
 
 function Header() {
   const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [nickname, setNickname] = useState(null);
   const [roles, setRoles] = useState([]);
 
+  // 토큰에서 사용자 정보 디코딩
   useEffect(() => {
     const token =
       localStorage.getItem('accessToken') ||
@@ -39,13 +41,56 @@ function Header() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    sessionStorage.removeItem('accessToken');
-    delete axios.defaults.headers.common['Authorization'];
-    navigate('/');
-    setNickname(null);
-    setRoles([]);
+  // 로그아웃
+  const handleLogout = async () => {
+    try {
+      const token =
+        localStorage.getItem('accessToken') ||
+        sessionStorage.getItem('accessToken');
+
+      if (!token) {
+        alert('이미 로그아웃 상태입니다.');
+        return;
+      }
+
+      // JWT payload에서 username 추출
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const payload = JSON.parse(jsonPayload);
+      const username = payload.sub || payload.username;
+
+      // 백엔드 로그아웃 API 호출 → RefreshToken 삭제
+      await axios.post(
+        `${API_BASE_URL}/api/auth/logout`,
+        { username }, // username 같이 보냄
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // 프론트 스토리지에서 토큰 제거
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('nickname');
+      localStorage.removeItem('roles');
+
+      sessionStorage.removeItem('accessToken');
+      sessionStorage.removeItem('refreshToken');
+
+      delete axios.defaults.headers.common['Authorization'];
+
+      alert('로그아웃 완료');
+      navigate('/');
+      setNickname(null);
+      setRoles([]);
+    } catch (err) {
+      console.error('로그아웃 실패:', err);
+      alert('로그아웃 실패');
+    }
   };
 
   return (
@@ -83,10 +128,7 @@ function Header() {
           </>
         )}
 
-        <button
-          className="play-button"
-          onClick={() => navigate('/play')}
-        >
+        <button className="play-button" onClick={() => navigate('/play')}>
           지금 플레이
         </button>
       </div>
