@@ -59,9 +59,6 @@ function AdminNpcCreate() {
         }
       } else if (err.response?.status === 409) {
         alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
-      } else if (err.response?.status === 401) {
-        alert("인증이 필요합니다. 다시 로그인해주세요.");
-        navigate("/login");
       } else if (err.response?.status === 403) {
         alert("관리자 권한이 필요합니다.");
       } else {

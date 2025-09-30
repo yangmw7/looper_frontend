@@ -94,6 +94,12 @@ function AdminUserList() {
               >
                 NPC 관리
               </button>
+              <button
+                className={location.pathname === '/admin/skills' ? 'active' : ''}
+                onClick={() => navigate('/admin/skills')}
+              >
+                스킬 관리
+              </button>
             </div>
 
             {/* ─── 검색 바 ───────────────────────── */}
