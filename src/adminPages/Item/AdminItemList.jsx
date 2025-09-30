@@ -88,7 +88,7 @@ function AdminItemList() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <h2 className="admin-title">관리자 페이지</h2>
+            <h2 className="admin-title">아이템 관리</h2>
 
             {/* ─── 탭 네비게이션 ───────────────────────── */}
             <div className="admin-tabs">

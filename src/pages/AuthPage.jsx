@@ -27,6 +27,7 @@ const AuthPage = () => {
     confirmPassword: '',
   });
 
+  // 이미 로그인 되어 있으면 홈으로 이동
   useEffect(() => {
     const storedToken =
       localStorage.getItem('accessToken') ||
@@ -50,45 +51,31 @@ const AuthPage = () => {
     setSignupForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ 로그인
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/login`, {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         username: loginCredentials.username,
         password: loginCredentials.password,
       });
 
-      let token =
-        typeof response.data === 'string'
-          ? response.data
-          : response.data.token;
+      const { accessToken, refreshToken, nickname, roles } = response.data;
 
       if (loginCredentials.remember) {
-        localStorage.setItem('accessToken', token);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
       } else {
-        sessionStorage.setItem('accessToken', token);
-      }
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-      // JWT 디코딩 및 roles 저장
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
-        );
-        const payload = JSON.parse(jsonPayload);
-        const roles = payload.roles || [];
-        localStorage.setItem('roles', JSON.stringify(roles));
-      } catch (err) {
-        console.error('JWT 디코딩 실패:', err);
+        sessionStorage.setItem('accessToken', accessToken);
+        sessionStorage.setItem('refreshToken', refreshToken);
       }
 
+      localStorage.setItem('nickname', nickname);
+      localStorage.setItem('roles', JSON.stringify(roles));
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
       navigate('/');
     } catch (err) {
       alert(
@@ -101,6 +88,7 @@ const AuthPage = () => {
     }
   };
 
+  // ✅ 회원가입
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     if (signupForm.password !== signupForm.confirmPassword) {
@@ -147,20 +135,20 @@ const AuthPage = () => {
         {/* 상단 토글 영역 */}
         <div className="toggle-header">
           <div className="toggle-labels">
-            <span 
+            <span
               className={`toggle-label ${isLogin ? 'active' : ''}`}
               onClick={() => setIsLogin(true)}
             >
               LOG IN
             </span>
-            <span 
+            <span
               className={`toggle-label ${!isLogin ? 'active' : ''}`}
               onClick={() => setIsLogin(false)}
             >
               SIGN UP
             </span>
           </div>
-          
+
           <div className="toggle-switch" onClick={toggleMode}>
             <div className={`toggle-slider ${isLogin ? 'login' : 'signup'}`}>
               <div className="arrow-icon"></div>
@@ -222,7 +210,7 @@ const AuthPage = () => {
 
                 <div className="forgot-id">
                   <a href="/find-id">아이디를 잊으셨나요?</a>
-                </div>  
+                </div>
                 <div className="forgot-password">
                   <a href="/find-password">비밀번호를 잊으셨나요?</a>
                 </div>
@@ -233,8 +221,6 @@ const AuthPage = () => {
             <div className="card-back">
               <h2 className="auth-title">SIGN UP</h2>
               <form onSubmit={handleSignupSubmit}>
-                
-
                 <div className="input-group">
                   <FaEnvelope className="input-icon" />
                   <input
@@ -259,7 +245,7 @@ const AuthPage = () => {
                     onChange={handleSignupChange}
                     required
                   />
-                </div> 
+                </div>
 
                 <div className="input-group">
                   <FaUser className="input-icon" />
