@@ -26,17 +26,20 @@ import AdminNpcList          from './adminPages/Npc/AdminNpcList';
 import AdminNpcDetail        from './adminPages/Npc/AdminNpcDetail';
 import AdminNpcCreate        from './adminPages/Npc/AdminNpcCreate';
 
-// === Skill 관리 추가 ===
+// === Skill 관리 ===
 import AdminSkillList        from './adminPages/Skill/AdminSkillList';
 import AdminSkillDetail      from './adminPages/Skill/AdminSkillDetail';
 import AdminSkillCreate      from './adminPages/Skill/AdminSkillCreate';
+
+// === Report 관리 추가 ===
+import AdminReportList       from './adminPages/Report/AdminReportList';
+import AdminReportDetail     from './adminPages/Report/AdminReportDetail';
 
 function App() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {/* 라우트 */}
       <Routes>
         {/* 일반 유저 라우트 */}
         <Route path="/"                       element={<MainPage />} />
@@ -80,6 +83,10 @@ function App() {
           <Route path="skills" element={<AdminSkillList />} />
           <Route path="skills/new" element={<AdminSkillCreate />} />
           <Route path="skills/:id" element={<AdminSkillDetail />} />
+
+          {/* Report 관리 */}
+          <Route path="reports" element={<AdminReportList />} />
+          <Route path="reports/:type/:id" element={<AdminReportDetail />} />
         </Route>
       </Routes>
     </>

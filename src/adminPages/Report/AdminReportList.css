@@ -1,0 +1,36 @@
+@import '../User/AdminUserList.css';
+
+.report-filter {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+.report-table th {
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+.report-table tr {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.report-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
