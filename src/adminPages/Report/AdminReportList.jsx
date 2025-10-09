@@ -1,4 +1,3 @@
-// src/adminPages/Report/AdminReportList.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -16,7 +15,7 @@ function AdminReportList() {
   const [error, setError] = useState(null);
   const [statusFilter, setStatusFilter] = useState("ALL");
 
-  // ✅ 상태 한글 매핑
+  // 상태 한글 매핑
   const statusLabels = {
     ALL: "전체",
     PENDING: "접수",
@@ -26,7 +25,7 @@ function AdminReportList() {
     RESOLVED: "종결",
   };
 
-  // ✅ 신고 사유 한글 매핑
+  // 신고 사유 한글 매핑
   const reasonLabels = {
     SPAM: "스팸/광고",
     ABUSE: "욕설/혐오",
@@ -37,19 +36,32 @@ function AdminReportList() {
     OTHER: "기타",
   };
 
-  // 1) 신고 데이터 불러오기
+  // 1) 신고 데이터 불러오기 (Authorization 헤더 포함)
   useEffect(() => {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+
+    if (!token) {
+      setError(new Error("로그인이 필요합니다."));
+      setLoading(false);
+      return;
+    }
+
     axios
-      .get(`${API_BASE_URL}/api/admin/reports/posts`) // 기본: 게시글 신고
+      .get(`${API_BASE_URL}/api/admin/reports/posts`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setReports(res.data.content || []);
         setLoading(false);
       })
       .catch((err) => {
+        console.error("신고 목록 요청 실패:", err);
         setError(err);
         setLoading(false);
       });
-  }, []);
+  }, [API_BASE_URL]);
 
   // 2) 필터링
   const filtered = reports.filter((r) => {
@@ -70,20 +82,67 @@ function AdminReportList() {
           <div className="admin-container">
             <h2 className="admin-title">신고 관리</h2>
 
+            {/* ─── 탭 네비게이션 ───────────────────────── */}
+            <div className="admin-tabs">
+              <button
+                className={location.pathname === "/admin/users" ? "active" : ""}
+                onClick={() => navigate("/admin/users")}
+              >
+                회원 관리
+              </button>
+              <button
+                className={location.pathname === "/admin/items" ? "active" : ""}
+                onClick={() => navigate("/admin/items")}
+              >
+                아이템 관리
+              </button>
+              <button
+                className={location.pathname === "/admin/npcs" ? "active" : ""}
+                onClick={() => navigate("/admin/npcs")}
+              >
+                NPC 관리
+              </button>
+              <button
+                className={location.pathname === "/admin/skills" ? "active" : ""}
+                onClick={() => navigate("/admin/skills")}
+              >
+                스킬 관리
+              </button>
+              <button
+                className={location.pathname.startsWith("/admin/reports") ? "active" : ""}
+                onClick={() => navigate("/admin/reports")}
+              >
+                신고 관리
+              </button>
+            </div>
+
             {/* 상태 필터 */}
             <div className="report-filter">
               <label>상태 필터: </label>
-              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
                 {Object.entries(statusLabels).map(([key, label]) => (
-                  <option key={key} value={key}>{label}</option>
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
                 ))}
               </select>
             </div>
 
-            {/* 테이블 */}
+            {/* 로딩/에러 처리 */}
             {loading && <p className="loading">로딩 중...</p>}
-            {error && <p className="error-message">에러 발생: {error.message}</p>}
+            {error && (
+              <p className="error-message">
+                에러 발생:{" "}
+                {error.response?.status === 403
+                  ? "접근 권한이 없습니다. 관리자 계정으로 로그인하세요."
+                  : error.message}
+              </p>
+            )}
 
+            {/* 테이블 */}
             {!loading && !error && (
               <table className="report-table">
                 <thead>
@@ -116,7 +175,9 @@ function AdminReportList() {
                         <td>{r.reporterNickname}</td>
                         <td>{r.reportedNickname}</td>
                         <td>
-                          {Array.from(r.reasons).map((reason) => reasonLabels[reason] || reason).join(", ")}
+                          {Array.from(r.reasons)
+                            .map((reason) => reasonLabels[reason] || reason)
+                            .join(", ")}
                         </td>
                         <td>{statusLabels[r.status] || r.status}</td>
                         <td>{new Date(r.createdAt).toLocaleString()}</td>

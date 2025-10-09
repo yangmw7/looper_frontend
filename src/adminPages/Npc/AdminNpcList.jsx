@@ -74,8 +74,12 @@ function AdminNpcList() {
     return npc.name;
   };
 
-  // 6) NPC 이미지 (임시)
-  const getNpcImage = (npcId) => {
+  // ✅ 6) NPC 이미지 가져오기 (Cloudinary 우선)
+  const getNpcImage = (npc) => {
+    if (npc.imageUrl) {
+      return npc.imageUrl; // Cloudinary 이미지 URL 사용
+    }
+    // 기본 이미지
     return "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA0MjBfMjcy%2FMDAxNzEzNjE4MDk2NDMy.TJo5oSAsFzMeDKScAZZZWxLGY_Xj4QbTK_VPMcmgmrgg.MWbdnjNykHVl4kc0sv8hGD-Ju5GeaeCM5EmUmgKQcQsg.PNG%2F12.PNG&type=a340";
   };
 
@@ -107,7 +111,7 @@ function AdminNpcList() {
               >
                 NPC 관리
               </button>
-                            <button
+              <button
                 className={location.pathname === '/admin/skills' ? 'active' : ''}
                 onClick={() => navigate('/admin/skills')}
               >
@@ -154,11 +158,11 @@ function AdminNpcList() {
                     >
                       <div className="npc-image-wrapper">
                         <img
-                          src={getNpcImage(npc.id)}
+                          src={getNpcImage(npc)}
                           alt={getNpcName(npc)}
                           onError={(e) => {
                             e.target.src =
-                              'https://i.namu.wiki/i/xpQatdbCF5G0mhclJgY0oNQU3UtAFhh8nL2McgZh1K-4i7a-IXgMN3BknUrnAq2Y6o7LQae2ZV7avX6Rt0MDiQ.webp';
+                              "https://i.namu.wiki/i/xpQatdbCF5G0mhclJgY0oNQU3UtAFhh8nL2McgZh1K-4i7a-IXgMN3BknUrnAq2Y6o7LQae2ZV7avX6Rt0MDiQ.webp";
                           }}
                         />
                       </div>
