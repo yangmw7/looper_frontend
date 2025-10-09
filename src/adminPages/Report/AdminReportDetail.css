@@ -1,0 +1,97 @@
+@import '../User/AdminUserList.css';
+
+/* ─────────────────────────────────────────────── */
+/* 신고 상세 컨테이너 */
+.report-detail-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  line-height: 1.6;
+}
+
+.report-detail-box p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.report-detail-box b {
+  color: #7ad1ff;
+  margin-right: 6px;
+}
+
+/* ─────────────────────────────────────────────── */
+/* 상태 변경 섹션 */
+.report-actions {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-actions label {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.report-actions select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.report-actions textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 0.95rem;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.report-actions button {
+  align-self: flex-end;
+  padding: 10px 18px;
+  background: #2a7cff;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.report-actions button:hover {
+  background: #1a5cd8;
+  transform: translateY(-2px);
+}
+
+.report-actions button:active {
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────── */
+/* 반응형 */
+@media (max-width: 768px) {
+  .report-detail-box {
+    padding: 16px;
+    font-size: 0.9rem;
+  }
+
+  .report-actions button {
+    width: 100%;
+    text-align: center;
+  }
+}

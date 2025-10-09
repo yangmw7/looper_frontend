@@ -123,8 +123,7 @@ function Header() {
           </>
         ) : (
           <>
-            <Link to="/auth">로그인</Link>
-            <Link to="/auth">회원가입</Link>
+            <Link to="/auth">로그인 / 회원가입</Link>
           </>
         )}
 

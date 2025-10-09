@@ -113,6 +113,12 @@ function AdminNpcList() {
               >
                 스킬 관리
               </button>
+              <button
+                className={location.pathname.startsWith("/admin/reports") ? "active" : ""}
+                onClick={() => navigate("/admin/reports")}
+              >
+                신고 관리
+              </button>
             </div>
 
             {/* ─── 검색 바 + 추가 버튼 ───────────────────────── */}

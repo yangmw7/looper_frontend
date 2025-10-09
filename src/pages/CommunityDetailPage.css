@@ -56,7 +56,6 @@
   margin-bottom: 8px;
   letter-spacing: 1px;
 }
-
 .detail-subtitle {
   font-size: 1rem;
   color: #ccc;
@@ -65,7 +64,7 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 4) 상세 컨테이너: 반투명 배경 + 그림자 + 패딩 */
+/* 4) 상세 컨테이너 */
 .detail-container {
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 12px;
@@ -84,8 +83,6 @@
   position: relative;
   line-height: 1.3;
 }
-
-/* 제목 아래에 얇은 밑줄 강조선 */
 .post-title::after {
   content: '';
   position: absolute;
@@ -98,7 +95,7 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 6) 메타 정보 (작성자 · 조회 · 작성일) */
+/* 6) 메타 정보 */
 .post-meta {
   display: flex;
   gap: 40px;
@@ -108,30 +105,13 @@
   color: #ccc;
   flex-wrap: wrap;
 }
-
-/* 메타 각각에 아이콘을 미리 배치 */
-.meta-author::before {
-  content: '👤';
-  margin-right: 6px;
-}
-
-.meta-views::before {
-  content: '👁️';
-  margin-right: 6px;
-}
-
-.meta-date::before {
-  content: '📅';
-  margin-right: 6px;
-}
-
-/* 텍스트에 마우스를 올리면 약간 색 변화를 줘서 부드럽게 보이도록 */
-.post-meta span:hover {
-  color: #fff;
-}
+.meta-author::before { content: '👤'; margin-right: 6px; }
+.meta-views::before { content: '👁️'; margin-right: 6px; }
+.meta-date::before { content: '📅'; margin-right: 6px; }
+.post-meta span:hover { color: #fff; }
 
 /* ────────────────────────────────────────────────────── */
-/* 7) 본문 내용 */
+/* 7) 본문 */
 .post-content {
   background-color: rgba(255, 255, 255, 0.1);
   border-left: 4px solid #ffe07a;
@@ -143,29 +123,23 @@
   margin-bottom: 36px;
   position: relative;
 }
-
-/* 본문 배경 위에 약간의 반투명 그림자 */
 .post-content::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   z-index: -1;
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 8) 버튼 그룹: “목록으로”, “수정”, “삭제” */
+/* 8) 버튼 그룹 */
 .button-group {
   display: flex;
   gap: 16px;
   justify-content: flex-end;
 }
-
-/* 버튼 기본 스타일 */
 .button-group button {
   padding: 10px 20px;
   font-size: 0.95rem;
@@ -176,49 +150,31 @@
   transition: background-color 0.2s ease, transform 0.1s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
+.btn-back { background-color: #444; color: #fff; }
+.btn-back:hover { background-color: #555; transform: translateY(-1px); }
+.btn-edit { background-color: #2a7cff; color: #fff; }
+.btn-edit:hover { background-color: #1a5cd8; transform: translateY(-1px); }
+.btn-delete { background-color: #ff4d4d; color: #fff; }
+.btn-delete:hover { background-color: #e04343; transform: translateY(-1px); }
 
-/* “목록으로” 버튼 */
-.btn-back {
-  background-color: #444;
+/* 🚨 신고 버튼 */
+.btn-report {
+  background-color: #ff9800;
   color: #fff;
 }
-
-.btn-back:hover {
-  background-color: #555;
-  transform: translateY(-1px);
-}
-
-/* “수정” 버튼 */
-.btn-edit {
-  background-color: #2a7cff;
-  color: #fff;
-}
-
-.btn-edit:hover {
-  background-color: #1a5cd8;
-  transform: translateY(-1px);
-}
-
-/* “삭제” 버튼 */
-.btn-delete {
-  background-color: #ff4d4d;
-  color: #fff;
-}
-
-.btn-delete:hover {
-  background-color: #e04343;
+.btn-report:hover {
+  background-color: #e68900;
   transform: translateY(-1px);
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 9) 댓글 입력 영역 */
+/* 9) 댓글 입력 */
 .comment-input-container {
   display: flex;
   align-items: flex-start;
   margin-top: 40px;
   gap: 12px;
 }
-
 .comment-input {
   flex: 1;
   min-height: 80px;
@@ -232,17 +188,12 @@
   line-height: 1.4;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
-
-.comment-input::placeholder {
-  color: #bbb;
-}
-
-/* 댓글 등록 버튼을 세련되게 */
+.comment-input::placeholder { color: #bbb; }
 .btn-comment-submit {
   padding: 0 24px;
   height: 40px;
-  background-color: #ffc947;      /* 밝은 노란색 포인트 */
-  color: #222;                    /* 어두운 텍스트로 가독성 확보 */
+  background-color: #ffc947;
+  color: #222;
   font-size: 0.95rem;
   font-weight: 600;
   border: none;
@@ -250,23 +201,15 @@
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: background-color 0.2s ease, transform 0.1s ease;
-  align-self: flex-end;           /* 입력창 하단에 붙도록 정렬 */
+  align-self: flex-end;
 }
-
-.btn-comment-submit:hover {
-  background-color: #e6b337;     /* 호버 시 어두운 노란색 */
-  transform: translateY(-1px);
-}
-
-/* 버튼 비활성화 상태 */
+.btn-comment-submit:hover { background-color: #e6b337; transform: translateY(-1px); }
 .btn-comment-submit:disabled {
   background-color: rgba(255, 201, 71, 0.5);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
-
-/* “로그인해주세요” 메시지 */
 .comment-login-prompt {
   margin-top: 40px;
   font-size: 1rem;
@@ -275,11 +218,8 @@
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 10) 댓글 목록 영역 */
-.comments-section {
-  margin-top: 32px;
-}
-
+/* 10) 댓글 리스트 */
+.comments-section { margin-top: 32px; }
 .comments-title {
   font-size: 1.2rem;
   font-weight: 500;
@@ -287,8 +227,6 @@
   margin-bottom: 16px;
   position: relative;
 }
-
-/* 제목 아래에 얇은 밑줄 추가 */
 .comments-title::after {
   content: '';
   position: absolute;
@@ -299,22 +237,8 @@
   background-color: #ffe07a;
   border-radius: 2px;
 }
-
-.no-comments {
-  color: #bbb;
-  font-size: 1rem;
-  margin-top: 12px;
-  text-align: center;
-}
-
-/* 댓글 리스트 스타일 */
-.comments-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* 개별 댓글 아이템 */
+.no-comments { color: #bbb; font-size: 1rem; margin-top: 12px; text-align: center; }
+.comments-list { list-style: none; padding: 0; margin: 0; }
 .comment-item {
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 8px;
@@ -322,159 +246,181 @@
   margin-bottom: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-
-/* 댓글 헤더: 작성자 · (버튼그룹 + 날짜) or 날짜 */
 .comment-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;   /* 왼쪽 작성자와 오른쪽 메타(버튼+날짜) 세로 중앙 정렬 */
+  align-items: center;
   margin-bottom: 8px;
   font-size: 0.9rem;
   color: #ccc;
 }
-
-/* 작성자 닉네임을 파란색으로 강조 */
-.comment-author {
-  font-weight: 500;
-  color: #2a7cff;   /* 파란색 포인트 */
-}
-
-/* 본인 댓글인 경우: 버튼 그룹 + 날짜를 함께 묶는 컨테이너 */
+.comment-author { font-weight: 500; color: #2a7cff; }
 .comment-meta-right {
   display: flex;
-  align-items: center; /* 버튼과 날짜를 세로 중앙 정렬 */
-  gap: 8px;            /* 버튼과 날짜 사이 간격 */
+  align-items: center;
+  gap: 8px;
 }
-
-/* 날짜 스타일 */
-.comment-date {
-  color: #aaa;
-  font-size: 0.85rem;
-}
-
-/* 댓글 본문 */
+.comment-date { color: #aaa; font-size: 0.85rem; }
 .comment-content {
   font-size: 1rem;
   color: #eee;
   line-height: 1.6;
   white-space: pre-wrap;
-  margin-bottom: 8px; /* 아래 버튼 그룹과 간격 확보 */
+  margin-bottom: 8px;
 }
 
-/* ======== 댓글 수정·삭제 버튼 그룹 ======== */
+/* 댓글 버튼 그룹 (수정, 삭제, 신고) */
 .comment-button-group {
   display: flex;
   gap: 8px;
 }
-
-/* ========= 수정/삭제 버튼을 텍스트처럼 보이도록 변경 ========= */
-/* 글꼴 크기는 .comment-date와 동일하게 맞추고, 기본 색은 날짜와 비슷하게 설정 */
 .comment-edit-btn,
-.comment-delete-btn {
+.comment-delete-btn,
+.comment-report-btn {
   background: none;
   border: none;
   padding: 0;
   margin: 0;
-  font-size: 0.85rem;      /* .comment-date와 동일 */
-  color: #aaa;             /* 날짜 텍스트와 비슷한 회색 */
+  font-size: 0.85rem;
+  color: #aaa;
   cursor: pointer;
   transition: color 0.2s ease;
 }
-
-/* 호버 시 색 변화: 날짜보다 밝은 흰색 또는 팀 포인트 컬러 */
 .comment-edit-btn:hover,
-.comment-delete-btn:hover {
+.comment-delete-btn:hover,
+.comment-report-btn:hover {
   color: #fff;
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 11) 반응형(Responsive) */
+/* 11) 신고 모달 */
+.report-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.report-box {
+  background: #111;
+  border: 2px solid #555;
+  border-radius: 8px;
+  padding: 20px;
+  width: 420px;
+  max-width: 90%;
+  color: #eee;
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  animation: popup 0.2s ease-out;
+}
+@keyframes popup {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.report-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #ffcc00;
+}
+.report-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.report-close:hover { color: #fff; }
+.report-desc {
+  font-size: 0.85rem;
+  color: #bbb;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.report-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.report-reason {
+  font-size: 0.9rem;
+  color: #ddd;
+  cursor: pointer;
+}
+.report-reason input { margin-right: 8px; }
+.report-box textarea {
+  width: 100%;
+  min-height: 80px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  padding: 8px;
+  margin-bottom: 12px;
+  resize: vertical;
+  background: #222;
+  color: #fff;
+  box-sizing: border-box;   /* ✅ 부모 크기 초과 방지 */
+}
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.report-actions button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.report-actions button:first-child {
+  background: #d32f2f;
+  color: #fff;
+}
+.report-actions button:first-child:hover { background: #b71c1c; }
+.report-actions button:last-child {
+  background: #555;
+  color: #fff;
+}
+.report-actions button:last-child:hover { background: #666; }
+
+/* ────────────────────────────────────────────────────── */
+/* 12) 반응형 */
 @media (max-width: 768px) {
   .community-detail-page {
     margin-top: 80px;
     padding: 16px 16px 200px;
   }
-
-  .detail-container {
-    padding: 24px 16px;
-  }
-
-  .post-title {
-    font-size: 1.6rem;
-  }
-
-  .post-meta {
-    gap: 20px;
-    font-size: 0.85rem;
-  }
-
-  .post-content {
-    padding: 20px;
-    line-height: 1.6rem;
-    margin-bottom: 24px;
-  }
-
-  .button-group {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .button-group button {
-    width: 100%;
-    text-align: center;
-  }
-
-  .comment-input-container {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .btn-comment-submit {
-    width: 100%;
-    text-align: center;
-  }
-
-  .comment-item {
-    padding: 12px;
-  }
-
-  /* 모바일에서 버튼그룹과 날짜 간격 축소 */
-  .comment-meta-right {
-    gap: 4px;
-  }
-
-  .comment-edit-btn,
-  .comment-delete-btn {
-    font-size: 0.75rem;
-  }
-
-  
+  .detail-container { padding: 24px 16px; }
+  .post-title { font-size: 1.6rem; }
+  .post-meta { gap: 20px; font-size: 0.85rem; }
+  .post-content { padding: 20px; line-height: 1.6rem; margin-bottom: 24px; }
+  .button-group { flex-direction: column; gap: 12px; align-items: stretch; }
+  .button-group button { width: 100%; text-align: center; }
+  .comment-input-container { flex-direction: column; gap: 12px; }
+  .btn-comment-submit { width: 100%; text-align: center; }
+  .comment-item { padding: 12px; }
+  .comment-meta-right { gap: 4px; }
+  .comment-edit-btn, .comment-delete-btn, .comment-report-btn { font-size: 0.75rem; }
+  .report-box { width: 90%; }
 }
 
 /* ────────────────────────────────────────────────────── */
-/* 12) 업로드된 이미지 표시를 위한 갤러리 스타일 (수정) */
-.image-gallery {
-  display: block;        /* flex → block 으로 바꿔서 전체 너비 사용 */
-  margin-top: 16px;      /* 본문과의 간격 */
-}
-
+/* 13) 업로드 이미지 */
+.image-gallery { display: block; margin-top: 16px; }
 .post-image {
-  width: 100%;           /* 부모(.image-gallery 또는 .detail-container) 너비 100% */
-  height: auto;          /* 가로 세로 비율 유지 */
-  object-fit: cover;     /* 비율을 유지하며 잘라서 보여줌 */
-  border-radius: 8px;    /* 모서리 둥글게 */
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-  background-color: #222;/* 로딩 전에 보일 배경색 */
-  margin-bottom: 16px;   /* 이미지와 이후 요소 간 간격 */
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 13) 반응형: 모바일에서 너무 크지 않게 */
-@media (max-width: 768px) {
-  .post-image {
-    /* 모바일에서도 부모 너비에 꽉 차되, 특정 최대너비를 주고 싶다면 아래 속성 추가 가능 */
-    /* max-width: 100%; */
-    /* height: auto; */
-  }
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  background-color: #222;
+  margin-bottom: 16px;
 }
