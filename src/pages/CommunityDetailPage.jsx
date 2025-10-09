@@ -228,9 +228,18 @@ export default function CommunityDetailPage() {
 
                 {post.imageUrls.length > 0 && (
                   <div className="image-gallery">
-                    {post.imageUrls.map((url, idx) => (
-                      <img key={idx} src={`${API_BASE_URL}${url}`} alt={`img-${idx}`} className="post-image" />
-                    ))}
+                    {post.imageUrls.map((url, idx) => {
+                      // Cloudinary URL 변환: 너비 1200px, 자동 품질, 자동 포맷
+                      const transformedUrl = url.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
+                      return (
+                        <img 
+                          key={idx} 
+                          src={transformedUrl} 
+                          alt={`img-${idx}`} 
+                          className="post-image" 
+                        />
+                      );
+                    })}
                   </div>
                 )}
 

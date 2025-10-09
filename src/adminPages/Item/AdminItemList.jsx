@@ -77,8 +77,12 @@ function AdminItemList() {
     return item.name; // 문자열일 경우 fallback
   };
 
-  // 6) 아이템 이미지 경로 생성 (임시 공통 이미지)
-  const getItemImage = (itemId) => {
+  // 6) 아이템 이미지 경로 생성 - 구글 드라이브 URL 사용
+  const getItemImage = (item) => {
+    // imageUrl이 있으면 사용, 없으면 기본 이미지
+    if (item.imageUrl) {
+      return item.imageUrl;
+    }
     return "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2F77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp&type=sc960_832";
   };
 
@@ -159,7 +163,7 @@ function AdminItemList() {
                     >
                       <div className="item-image-wrapper">
                         <img
-                          src={getItemImage(item.id)}
+                          src={getItemImage(item)}
                           alt={getItemName(item)}
                           onError={(e) => {
                             e.target.src =
