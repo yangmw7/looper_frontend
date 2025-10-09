@@ -1,4 +1,3 @@
-// src/adminPages/Report/AdminReportDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +13,8 @@ function AdminReportDetail() {
   const [report, setReport] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [memo, setMemo] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // 상태 한글 매핑
   const statusLabels = {
@@ -35,16 +36,37 @@ function AdminReportDetail() {
     OTHER: "기타",
   };
 
+  // ✅ 관리자 토큰 포함해서 상세 신고 데이터 요청
   useEffect(() => {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+
+    if (!token) {
+      setError("관리자 로그인이 필요합니다.");
+      setLoading(false);
+      return;
+    }
+
     axios
-      .get(`${API_BASE_URL}/api/admin/reports/${type}s/${id}`)
+      .get(`${API_BASE_URL}/api/admin/reports/${type}s/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setReport(res.data);
         setNewStatus(res.data.status);
+        setLoading(false);
       })
-      .catch(() => alert("신고 데이터를 불러오는 중 오류 발생"));
-  }, [id, type]);
+      .catch((err) => {
+        console.error("신고 상세 요청 실패:", err);
+        if (err.response?.status === 403)
+          setError("접근 권한이 없습니다. 관리자 계정으로 로그인하세요.");
+        else setError("신고 데이터를 불러오는 중 오류 발생");
+        setLoading(false);
+      });
+  }, [API_BASE_URL, id, type]);
 
+  // 상태 변경
   const handleUpdate = () => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -63,7 +85,9 @@ function AdminReportDetail() {
       .catch(() => alert("상태 변경 중 오류 발생"));
   };
 
-  if (!report) return <p className="loading">로딩 중...</p>;
+  if (loading) return <p className="loading">로딩 중...</p>;
+  if (error) return <p className="error-message">에러: {error}</p>;
+  if (!report) return <p className="error-message">데이터를 찾을 수 없습니다.</p>;
 
   return (
     <>
@@ -93,7 +117,9 @@ function AdminReportDetail() {
               <p><b>피신고자:</b> {report.reportedNickname}</p>
               <p>
                 <b>신고 사유:</b>{" "}
-                {Array.from(report.reasons).map((r) => reasonLabels[r] || r).join(", ")}
+                {Array.from(report.reasons)
+                  .map((r) => reasonLabels[r] || r)
+                  .join(", ")}
               </p>
               <p><b>설명:</b> {report.description}</p>
               <p><b>접수 상태:</b> {statusLabels[report.status] || report.status}</p>
@@ -112,6 +138,7 @@ function AdminReportDetail() {
                 <option value="ACTION_TAKEN">조치 완료</option>
                 <option value="RESOLVED">종결</option>
               </select>
+
               <textarea
                 placeholder="관리자 메모"
                 value={memo}
@@ -119,6 +146,13 @@ function AdminReportDetail() {
               />
               <button onClick={handleUpdate}>상태 저장</button>
             </div>
+
+            <button
+              className="back-button bottom-left"
+              onClick={() => navigate("/admin/reports")}
+            >
+              ← 목록으로
+            </button>
           </div>
         </div>
       </div>
