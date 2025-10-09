@@ -19,19 +19,55 @@ export default function CommunityEditPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // JWT 토큰에서 현재 사용자 닉네임 추출
+  const [currentUserNickname, setCurrentUserNickname] = useState(null);
+  const [postAuthor, setPostAuthor] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      navigate(`/community/${id}`);
+      return;
+    }
+
+    // JWT 토큰 파싱
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const json = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const decoded = JSON.parse(json);
+      const nick = decoded.nickname || decoded.username || decoded.sub;
+      setCurrentUserNickname(nick);
+    } catch {
+      setCurrentUserNickname(null);
+    }
+  }, []);
+
   useEffect(() => {
     axios.get(`${API_BASE_URL}/api/posts/${id}`)
       .then(res => {
         setTitle(res.data.title);
         setContent(res.data.content);
         setExistingImages(res.data.imageUrls || []);
+        setPostAuthor(res.data.writer); // 작성자 저장
+
+        // 작성자가 아니면 접근 차단
+        if (currentUserNickname && res.data.writer !== currentUserNickname) {
+          alert('작성자만 수정할 수 있습니다.');
+          navigate(`/community/${id}`);
+        }
       })
       .catch(err => {
         console.error('수정할 게시글 정보 로드 실패:', err);
         setError('게시글 정보를 불러오는 중 오류가 발생했습니다.');
       })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, currentUserNickname]);
 
   const handleFileChange = e => {
     const filesArr = Array.from(e.target.files);
@@ -75,6 +111,7 @@ export default function CommunityEditPage() {
       console.error('게시글 수정 실패:', err);
       if (err.response?.status === 403) {
         alert('수정 권한이 없습니다.');
+        navigate(`/community/${id}`);
       } else {
         alert('게시물 수정 중 오류가 발생했습니다.');
       }
@@ -116,12 +153,16 @@ export default function CommunityEditPage() {
 
           <label className="edit-label">사진 첨부 (여러 장 가능)</label>
           <div className="edit-image-list">
-            {existingImages.map((url, i) => (
-              <div key={i} className="edit-image-item">
-                <img src={`${API_BASE_URL}${url}`} alt={`thumb-${i}`} />
-                <button type="button" onClick={() => removeExistingImage(url)}>×</button>
-              </div>
-            ))}
+            {existingImages.map((url, i) => {
+              // Cloudinary URL 변환 (썸네일용)
+              const transformedUrl = url.replace('/upload/', '/upload/w_400,q_auto,f_auto/');
+              return (
+                <div key={i} className="edit-image-item">
+                  <img src={transformedUrl} alt={`thumb-${i}`} />
+                  <button type="button" onClick={() => removeExistingImage(url)}>×</button>
+                </div>
+              );
+            })}
             {newFiles.map((file, i) => (
               <div key={`new-${i}`} className="edit-image-item">
                 <img src={URL.createObjectURL(file)} alt={`new-${i}`} />

@@ -414,13 +414,21 @@
 
 /* ────────────────────────────────────────────────────── */
 /* 13) 업로드 이미지 */
-.image-gallery { display: block; margin-top: 16px; }
-.post-image {
+.image-gallery {
+  display: flex;
+  flex-direction: column;    /* 세로로 나열 */
+  align-items: center;       /* 가운데 정렬 */
+  gap: 20px;                 /* 이미지 간격 */
+  margin: 20px 0;
   width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
-  background-color: #222;
-  margin-bottom: 16px;
+}
+
+.post-image {
+  max-width: 100%;           /* 부모를 넘지 않음 */
+  max-height: 600px;         /* 최대 높이 */
+  width: auto;               /* 비율 유지 */
+  height: auto;              /* 비율 유지 */
+  object-fit: contain;       /* 비율 유지하며 맞춤 */
+  border-radius: 8px;        /* 모서리 둥글게 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);  /* 그림자 효과 */
 }

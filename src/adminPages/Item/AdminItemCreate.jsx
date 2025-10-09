@@ -20,6 +20,10 @@ function AdminItemCreate() {
     stackable: false,
     skills: [],
   });
+  
+  // 이미지 업로드 관련 state
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleIdChange = (e) => {
     const value = e.target.value.replace(/[^0-9.\-]/g, "");
@@ -49,6 +53,39 @@ function AdminItemCreate() {
     const updated = [...editData.attributes];
     updated.splice(index, 1);
     setEditData({ ...editData, attributes: updated });
+  };
+
+  // 이미지 파일 선택 핸들러
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // 파일 크기 체크 (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert("파일 크기는 10MB를 초과할 수 없습니다.");
+        return;
+      }
+      
+      // 이미지 파일 타입 체크
+      if (!file.type.startsWith('image/')) {
+        alert("이미지 파일만 업로드 가능합니다.");
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // 미리보기 생성
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 이미지 제거 핸들러
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
   };
 
   const handleSave = async () => {
@@ -84,16 +121,31 @@ function AdminItemCreate() {
       sessionStorage.getItem("accessToken");
 
     try {
-      const payload = {
+      const formData = new FormData();
+      
+      // 아이템 데이터를 JSON으로 변환
+      const itemData = {
         ...editData,
         attributes: editData.attributes.map((attr) => ({
           ...attr,
           value: parseFloat(attr.value) || 0,
         })),
       };
+      
+      formData.append('item', new Blob([JSON.stringify(itemData)], {
+        type: 'application/json'
+      }));
+      
+      // 이미지 파일 추가 (있는 경우)
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
 
-      await axios.post(`${API_BASE_URL}/api/items`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.post(`${API_BASE_URL}/api/items`, formData, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
       });
 
       alert("아이템이 추가되었습니다.");
@@ -101,10 +153,8 @@ function AdminItemCreate() {
     } catch (err) {
       console.error(err);
       if (err.response?.status === 400) {
-        // 백엔드에서 보내는 에러 메시지 확인
         const errorMessage = err.response?.data?.message || err.response?.data?.error || "";
         
-        // ID 중복 관련 키워드 확인
         if (errorMessage.includes("duplicate") || 
             errorMessage.includes("already exists") || 
             errorMessage.includes("중복") ||
@@ -114,7 +164,6 @@ function AdminItemCreate() {
           alert("잘못된 요청입니다. 입력 내용을 확인해주세요.");
         }
       } else if (err.response?.status === 409) {
-        // 409 Conflict는 일반적으로 중복을 나타냄
         alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
       } else {
         alert("아이템 추가 중 오류가 발생했습니다.");
@@ -123,6 +172,9 @@ function AdminItemCreate() {
   };
 
   const getItemImage = () => {
+    if (imagePreview) {
+      return imagePreview;
+    }
     return "https://i.namu.wiki/i/77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp";
   };
 
@@ -146,6 +198,42 @@ function AdminItemCreate() {
                 </div>
                 <div className={`item-rarity-badge ${editData.rarity}`}>
                   {editData.rarity.toUpperCase()}
+                </div>
+                
+                {/* 이미지 업로드 섹션 */}
+                <div className="image-upload-section" style={{ marginTop: '20px' }}>
+                  <label htmlFor="image-upload" className="image-upload-label">
+                    {imageFile ? '이미지 변경' : '이미지 업로드'}
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    style={{ display: 'none' }}
+                  />
+                  {imageFile && (
+                    <div style={{ marginTop: '10px' }}>
+                      <p style={{ fontSize: '14px', color: '#666' }}>
+                        {imageFile.name}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        style={{
+                          padding: '5px 10px',
+                          backgroundColor: '#dc3545',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '12px'
+                        }}
+                      >
+                        이미지 제거
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 

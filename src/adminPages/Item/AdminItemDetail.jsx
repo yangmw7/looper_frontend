@@ -26,6 +26,10 @@ function AdminItemDetail() {
     skills: [],
   });
 
+  // 이미지 업로드 관련 state
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
   useEffect(() => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -136,6 +140,39 @@ function AdminItemDetail() {
     setEditData({ ...editData, attributes: updated });
   };
 
+  // 이미지 파일 선택 핸들러
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // 파일 크기 체크 (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert("파일 크기는 10MB를 초과할 수 없습니다.");
+        return;
+      }
+      
+      // 이미지 파일 타입 체크
+      if (!file.type.startsWith('image/')) {
+        alert("이미지 파일만 업로드 가능합니다.");
+        return;
+      }
+      
+      setImageFile(file);
+      
+      // 미리보기 생성
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 이미지 제거 핸들러
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleSave = async () => {
     // 이름 검증
     if (!editData.name[0].trim() || !editData.name[1].trim()) {
@@ -163,21 +200,37 @@ function AdminItemDetail() {
       sessionStorage.getItem("accessToken");
 
     try {
-      const payload = {
+      const formData = new FormData();
+      
+      // 아이템 데이터를 JSON으로 변환
+      const itemData = {
         ...editData,
         attributes: editData.attributes.map((attr) => ({
           ...attr,
           value: parseFloat(attr.value) || 0,
         })),
       };
+      
+      formData.append('item', new Blob([JSON.stringify(itemData)], {
+        type: 'application/json'
+      }));
+      
+      // 새 이미지가 있으면 추가
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
 
-      await axios.put(`${API_BASE_URL}/api/items/${id}`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.put(`${API_BASE_URL}/api/items/${id}`, formData, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
       });
 
-      setItem(editData);
-      setIsEditing(false);
       alert("아이템이 수정되었습니다.");
+      // 페이지 새로고침으로 최신 데이터 가져오기
+      window.location.reload();
+      
     } catch (err) {
       console.error(err);
       alert("수정 중 오류가 발생했습니다.");
@@ -203,7 +256,16 @@ function AdminItemDetail() {
     }
   };
 
-  const getItemImage = (itemId) => {
+  const getItemImage = () => {
+    // 미리보기가 있으면 미리보기 사용 (수정 중)
+    if (imagePreview) {
+      return imagePreview;
+    }
+    // item의 imageUrl이 있으면 사용
+    if (item?.imageUrl) {
+      return item.imageUrl;
+    }
+    // 기본 이미지
     return "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2F77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp&type=sc960_832";
   };
 
@@ -225,13 +287,51 @@ function AdminItemDetail() {
               <div className="item-detail-left">
                 <div className="item-detail-image">
                   <img
-                    src={getItemImage(item.id)}
+                    src={getItemImage()}
                     alt={editData.name[1] || editData.name[0]}
                   />
                 </div>
                 <div className={`item-rarity-badge ${item.rarity}`}>
                   {item.rarity.toUpperCase()}
                 </div>
+                
+                {/* 수정 모드일 때만 이미지 업로드 섹션 표시 */}
+                {isEditing && (
+                  <div className="image-upload-section" style={{ marginTop: '20px' }}>
+                    <label htmlFor="image-upload" className="image-upload-label">
+                      {imageFile ? '이미지 변경' : '새 이미지 업로드'}
+                    </label>
+                    <input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      style={{ display: 'none' }}
+                    />
+                    {imageFile && (
+                      <div style={{ marginTop: '10px' }}>
+                        <p style={{ fontSize: '14px', color: '#666' }}>
+                          {imageFile.name}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          style={{
+                            padding: '5px 10px',
+                            backgroundColor: '#dc3545',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                          }}
+                        >
+                          이미지 제거
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="item-detail-right">
@@ -519,6 +619,8 @@ function AdminItemDetail() {
                         onClick={() => {
                           setIsEditing(false);
                           setEditData(item);
+                          setImageFile(null);
+                          setImagePreview(null);
                         }}
                       >
                         취소
