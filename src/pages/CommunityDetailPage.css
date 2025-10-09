@@ -363,31 +363,23 @@
   border-radius: 6px;
   border: 1px solid #444;
   padding: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
   resize: vertical;
   background: #222;
   color: #fff;
   box-sizing: border-box;
 }
-
-/* 신고/취소 버튼 컨테이너 간격 조정 */
 .report-actions {
-  margin-top: 8px;
-  margin-bottom: 0; 
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: flex-end;
-  align-items: center;
+  display: flex;
+  justify-content: space-between;  /* ✅ flex-end → space-between 변경 */
   gap: 10px;
-  flex-wrap: nowrap !important;
 }
-
-
 .report-actions button {
-  flex: 0 0 auto;
-  white-space: nowrap;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
-
 .report-actions button:first-child {
   background: #d32f2f;
   color: #fff;
