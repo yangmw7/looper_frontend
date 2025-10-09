@@ -1,4 +1,3 @@
-// src/adminPages/Skill/AdminSkillCreate.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,27 +8,61 @@ import "./AdminSkillCreate.css";
 function AdminSkillCreate() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
+
   const [editData, setEditData] = useState({
     id: "",
-    name: ["", ""],         // [영문, 한글]
-    description: ["", ""],  // [영문, 한글]
+    name: ["", ""],
+    description: ["", ""],
   });
 
+  // 이미지 업로드 관련 state
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  // 이미지 선택 시
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        alert("이미지 파일 크기는 10MB를 초과할 수 없습니다.");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        alert("이미지 파일만 업로드 가능합니다.");
+        return;
+      }
+
+      setImageFile(file);
+
+      // 미리보기
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 이미지 제거
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
+  // 기본 이미지
   const getSkillImage = () => {
+    if (imagePreview) return imagePreview;
     return "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMTZfNDAg%2FMDAxNjM5NjQxNzUxMDc5.8Z45VaLbczbt6T0CnwI5852sOiWcu9zqPby1vdSSVJ0g.wFZHYWgSfK9TsAXqEPG71DPVaz1USCDCw0aImGSBhAcg.PNG.glory8743%2F1231312.png&type=sc960_832";
   };
 
+  // 저장
   const handleSave = async () => {
     if (!editData.id.trim()) {
       alert("스킬 ID를 입력해주세요.");
       return;
     }
-
     if (!editData.name[0].trim() || !editData.name[1].trim()) {
       alert("스킬 이름(영문, 한글)을 모두 입력해야 합니다.");
       return;
     }
-
     if (!editData.description[0].trim() || !editData.description[1].trim()) {
       alert("스킬 설명(영문, 한글)을 모두 입력해야 합니다.");
       return;
@@ -40,11 +73,25 @@ function AdminSkillCreate() {
       sessionStorage.getItem("accessToken");
 
     try {
-      await axios.post(`${API_BASE_URL}/api/skills`, editData, {
-        headers: { Authorization: `Bearer ${token}` },
+      const formData = new FormData();
+      formData.append(
+        "skill",
+        new Blob([JSON.stringify(editData)], {
+          type: "application/json",
+        })
+      );
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      await axios.post(`${API_BASE_URL}/api/skills`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      alert("스킬이 추가되었습니다.");
+      alert("스킬이 성공적으로 추가되었습니다!");
       navigate("/admin/skills");
     } catch (err) {
       console.error("스킬 생성 에러:", err);
@@ -82,6 +129,7 @@ function AdminSkillCreate() {
             </div>
 
             <div className="skill-detail-content">
+              {/* 왼쪽: 이미지 업로드 */}
               <div className="skill-detail-left">
                 <div className="skill-detail-image">
                   <img
@@ -89,12 +137,48 @@ function AdminSkillCreate() {
                     alt="New Skill"
                     onError={(e) => {
                       e.target.src =
-                        "https://cdn-icons-png.flaticon.com/512/616/616408.png";
+                        "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTEyMTZfNDAg%2FMDAxNjM5NjQxNzUxMDc5.8Z45VaLbczbt6T0CnwI5852sOiWcu9zqPby1vdSSVJ0g.wFZHYWgSfK9TsAXqEPG71DPVaz1USCDCw0aImGSBhAcg.PNG.glory8743%2F1231312.png&type=sc960_832";
                     }}
                   />
                 </div>
+
+                <div className="image-upload-section" style={{ marginTop: "20px" }}>
+                  <label htmlFor="image-upload" className="image-upload-label">
+                    {imageFile ? "이미지 변경" : "이미지 업로드"}
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    style={{ display: "none" }}
+                  />
+                  {imageFile && (
+                    <div style={{ marginTop: "10px" }}>
+                      <p style={{ fontSize: "14px", color: "#ccc" }}>
+                        {imageFile.name}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        style={{
+                          padding: "5px 10px",
+                          backgroundColor: "#dc3545",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                        }}
+                      >
+                        이미지 제거
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
 
+              {/* 오른쪽: 정보 입력 */}
               <div className="skill-detail-right">
                 <div className="detail-row">
                   <label>ID:</label>
@@ -107,6 +191,7 @@ function AdminSkillCreate() {
                     placeholder="예: 20001"
                   />
                 </div>
+
                 <div className="detail-row">
                   <label>이름 (영문):</label>
                   <input
@@ -121,6 +206,7 @@ function AdminSkillCreate() {
                     placeholder="English name"
                   />
                 </div>
+
                 <div className="detail-row">
                   <label>이름 (한글):</label>
                   <input
@@ -135,6 +221,7 @@ function AdminSkillCreate() {
                     placeholder="한글 이름"
                   />
                 </div>
+
                 <div className="detail-row">
                   <label>설명 (영문):</label>
                   <textarea
@@ -148,6 +235,7 @@ function AdminSkillCreate() {
                     placeholder="Skill description in English"
                   />
                 </div>
+
                 <div className="detail-row">
                   <label>설명 (한글):</label>
                   <textarea
@@ -162,18 +250,16 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="detail-section">
-                  <div className="button-group">
-                    <button className="save-button" onClick={handleSave}>
-                      저장
-                    </button>
-                    <button
-                      className="cancel-button"
-                      onClick={() => navigate("/admin/skills")}
-                    >
-                      취소
-                    </button>
-                  </div>
+                <div className="button-group">
+                  <button className="save-button" onClick={handleSave}>
+                    저장
+                  </button>
+                  <button
+                    className="cancel-button"
+                    onClick={() => navigate("/admin/skills")}
+                  >
+                    취소
+                  </button>
                 </div>
               </div>
             </div>
