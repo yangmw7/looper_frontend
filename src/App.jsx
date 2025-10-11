@@ -15,6 +15,8 @@ import CommunityDetailPage   from './pages/CommunityDetailPage';
 import CommunityCreatePage   from './pages/CommunityCreatePage';
 import CommunityEditPage     from './pages/CommunityEditPage';
 
+import MyPage                from './pages/MyPage/MyPage';
+
 import AdminRoute            from './components/AdminRoute';
 import AdminUserList         from './adminPages/User/AdminUserList';
 
@@ -60,6 +62,9 @@ function App() {
         <Route path="/community/new"          element={<CommunityCreatePage />} />
         <Route path="/community/:id"          element={<CommunityDetailPage />} />
         <Route path="/community/:id/edit"     element={<CommunityEditPage />} />
+
+        {/* 마이페이지 (로그인 필수) */}
+        <Route path="/mypage/*"               element={<MyPage />} />
 
         {/* 관리자 전용 라우트 */}
         <Route path="/admin" element={<AdminRoute />}>

@@ -112,8 +112,8 @@ function Header() {
                 관리자 페이지
               </Link>
             ) : (
-              <Link to="/profile" className="profile-link">
-                내 정보
+              <Link to="/mypage" className="profile-link">
+                마이 페이지
               </Link>
             )}
 
