@@ -1,5 +1,5 @@
-// src/pages/CommunityListPage.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CommunityListPage.css';
 
@@ -7,13 +7,14 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function CommunityListPage() {
+  const navigate = useNavigate();
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const [posts, setPosts]       = useState([]);
-  const [error, setError]       = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 10;
+  const [activeTab, setActiveTab] = useState('recent');
+  const postsPerPage = 15;
 
-  // ─── 검색 상태 ─────────────────────────
   const [searchField, setSearchField] = useState('title');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -21,8 +22,6 @@ export default function CommunityListPage() {
     axios
       .get(`${API_BASE_URL}/api/posts`)
       .then((response) => {
-        // 'commentCount' 필드 기준으로도 이미 내려오지만, 
-        // 최근 글(tab)이니까 createdAt 으로 정렬합니다.
         const sortedByDate = response.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -30,7 +29,7 @@ export default function CommunityListPage() {
           id: p.id,
           title: p.title,
           author: p.writer,
-          comments: p.commentCount,    // 백엔드에서 내려주는 실제 댓글 수
+          comments: p.commentCount,
           views: p.viewCount,
           createdAt: formatDate(p.createdAt),
         }));
@@ -40,7 +39,7 @@ export default function CommunityListPage() {
         console.error('게시글 목록 조회 실패:', err);
         setError('게시글을 불러오는 중 오류가 발생했습니다.');
       });
-  }, []);
+  }, [API_BASE_URL]);
 
   function formatDate(isoString) {
     const created = new Date(isoString);
@@ -53,113 +52,148 @@ export default function CommunityListPage() {
     const diffHour = Math.floor(diffMin / 60);
     if (diffHour < 24) return `${diffHour}시간 전`;
     const diffDay = Math.floor(diffHour / 24);
-    return `${diffDay}일 전`;
+    if (diffDay < 7) return `${diffDay}일 전`;
+    return created.toLocaleDateString();
   }
 
-  // ─── 검색 & 필터링 ───────────────────────
   const filteredPosts = posts.filter((post) => {
     if (!searchQuery.trim()) return true;
     const fieldValue = String(post[searchField] || '').toLowerCase();
     return fieldValue.includes(searchQuery.trim().toLowerCase());
   });
 
-  // ─── 페이징 로직 ─────────────────────────
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-  const idxLast  = currentPage * postsPerPage;
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (activeTab === 'popular') {
+      return (b.views + b.comments * 10) - (a.views + a.comments * 10);
+    }
+    return 0;
+  });
+
+  const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
+  const idxLast = currentPage * postsPerPage;
   const idxFirst = idxLast - postsPerPage;
-  const currentPosts = filteredPosts.slice(idxFirst, idxLast);
+  const currentPosts = sortedPosts.slice(idxFirst, idxLast);
 
   const handlePageClick = (num) => setCurrentPage(num);
   const handlePrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const handleNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+  };
+
   return (
-    <div className="community-background">
+    <div className="community-page">
+      <div className="grain-overlay" />
       <Header />
 
-      <div className="community-list-page">
-        <h2 className="community-title">커뮤니티</h2>
-        <div className="tab-menu">
-          <span className="tab">카테고리</span>
-          <span className="tab">인기 글</span>
-          <span className="tab active">최근 글</span>
+      <div className="community-container">
+        <div className="community-header">
+          <h1>커뮤니티</h1>
+          <p>게임 이야기를 나누는 공간</p>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-
-        {/* ─── 검색 바 ───────────────────────── */}
-        <div className="community-search">
-          <select
-            value={searchField}
-            onChange={(e) => setSearchField(e.target.value)}
-          >
-            <option value="title">제목</option>
-            <option value="author">작성자</option>
-          </select>
-          <input
-            type="text"
-            placeholder="검색어를 입력하세요"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && setCurrentPage(1)}
-          />
-          <button onClick={() => setCurrentPage(1)}>검색</button>
-        </div>
-
-        <div className="post-table">
-          <div className="post-header">
-            <span className="col-title">제목</span>
-            <span className="col-author">작성자</span>
-            <span className="col-comments">댓글</span>
-            <span className="col-views">조회</span>
-            <span className="col-date">날짜</span>
-          </div>
-
-          <ul className="post-list">
-            {currentPosts.map((post) => (
-              <li key={post.id} className="post-row">
-                <a href={`/community/${post.id}`} className="col-title">
-                  {post.title}
-                </a>
-                <span className="col-author">{post.author}</span>
-                <span className="col-comments">💬 {post.comments}</span>
-                <span className="col-views">👁️ {post.views}</span>
-                <span className="col-date">{post.createdAt}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="pagination-wrapper">
-          <div className="pagination">
-            <button
-              className="page-button prev-button"
-              onClick={handlePrev}
-              disabled={currentPage === 1}
-            >
-              &lt;
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+        <div className="community-content">
+          <div className="content-top">
+            <div className="tabs">
               <button
-                key={num}
-                className={`page-button ${currentPage === num ? 'active' : ''}`}
-                onClick={() => handlePageClick(num)}
+                className={activeTab === 'recent' ? 'active' : ''}
+                onClick={() => handleTabChange('recent')}
               >
-                {num}
+                최근 글
               </button>
-            ))}
-            <button
-              className="page-button next-button"
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-            >
-              &gt;
-            </button>
+              <button
+                className={activeTab === 'popular' ? 'active' : ''}
+                onClick={() => handleTabChange('popular')}
+              >
+                인기 글
+              </button>
+            </div>
+
+            <div className="actions">
+              <div className="search">
+                <select
+                  value={searchField}
+                  onChange={(e) => setSearchField(e.target.value)}
+                >
+                  <option value="title">제목</option>
+                  <option value="author">작성자</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="검색..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && setCurrentPage(1)}
+                />
+              </div>
+              <button 
+                className="write-btn"
+                onClick={() => navigate('/community/new')}
+              >
+                글쓰기
+              </button>
+            </div>
           </div>
 
-          <a href="/community/new" className="new-post-button">
-            글쓰기
-          </a>
+          {error && <div className="error-msg">{error}</div>}
+
+          <div className="posts-table">
+            <div className="table-header">
+              <span className="col-title">제목</span>
+              <span className="col-author">작성자</span>
+              <span className="col-views">조회</span>
+              <span className="col-date">날짜</span>
+            </div>
+
+            <div className="table-body">
+              {currentPosts.length > 0 ? (
+                currentPosts.map((post) => (
+                  <div
+                    key={post.id}
+                    className="post-row"
+                    onClick={() => navigate(`/community/${post.id}`)}
+                  >
+                    <div className="col-title">
+                      {post.title}
+                      {post.comments > 0 && (
+                        <span className="comment-count">[{post.comments}]</span>
+                      )}
+                    </div>
+                    <span className="col-author">{post.author}</span>
+                    <span className="col-views">{post.views}</span>
+                    <span className="col-date">{post.createdAt}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="empty">게시글이 없습니다</div>
+              )}
+            </div>
+          </div>
+
+          {totalPages > 0 && (
+            <div className="pagination">
+              <button onClick={handlePrev} disabled={currentPage === 1}>
+                ‹
+              </button>
+              {Array.from({ length: Math.min(totalPages, 10) }, (_, i) => {
+                const pageNum = i + 1;
+                return (
+                  <button
+                    key={pageNum}
+                    className={currentPage === pageNum ? 'active' : ''}
+                    onClick={() => handlePageClick(pageNum)}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+              <button onClick={handleNext} disabled={currentPage === totalPages}>
+                ›
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

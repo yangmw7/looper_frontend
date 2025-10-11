@@ -1,228 +1,394 @@
-/* ────────────────────────────────────────────────────── */
-/* 1) 최상위 배경 컨테이너 */
-.community-background {
-  background-image: url('../assets/main.png');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
+/* ===== 페이지 기본 ===== */
+.community-page {
+  position: relative;
+  background: linear-gradient(180deg, #0a0e12 0%, #1a1e2e 50%, #0a0e12 100%);
   min-height: 100vh;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ────────────────────────────────────────────────────── */
-/* 2) 내부 콘텐츠 영역 */
-.community-list-page {
-  flex: 1;
-  max-width: 1250px;
-  width: 100%;
-  margin: 0 auto;
-  margin-top: 100px;
-  padding: 20px 0 200px;
   color: #f0f0f0;
-  font-family: 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
-/* 에러 메시지 */
-.error-message {
-  color: #ff4d4d;
-  text-align: center;
-  margin-bottom: 16px;
-  font-size: 0.9rem;
+/* 그레인 텍스처 오버레이 */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 3) 상단 제목 & 탭 메뉴 */
-.community-title { font-size: 2rem; margin-bottom: 16px; }
-.tab-menu { display: flex; gap: 24px; margin-bottom: 16px; }
-.tab { cursor: pointer; font-size: 1rem; color: #bbb; }
-.tab.active {
-  color: #ffe07a;
-  border-bottom: 2px solid #ffe07a;
-  padding-bottom: 4px;
+/* 그라디언트 배경 효과 */
+.community-page::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(233, 30, 99, 0.3) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float1 20s infinite ease-in-out;
 }
 
-/* ─── 검색 바 ─────────────────────────────────────── */
-.community-search {
+.community-page::after {
+  content: '';
+  position: fixed;
+  bottom: -150px;
+  right: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(156, 39, 176, 0.3) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float2 20s infinite ease-in-out;
+  animation-delay: 7s;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-50px, 50px) scale(1.1); }
+  66% { transform: translate(30px, -30px) scale(0.9); }
+}
+
+/* ===== 컨테이너 ===== */
+.community-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 2rem 4rem;
+  z-index: 2;
+}
+
+/* ===== 헤더 ===== */
+.community-header {
+  margin-bottom: 3rem;
+}
+
+.community-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.community-header p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ===== 컨텐츠 영역 ===== */
+.community-content {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ===== 상단 영역 ===== */
+.content-top {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  justify-content: flex-end;
-}
-.community-search select,
-.community-search input {
-  height: 36px;
-  padding: 0 8px;
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-/* 드롭다운 옵션들 (열었을 때) */
-.community-search select option {
-  /* 옵션 배경은 흰색, 글씨는 진한 회색 */
-  background-color: #fff;
-  color: #222;
+/* ===== 탭 ===== */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
 }
 
-/* (선택) 크롬에서 select 내부 옵션 스타일링 좀 더 잘 보이도록 */
-.community-search select:focus,
-.community-search select:hover {
-  color: #fff;
-}
-
-.community-search select { width: 120px; }
-.community-search input { flex: 1; max-width: 300px; }
-.community-search button {
-  height: 36px;
-  padding: 0 16px;
-  background: #ffe07a;
-  color: #222;
-  border: none;
-  border-radius: 4px;
+.tabs button {
+  padding: 0.6rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
   cursor: pointer;
-  font-size: 0.95rem;
-}
-.community-search button:hover {
-  background: #e6b337;
+  transition: all 0.2s;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 4) 게시글 목록 - 전체 구분선 */
-.post-table { border-top: 1px solid rgba(255,255,255,0.2); }
-.post-header { display: none; }
-.post-list { list-style: none; padding: 0; margin: 0; }
+.tabs button:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
 
-/* ─── 게시글 행 ───────────────────────────────────── */
+.tabs button.active {
+  background: #e91e63;
+  border-color: #e91e63;
+  color: #fff;
+}
+
+/* ===== 액션 영역 ===== */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.search {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+
+.search select,
+.search input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.search select {
+  padding: 0 0.5rem;
+  cursor: pointer;
+}
+
+.search select option {
+  background: #1a1e2e;
+}
+
+.search input {
+  width: 200px;
+  padding: 0 0.5rem;
+}
+
+.search input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.write-btn {
+  padding: 0.6rem 1.2rem;
+  background: #e91e63;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.write-btn:hover {
+  background: #c2185b;
+}
+
+/* ===== 에러 메시지 ===== */
+.error-msg {
+  margin: 1rem 1.5rem;
+  padding: 1rem;
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 8px;
+  color: #f44336;
+  text-align: center;
+}
+
+/* ===== 게시글 테이블 ===== */
+.posts-table {
+  min-height: 500px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 0.6fr 0.8fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.table-body {
+  padding: 0.5rem 0;
+}
+
+/* ===== 게시글 행 ===== */
 .post-row {
   display: grid;
-  grid-template-columns: 6fr 0.8fr 0.8fr 0.8fr 0.5fr;
+  grid-template-columns: 2fr 0.8fr 0.6fr 0.8fr;
+  gap: 1rem;
   align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  transition: background-color 0.2s ease;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.post-row:hover { background: rgba(0,0,0,0.1); }
 
-/* 제목 */
+.post-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.post-row:last-child {
+  border-bottom: none;
+}
+
 .col-title {
   color: #fff;
-  text-decoration: none;
-  font-size: 1.1rem;
-}
-.col-title:hover { text-decoration: none; }
-
-/* 작성자 */
-.col-author {
-  justify-self: start;
   font-size: 0.95rem;
-  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* 댓글 */
-.col-comments {
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.comment-count {
+  color: #e91e63;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.col-author {
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
-  color: #ccc;
 }
 
-/* 조회 */
 .col-views {
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 0.9rem;
-  color: #ccc;
+  text-align: center;
 }
 
-/* 날짜 */
 .col-date {
-  justify-self: end;
-  font-size: 0.9rem;
-  color: #ccc;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  text-align: right;
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 5) 글쓰기 버튼 */
-.new-post-button {
-  display: inline-block;
-  padding: 10px 24px;
-  background-color: #ffc947;
-  color: #000;
-  font-size: 1rem;
-  font-weight: 500;
-  border: none;
-  border-radius: 6px;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-.new-post-button:hover {
-  background-color: #e6b337;
-  transform: translateY(-1px);
-}
-.new-post-button:disabled {
-  background-color: rgba(255,201,71,0.5);
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
+/* ===== 빈 상태 ===== */
+.empty {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 6) 페이지네이션 + 글쓰기 버튼 같은 줄 배치 */
-.pagination-wrapper {
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  margin-top: 24px;
-}
+/* ===== 페이지네이션 ===== */
 .pagination {
   display: flex;
-  gap: 8px;
-  margin: 0 auto;
-}
-.page-button {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
-}
-.page-button:hover { background: rgba(255,255,255,0.2); }
-.page-button.active {
-  background: #ffe07a;
-  color: #222;
-  cursor: default;
-}
-.page-button:disabled {
-  background: rgba(255,255,255,0.05);
-  color: #777;
-  cursor: default;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ────────────────────────────────────────────────────── */
-/* 7) 반응형 */
+.pagination button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.pagination button.active {
+  background: #e91e63;
+  border-color: #e91e63;
+  color: #fff;
+}
+
+.pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ===== 반응형 ===== */
 @media (max-width: 768px) {
-  .pagination-wrapper {
-    flex-direction: column;
-    gap: 12px;
-    padding: 0;
+  .community-container {
+    padding: 90px 1rem 2rem;
   }
-  .pagination { justify-content: center; margin: 0; }
-  .page-button { padding: 6px 10px; font-size: 0.8rem; }
-  .new-post-button { width: 100%; text-align: center; }
+
+  .community-header h1 {
+    font-size: 2rem;
+  }
+
+  .content-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tabs button {
+    flex: 1;
+  }
+
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .search input {
+    width: 100%;
+  }
+
+  .write-btn {
+    width: 100%;
+  }
+
+  .table-header {
+    display: none;
+  }
+
+  .post-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .col-title {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .col-views,
+  .col-date {
+    text-align: left;
+    font-size: 0.8rem;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
 }

@@ -127,9 +127,6 @@ function Header() {
           </>
         )}
 
-        <button className="play-button" onClick={() => navigate('/play')}>
-          지금 플레이
-        </button>
       </div>
     </header>
   );

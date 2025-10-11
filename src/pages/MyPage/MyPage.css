@@ -1,46 +1,101 @@
 /* ─────────────────────────────────────────────── */
 /* 전체 배경 */
 .mypage-background {
-  background-image: url("../../assets/main.png");
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
+  position: relative;
+  background: linear-gradient(180deg, #0a0e12 0%, #1a1e2e 50%, #0a0e12 100%);
   min-height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 120px 20px 100px;
+  overflow-x: hidden; /* 전체 스크롤은 브라우저 기본 스크롤 사용 */
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* 그레인 텍스처 오버레이 */
+.mypage-background::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* 그라디언트 구체 효과 - 왼쪽 상단 */
+.mypage-background::after {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(233, 30, 99, 0.3) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float1 20s infinite ease-in-out;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+/* 그라디언트 구체 효과 - 오른쪽 하단 */
+.gradient-orb-right {
+  position: fixed;
+  bottom: -150px;
+  right: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(156, 39, 176, 0.3) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float2 20s infinite ease-in-out;
+  animation-delay: 7s;
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-50px, 50px) scale(1.1); }
+  66% { transform: translate(30px, -30px) scale(0.9); }
 }
 
 /* ─────────────────────────────────────────────── */
 /* 메인 래퍼 (사이드바 + 컨텐츠) */
 .mypage-wrapper {
+  position: relative;
   display: flex;
   gap: 32px;
-  max-width: 1600px; /* ✅ 폭 확대 */
+  max-width: 1600px;
   width: 100%;
   align-items: flex-start;
-  margin: 0 auto; /* 중앙 정렬 */
-  position: relative;
+  margin: 0 auto;
+  z-index: 2;
 }
 
 /* ─────────────────────────────────────────────── */
-/* 왼쪽 사이드바 */
+/* 왼쪽 사이드바 - 화면에 고정(페이지 스크롤시 항상 노출) */
 .mypage-sidebar {
-  width: 340px; /* ✅ 기존 320 → 340 */
-  min-width: 340px;
+  position: fixed;
+  top: 190px; /* 헤더 높이에 맞춰 조정 */
+  left: calc(50% - 800px); /* 1600px 컨테이너 기준 좌측 정렬 */
+  width: 340px;
   background-color: rgba(0, 0, 0, 0.85);
   border-radius: 10px;
   padding: 32px 24px;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-
-  /* ✅ 스크롤해도 고정되게 변경 */
-  position: fixed;
-  top: 120px;
-  left: calc(50% - 800px); /* 전체 폭 1600px 기준 정렬 */
-  height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  height: fit-content;
   z-index: 5;
 }
 
@@ -80,13 +135,13 @@
 .nav-item:hover {
   background-color: rgba(255, 255, 255, 0.05);
   color: #fff;
-  border-left-color: rgba(255, 224, 122, 0.5);
+  border-left-color: rgba(233, 30, 99, 0.5);
 }
 
 .nav-item.active {
-  background-color: rgba(255, 224, 122, 0.1);
-  color: #ffe07a;
-  border-left-color: #ffe07a;
+  background-color: rgba(233, 30, 99, 0.1);
+  color: #e91e63;
+  border-left-color: #e91e63;
 }
 
 .nav-icon {
@@ -102,19 +157,19 @@
 }
 
 /* ─────────────────────────────────────────────── */
-/* 오른쪽 컨텐츠 영역 */
+/* 오른쪽 컨텐츠 영역 - 별도 스크롤바 없음(페이지 스크롤 사용) */
 .mypage-content {
+  margin-left: 372px; /* 사이드바 너비(340) + 간격(32) */
   flex: 1;
   background-color: rgba(0, 0, 0, 0.75);
   border-radius: 8px;
   padding: 50px;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   min-height: 700px;
   color: #fff;
-
-  /* ✅ 고정 사이드바 공간 확보 */
-  margin-left: 400px;
+  /* height/overflow 제거 -> 브라우저 기본 스크롤로 컨트롤 */
 }
 
 /* 로딩/에러 메시지 */
@@ -141,10 +196,9 @@
 /* 반응형 - 태블릿 */
 @media (max-width: 1200px) {
   .mypage-sidebar {
-    position: static; /* ✅ 고정 해제 (좁은 화면에서 자연스럽게) */
-    left: 0;
+    position: static;    /* 고정 해제 */
     width: 100%;
-    min-width: auto;
+    left: 0;
   }
 
   .mypage-wrapper {
@@ -187,6 +241,7 @@
 
   .mypage-sidebar {
     padding: 24px 16px;
+    position: static; /* 모바일에서는 상단에 고정되지 않도록 */
   }
 
   .sidebar-title {

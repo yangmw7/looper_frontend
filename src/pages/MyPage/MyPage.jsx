@@ -103,6 +103,7 @@ function MyPage() {
     <>
       <Header />
       <div className="mypage-background">
+        <div className="gradient-orb-right" />
         <div className="mypage-wrapper">
           {/* 왼쪽 사이드바 네비게이션 */}
           <aside className="mypage-sidebar">
