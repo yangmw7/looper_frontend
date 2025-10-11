@@ -1,0 +1,455 @@
+.equipment-ui {
+  display: flex;
+  gap: 30px;
+  color: #f5f5f5;
+  font-family: "Noto Sans KR", sans-serif;
+  padding: 30px;
+  position: relative;
+}
+
+/* 왼쪽 패널 */
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  max-width: 500px;
+}
+
+/* 장비창 */
+.character-panel {
+  background: linear-gradient(180deg, rgba(25,25,30,0.9), rgba(15,15,20,0.9));
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.character-panel h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.character-container {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 480px;
+  margin: 0 auto;
+  background: rgba(70, 75, 80, 0.4);
+  border-radius: 12px;
+}
+
+/* 전사 실루엣 이미지 */
+.character-figure {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warrior-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 1;
+  background: transparent;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+/* 장비 슬롯 */
+.equip-slot {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.equip-slot:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(100, 200, 255, 0.6);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(100, 200, 255, 0.4);
+}
+
+.slot-label {
+  font-size: 0.7rem;
+  color: #ffeb3b;
+  margin-bottom: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.slot-icon {
+  font-size: 2rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.slot-empty {
+  font-size: 0.65rem;
+  color: #888;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* 슬롯 배치 */
+.equip-slot.helmet { 
+  top: 10px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+}
+
+.equip-slot.armor { 
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+}
+
+.equip-slot.pants { 
+  bottom: 15px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+}
+
+.equip-slot.mainWeapon { 
+  top: 50%;
+  left: 15px; 
+  transform: translateY(-50%);
+}
+
+.equip-slot.subWeapon { 
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+}
+
+/* 호버 시 위치 보정 */
+.equip-slot.helmet:hover { 
+  transform: translateX(-50%) scale(1.05); 
+}
+
+.equip-slot.armor:hover { 
+  transform: translate(-50%, -50%) scale(1.05); 
+}
+
+.equip-slot.pants:hover { 
+  transform: translateX(-50%) scale(1.05); 
+}
+
+.equip-slot.mainWeapon:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.equip-slot.subWeapon:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* 툴팁 - 적응형 위치 */
+.item-tooltip {
+  position: absolute;
+  background: rgba(20, 20, 25, 0.98);
+  border: 2px solid rgba(233, 30, 99, 0.6);
+  border-radius: 10px;
+  padding: 12px 15px;
+  z-index: 9999;
+  pointer-events: none;
+  min-width: 200px;
+  max-width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+/* 아래 중앙 */
+.item-tooltip.tooltip-below-center {
+  transform: translate(-50%, 0);
+}
+
+/* 위 중앙 */
+.item-tooltip.tooltip-above-center {
+  transform: translate(-50%, -100%);
+}
+
+/* 아래 왼쪽 */
+.item-tooltip.tooltip-below-left {
+  transform: translate(0, 0);
+}
+
+/* 위 왼쪽 */
+.item-tooltip.tooltip-above-left {
+  transform: translate(0, -100%);
+}
+
+/* 아래 오른쪽 */
+.item-tooltip.tooltip-below-right {
+  transform: translate(-100%, 0);
+}
+
+/* 위 오른쪽 */
+.item-tooltip.tooltip-above-right {
+  transform: translate(-100%, -100%);
+}
+
+/* 오른쪽 중앙 */
+.item-tooltip.tooltip-right-center {
+  transform: translate(0, -50%);
+}
+
+/* 왼쪽 중앙 */
+.item-tooltip.tooltip-left-center {
+  transform: translate(-100%, -50%);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tooltip-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ff4081;
+  margin-bottom: 6px;
+}
+
+.tooltip-desc {
+  font-size: 0.85rem;
+  color: #ddd;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.tooltip-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.stat-hp {
+  color: #4caf50;
+}
+
+.stat-atk {
+  color: #ff5722;
+}
+
+.stat-def {
+  color: #2196f3;
+}
+
+/* 스탯창 */
+.stats-panel {
+  background: rgba(30, 30, 35, 0.9);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+.stats-panel h2 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  color: #fff;
+}
+
+.stats-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 10px;
+  column-gap: 20px;
+  font-size: 1rem;
+  align-items: center;
+}
+
+.stats-list div:nth-child(odd) { 
+  color: #aaa; 
+  font-weight: 600;
+}
+
+.stats-list div:nth-child(even) {
+  color: #4caf50;
+  text-align: right;
+  font-weight: 700;
+}
+
+.stat-bonus {
+  color: #ffd700;
+  font-size: 0.9rem;
+  margin-left: 5px;
+}
+
+/* 인벤토리 */
+.right-panel {
+  flex: 1.8;
+  background: linear-gradient(180deg, rgba(20,20,25,0.95), rgba(10,10,15,0.9));
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.inventory-header h2 {
+  margin-bottom: 15px;
+  color: #ff80ab;
+  font-size: 1.5rem;
+}
+
+/* 인벤토리 래퍼 - 여백 추가 */
+.inventory-grid-wrapper {
+  flex: 1;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.inventory-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
+  padding: 15px;
+  padding-right: 20px;
+}
+
+/* 스크롤바 스타일 */
+.inventory-grid::-webkit-scrollbar {
+  width: 10px;
+}
+
+.inventory-grid::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.inventory-grid::-webkit-scrollbar-thumb {
+  background: rgba(233, 30, 99, 0.5);
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.inventory-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(233, 30, 99, 0.7);
+}
+
+.inventory-slot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 70px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.inventory-slot:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.08);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+}
+
+.inventory-slot.equipped {
+  background: rgba(233, 30, 99, 0.15);
+  border-color: rgba(233, 30, 99, 0.5);
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+}
+
+.item-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.equipped-badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(233, 30, 99, 0.95);
+  color: #fff;
+  font-size: 0.6rem;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  margin-top: 30px;
+  grid-column: 1 / -1;
+  font-size: 1rem;
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
+  .equipment-ui {
+    flex-direction: column;
+  }
+  
+  .left-panel {
+    max-width: 100%;
+  }
+  .character-container {
+    height: 450px;
+  }
+  
+  .inventory-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .equipment-ui {
+    padding: 20px;
+  }
+  
+  .character-container {
+    height: 400px;
+  }
+  
+  .equip-slot {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .inventory-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .item-icon {
+    font-size: 2rem;
+  }
+}

@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./ProfileTab.css";
 
 function ProfileTab({ data, onUpdate }) {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  // 원본 데이터 저장
   const [originalData, setOriginalData] = useState({
     nickname: data?.nickname || "",
     email: data?.email || "",
   });
 
-  // Looper ID 수정 상태
   const [looperId, setLooperId] = useState({
     nickname: data?.nickname || "",
   });
   const [isLooperIdChanged, setIsLooperIdChanged] = useState(false);
 
-  // Personal Information 수정 상태
   const [personalInfo, setPersonalInfo] = useState({
     email: data?.email || "",
   });
   const [isPersonalInfoChanged, setIsPersonalInfoChanged] = useState(false);
 
-  // 비밀번호 변경 상태
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -31,22 +28,35 @@ function ProfileTab({ data, onUpdate }) {
   });
   const [isPasswordFormFilled, setIsPasswordFormFilled] = useState(false);
 
+  // 눈 아이콘 상태 (보이기 여부)
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
+  // 각 input focus 상태
+  const [focusedField, setFocusedField] = useState(null);
+
+  // 비밀번호 제약 조건 검사
+  const [passwordChecks, setPasswordChecks] = useState({
+    length: false,
+    variety: false,
+  });
+
   const token =
     localStorage.getItem("accessToken") ||
     sessionStorage.getItem("accessToken");
 
-  // data가 업데이트되면 상태 동기화
+  // 초기 데이터 동기화
   useEffect(() => {
     if (data) {
-      const newOriginal = {
+      setOriginalData({
         nickname: data.nickname || "",
         email: data.email || "",
-      };
-      setOriginalData(newOriginal);
+      });
       setLooperId({ nickname: data.nickname || "" });
       setPersonalInfo({ email: data.email || "" });
-      setIsLooperIdChanged(false);
-      setIsPersonalInfoChanged(false);
     }
   }, [data]);
 
@@ -59,45 +69,56 @@ function ProfileTab({ data, onUpdate }) {
     setIsPasswordFormFilled(isFilled);
   }, [passwords]);
 
-  // 아이디 마스킹
+  // 비밀번호 조건 체크
+  useEffect(() => {
+    const pwd = passwords.newPassword;
+    const hasLetter = /[a-zA-Z]/.test(pwd);
+    const hasNumber = /\d/.test(pwd);
+    const hasSymbol = /[@$!%*?&]/.test(pwd);
+
+    setPasswordChecks({
+      length: pwd.length >= 8,
+      variety: [hasLetter, hasNumber, hasSymbol].filter(Boolean).length >= 2,
+    });
+  }, [passwords.newPassword]);
+
+  // 유저 이름 마스킹
   const maskUsername = (username) => {
     if (!username) return "";
     if (username.length <= 2) return "*".repeat(username.length);
     return username.substring(0, 2) + "*".repeat(username.length - 2);
   };
 
-  // Looper ID 변경 감지
+  // 필드 변경 핸들러
   const handleLooperIdChange = (e) => {
-    const newValue = e.target.value;
-    setLooperId({ nickname: newValue });
-    setIsLooperIdChanged(newValue !== originalData.nickname);
+    setLooperId({ nickname: e.target.value });
+    setIsLooperIdChanged(e.target.value !== originalData.nickname);
   };
 
-  // Personal Info 변경 감지
   const handleEmailChange = (e) => {
-    const newValue = e.target.value;
-    setPersonalInfo({ email: newValue });
-    setIsPersonalInfoChanged(newValue !== originalData.email);
+    setPersonalInfo({ email: e.target.value });
+    setIsPersonalInfoChanged(e.target.value !== originalData.email);
   };
 
-  // 비밀번호 입력 변경
   const handlePasswordInputChange = (field, value) => {
     setPasswords({ ...passwords, [field]: value });
   };
 
-  // Looper ID 취소
+  const toggleShowPassword = (field) => {
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  // 취소 핸들러
   const handleCancelLooperId = () => {
     setLooperId({ nickname: originalData.nickname });
     setIsLooperIdChanged(false);
   };
 
-  // Personal Info 취소
   const handleCancelPersonalInfo = () => {
     setPersonalInfo({ email: originalData.email });
     setIsPersonalInfoChanged(false);
   };
 
-  // 비밀번호 폼 취소
   const handleCancelPassword = () => {
     setPasswords({
       currentPassword: "",
@@ -106,49 +127,37 @@ function ProfileTab({ data, onUpdate }) {
     });
   };
 
-  // Looper ID 저장
+  // 저장 핸들러
   const handleSaveLooperId = async () => {
     try {
       await axios.put(
         `${API_BASE_URL}/api/mypage/profile`,
-        {
-          nickname: looperId.nickname,
-          email: originalData.email,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { nickname: looperId.nickname, email: originalData.email },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("닉네임이 변경되었습니다.");
       setIsLooperIdChanged(false);
       onUpdate();
-    } catch (err) {
-      alert(err.response?.data || "닉네임 변경 실패");
+    } catch {
+      alert("닉네임 변경 실패");
     }
   };
 
-  // Personal Info 저장
   const handleSavePersonalInfo = async () => {
     try {
       await axios.put(
         `${API_BASE_URL}/api/mypage/profile`,
-        {
-          nickname: originalData.nickname,
-          email: personalInfo.email,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { nickname: originalData.nickname, email: personalInfo.email },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("이메일이 변경되었습니다.");
       setIsPersonalInfoChanged(false);
       onUpdate();
-    } catch (err) {
-      alert(err.response?.data || "이메일 변경 실패");
+    } catch {
+      alert("이메일 변경 실패");
     }
   };
 
-  // 비밀번호 변경
   const handlePasswordChange = async (e) => {
     e.preventDefault();
 
@@ -158,27 +167,24 @@ function ProfileTab({ data, onUpdate }) {
     }
 
     try {
-      const res = await axios.put(
+      await axios.put(
         `${API_BASE_URL}/api/mypage/password`,
         {
           currentPassword: passwords.currentPassword,
           newPassword: passwords.newPassword,
           newPasswordConfirm: passwords.confirmPassword,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert(res.data || "비밀번호가 변경되었습니다.");
+      alert("비밀번호가 변경되었습니다.");
       setPasswords({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
-    } catch (err) {
-      const message = err.response?.data || "비밀번호 변경 실패";
-      alert(message);
+    } catch {
+      alert("비밀번호 변경 실패");
     }
   };
 
@@ -206,7 +212,6 @@ function ProfileTab({ data, onUpdate }) {
             </div>
           </div>
 
-
           <div className="button-group">
             {isLooperIdChanged && (
               <button className="cancel-button" onClick={handleCancelLooperId}>
@@ -224,7 +229,7 @@ function ProfileTab({ data, onUpdate }) {
         </div>
       </div>
 
-      {/* Personal Information 섹션 */}
+      {/* 이메일 변경 섹션 */}
       <div className="profile-section">
         <div className="section-left">
           <h2 className="section-title">이메일 변경</h2>
@@ -283,12 +288,14 @@ function ProfileTab({ data, onUpdate }) {
         </div>
       </div>
 
-      {/* Looper Account Sign-In 섹션 */}
+      {/* 비밀번호 변경 섹션 */}
       <div className="profile-section">
         <div className="section-left">
           <h2 className="section-title">비밀번호 변경</h2>
           <p className="section-description">
-            보안을 위해 정기적으로 비밀번호를 변경하는 것을 권장합니다.
+            보안을 위해 정기적으로 비밀번호를 
+            <br></br>
+            변경하는 것을 권장합니다.
           </p>
         </div>
         <div className="section-right">
@@ -302,41 +309,53 @@ function ProfileTab({ data, onUpdate }) {
           <form className="password-form" onSubmit={handlePasswordChange}>
             <h3 className="password-title">비밀번호 변경</h3>
 
-            <div className="password-field">
-              <label className="inline-label">CURRENT PASSWORD</label>
-              <input
-                type="password"
-                className="inline-input"
-                value={passwords.currentPassword}
-                onChange={(e) =>
-                  handlePasswordInputChange("currentPassword", e.target.value)
-                }
-              />
-            </div>
+            {["current", "new", "confirm"].map((type) => (
+              <div className="password-field" key={type}>
+                <label className="inline-label">
+                  {type === "current"
+                    ? "현재 비밀번호"
+                    : type === "new"
+                    ? "새 비밀번호"
+                    : "새 비밀번호 확인"}
+                </label>
 
-            <div className="password-field">
-              <label className="inline-label">NEW PASSWORD</label>
-              <input
-                type="password"
-                className="inline-input"
-                value={passwords.newPassword}
-                onChange={(e) =>
-                  handlePasswordInputChange("newPassword", e.target.value)
-                }
-              />
-            </div>
+                <div className="password-input-wrapper">
+                  <input
+                    type={showPassword[type] ? "text" : "password"}
+                    className="inline-input"
+                    value={passwords[`${type}Password`]}
+                    onFocus={() => setFocusedField(type)}
+                    onBlur={() => setFocusedField(null)}
+                    onChange={(e) =>
+                      handlePasswordInputChange(`${type}Password`, e.target.value)
+                    }
+                  />
 
-            <div className="password-field">
-              <label className="inline-label">CONFIRM NEW PASSWORD</label>
-              <input
-                type="password"
-                className="inline-input"
-                value={passwords.confirmPassword}
-                onChange={(e) =>
-                  handlePasswordInputChange("confirmPassword", e.target.value)
-                }
-              />
-            </div>
+                  {/* 눈 아이콘 (focus 시만 표시) */}
+                  {focusedField === type && (
+                    <span
+                      className="password-toggle"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => toggleShowPassword(type)}
+                    >
+                      {showPassword[type] ? <FaEyeSlash /> : <FaEye />}
+                    </span>
+                  )}
+                </div>
+
+                {/* 새 비밀번호 제약 조건 (focus 시 표시) */}
+                {type === "new" && focusedField === "new" && (
+                  <ul className="password-rules">
+                    <li className={passwordChecks.length ? "valid" : ""}>
+                      비밀번호는 8-20자여야 합니다.
+                    </li>
+                    <li className={passwordChecks.variety ? "valid" : ""}>
+                      비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다.
+                    </li>
+                  </ul>
+                )}
+              </div>
+            ))}
 
             <div className="button-group">
               {isPasswordFormFilled && (

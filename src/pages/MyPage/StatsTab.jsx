@@ -1,4 +1,5 @@
 import React from "react";
+import "./StatsTab.css";
 
 function StatsTab({ data }) {
   return (

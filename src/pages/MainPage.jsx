@@ -4,6 +4,25 @@ import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './MainPage.css';
+import { 
+  FaGamepad, 
+  FaChevronRight, 
+  FaBullhorn,
+  FaFire,
+  FaPlay
+} from 'react-icons/fa';
+import { 
+  GiSwordman, 
+  GiCrossedSwords, 
+  GiTreasureMap,
+  GiCrosshair,
+  GiLightningBow,
+  GiCardPickup,
+  GiTrophy,
+  GiGiftOfKnowledge,
+  GiPartyPopper
+} from 'react-icons/gi';
+import { IoMdArrowForward } from 'react-icons/io';
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -36,11 +55,11 @@ export default function MainPage() {
       })
       .catch((err) => console.error('게시글 로딩 실패:', err));
 
-    // 공지사항 가져오기 (임시 데이터 - API 엔드포인트가 있다면 교체)
+    // 공지사항 가져오기
     setNotices([
-      { id: 1, title: '🎉 신규 던전 "어둠의 심연" 오픈!', date: '2025-10-10', badge: 'NEW' },
-      { id: 2, title: '⚔️ 대규모 밸런스 패치 노트', date: '2025-10-08', badge: '중요' },
-      { id: 3, title: '🎁 주간 이벤트: 경험치 2배!', date: '2025-10-05', badge: '이벤트' },
+      { id: 1, title: '신규 던전 "어둠의 심연" 오픈!', date: '2025-10-10', badge: 'NEW', icon: GiPartyPopper },
+      { id: 2, title: '대규모 밸런스 패치 노트', date: '2025-10-08', badge: '중요', icon: GiCrossedSwords },
+      { id: 3, title: '주간 이벤트: 경험치 2배!', date: '2025-10-05', badge: '이벤트', icon: GiGiftOfKnowledge },
     ]);
     
     return () => clearInterval(interval);
@@ -50,25 +69,25 @@ export default function MainPage() {
     {
       title: '무한 던전 탐험',
       desc: '매번 다르게 생성되는 던전에서 살아남아라',
-      icon: '🗡️'
+      icon: GiSwordman
     },
     {
       title: '전략적 전투',
       desc: '다양한 스킬과 아이템을 조합하여 최강의 빌드를 완성하세요',
-      icon: '⚔️'
+      icon: GiCrossedSwords
     },
     {
       title: '끝없는 성장',
       desc: '죽어도 다시 시작하는 로그라이크의 재미',
-      icon: '🎮'
+      icon: FaGamepad
     }
   ];
 
   const gameFeatures = [
-    { icon: '🎯', title: '로그라이크', desc: '랜덤 생성 던전' },
-    { icon: '⚡', title: '빠른 전투', desc: '박진감 넘치는 액션' },
-    { icon: '📦', title: '아이템 파밍', desc: '수집의 재미' },
-    { icon: '🏆', title: '랭킹 시스템', desc: '경쟁과 도전' },
+    { icon: GiCrosshair, title: '로그라이크', desc: '랜덤 생성 던전' },
+    { icon: GiLightningBow, title: '빠른 전투', desc: '박진감 넘치는 액션' },
+    { icon: GiCardPickup, title: '아이템 파밍', desc: '수집의 재미' },
+    { icon: GiTrophy, title: '랭킹 시스템', desc: '경쟁과 도전' },
   ];
 
   return (
@@ -85,7 +104,10 @@ export default function MainPage() {
         </div>
 
         <div className={`hero-content ${showContent ? 'show' : ''}`}>
-          <div className="hero-badge">🎮 2D 로그라이크 RPG</div>
+          <div className="hero-badge">
+            <FaGamepad style={{ marginRight: '6px' }} />
+            2D 로그라이크 RPG
+          </div>
           
           <h1 className="hero-title">
             <span className="title-line">끝없는 던전에서</span>
@@ -100,9 +122,7 @@ export default function MainPage() {
           <div className="hero-buttons">
             <button className="btn-primary" onClick={() => navigate('/auth')}>
               <span>지금 시작하기</span>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <FaChevronRight />
             </button>
             <button className="btn-secondary" onClick={() => navigate('/guide')}>
               게임 정보
@@ -136,15 +156,20 @@ export default function MainPage() {
       {/* Game Features Grid */}
       <section className="game-features-section">
         <div className="features-grid-compact">
-          {gameFeatures.map((feature, index) => (
-            <div key={index} className="feature-compact">
-              <div className="feature-compact-icon">{feature.icon}</div>
-              <div className="feature-compact-content">
-                <h4>{feature.title}</h4>
-                <p>{feature.desc}</p>
+          {gameFeatures.map((feature, index) => {
+            const IconComponent = feature.icon;
+            return (
+              <div key={index} className="feature-compact">
+                <div className="feature-compact-icon">
+                  <IconComponent size={32} />
+                </div>
+                <div className="feature-compact-content">
+                  <h4>{feature.title}</h4>
+                  <p>{feature.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -154,32 +179,42 @@ export default function MainPage() {
           {/* 공지사항 */}
           <div className="content-card notice-card">
             <div className="card-header">
-              <h3>📢 공지사항</h3>
+              <h3>
+                <FaBullhorn style={{ marginRight: '8px' }} />
+                공지사항
+              </h3>
               <button className="more-btn" onClick={() => navigate('/notice')}>
-                더보기 →
+                더보기 <IoMdArrowForward style={{ marginLeft: '4px' }} />
               </button>
             </div>
             <div className="notice-list">
-              {notices.map((notice) => (
-                <div key={notice.id} className="notice-item" onClick={() => navigate(`/notice/${notice.id}`)}>
-                  <div className="notice-content">
-                    <span className={`notice-badge ${notice.badge === 'NEW' ? 'new' : notice.badge === '중요' ? 'important' : 'event'}`}>
-                      {notice.badge}
-                    </span>
-                    <span className="notice-title">{notice.title}</span>
+              {notices.map((notice) => {
+                const NoticeIcon = notice.icon;
+                return (
+                  <div key={notice.id} className="notice-item" onClick={() => navigate(`/notice/${notice.id}`)}>
+                    <div className="notice-content">
+                      <span className={`notice-badge ${notice.badge === 'NEW' ? 'new' : notice.badge === '중요' ? 'important' : 'event'}`}>
+                        {notice.badge}
+                      </span>
+                      <NoticeIcon style={{ marginRight: '8px', fontSize: '1.2rem' }} />
+                      <span className="notice-title">{notice.title}</span>
+                    </div>
+                    <span className="notice-date">{notice.date}</span>
                   </div>
-                  <span className="notice-date">{notice.date}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           {/* 커뮤니티 인기글 */}
           <div className="content-card community-card">
             <div className="card-header">
-              <h3>🔥 커뮤니티 HOT</h3>
+              <h3>
+                <FaFire style={{ marginRight: '8px' }} />
+                커뮤니티 HOT
+              </h3>
               <button className="more-btn" onClick={() => navigate('/community')}>
-                더보기 →
+                더보기 <IoMdArrowForward style={{ marginLeft: '4px' }} />
               </button>
             </div>
             <div className="community-list">
@@ -207,18 +242,23 @@ export default function MainPage() {
         </div>
 
         <div className="features-grid">
-          {features.map((feature, index) => (
-            <div 
-              key={index}
-              className={`feature-card ${activeFeature === index ? 'active' : ''}`}
-              onMouseEnter={() => setActiveFeature(index)}
-            >
-              <div className="feature-icon">{feature.icon}</div>
-              <h3 className="feature-title">{feature.title}</h3>
-              <p className="feature-desc">{feature.desc}</p>
-              <div className="feature-glow" />
-            </div>
-          ))}
+          {features.map((feature, index) => {
+            const FeatureIcon = feature.icon;
+            return (
+              <div 
+                key={index}
+                className={`feature-card ${activeFeature === index ? 'active' : ''}`}
+                onMouseEnter={() => setActiveFeature(index)}
+              >
+                <div className="feature-icon">
+                  <FeatureIcon size={48} />
+                </div>
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-desc">{feature.desc}</p>
+                <div className="feature-glow" />
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -232,10 +272,7 @@ export default function MainPage() {
         <div className="video-container">
           <div className="video-placeholder">
             <div className="play-button">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="40" fill="rgba(233, 30, 99, 0.9)" />
-                <path d="M32 25L55 40L32 55V25Z" fill="white" />
-              </svg>
+              <FaPlay size={40} color="white" />
             </div>
             <div className="video-overlay">
               <h3>게임플레이 트레일러</h3>

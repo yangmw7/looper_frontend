@@ -1,11 +1,11 @@
-/* ProfileTab 전체 스타일 */
+/* ProfileTab 전체 컨테이너 */
 .profile-tab {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
-/* 프로필 섹션 */
+/* 각 섹션 */
 .profile-section {
   display: flex;
   gap: 48px;
@@ -15,7 +15,7 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* 왼쪽 영역 */
+/* 왼쪽 정보 */
 .section-left {
   flex: 0 0 320px;
   padding-right: 24px;
@@ -35,7 +35,7 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* 오른쪽 영역 */
+/* 오른쪽 입력영역 */
 .section-right {
   flex: 1;
   display: flex;
@@ -43,7 +43,7 @@
   gap: 24px;
 }
 
-/* 인라인 수정 행 */
+/* 인라인 행 */
 .inline-edit-row {
   display: flex;
   gap: 24px;
@@ -54,6 +54,7 @@
   gap: 0;
 }
 
+/* 그룹 */
 .inline-group {
   flex: 1;
   display: flex;
@@ -73,8 +74,9 @@
   letter-spacing: 1px;
 }
 
-/* 인라인 입력 필드 */
+/* 입력 필드 */
 .inline-input {
+  width: 100%;
   padding: 16px 20px;
   background-color: rgba(255, 255, 255, 0.05);
   color: #fff;
@@ -105,29 +107,6 @@
   border-radius: 4px;
   font-size: 1.15rem;
   font-weight: 600;
-}
-
-/* 알림 메시지 */
-.info-notice {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background-color: rgba(138, 43, 226, 0.1);
-  border-left: 3px solid #8a2be2;
-  border-radius: 4px;
-}
-
-.notice-icon {
-  font-size: 1.2rem;
-}
-
-.notice-text {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 /* 버튼 그룹 */
@@ -208,7 +187,65 @@
   gap: 8px;
 }
 
-/* 반응형 - 태블릿 */
+/* ------------------------------- */
+/* 비밀번호 입력창 + 눈 아이콘 영역 */
+/* ------------------------------- */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* ------------------------------- */
+/* 비밀번호 규칙 리스트 */
+/* ------------------------------- */
+.password-rules {
+  list-style: none;
+  margin-top: 8px;
+  padding-left: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.password-rules li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.password-rules li::before {
+  content: "✖";
+  color: #ff5555;
+  font-size: 0.8rem;
+}
+
+.password-rules li.valid {
+  color: #57e39b;
+}
+
+.password-rules li.valid::before {
+  content: "✔";
+  color: #57e39b;
+}
+
+/* ------------------------------- */
+/* 반응형 스타일 */
+/* ------------------------------- */
 @media (max-width: 1024px) {
   .profile-section {
     flex-direction: column;
@@ -236,7 +273,6 @@
   }
 }
 
-/* 반응형 - 모바일 */
 @media (max-width: 768px) {
   .profile-section {
     padding: 24px 20px;
@@ -267,11 +303,5 @@
   .cancel-button,
   .save-button {
     width: 100%;
-  }
-
-  .info-notice {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
   }
 }

@@ -1,0 +1,112 @@
+/* ─────────────────────────────── */
+/* 전체 컨테이너 */
+.stats-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 30px;
+  color: #e6e6e6;
+  background: rgba(15, 20, 35, 0.9);
+  border: 2px solid rgba(90, 120, 170, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 0 18px rgba(0, 60, 150, 0.3);
+  font-family: "Noto Sans KR", sans-serif;
+  width: 80%;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* 제목 */
+.stats-tab h3 {
+  font-size: 1.6rem;
+  color: #99ccff;
+  text-shadow: 0 0 6px rgba(80, 160, 255, 0.6);
+  border-bottom: 2px solid rgba(80, 130, 200, 0.4);
+  padding-bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* ─────────────────────────────── */
+/* 스탯 카드 영역 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 30px;
+  width: 100%;
+  background: rgba(25, 35, 55, 0.7);
+  border: 1px solid rgba(120, 160, 220, 0.3);
+  border-radius: 8px;
+  padding: 16px 24px;
+}
+
+/* 각 스탯 행 */
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+  background: rgba(120, 180, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* 스탯 이름 */
+.stat-item span {
+  font-weight: 600;
+  color: #a8c8ff;
+  text-shadow: 0 0 3px rgba(150, 200, 255, 0.3);
+}
+
+/* 스탯 값 */
+.stat-item strong {
+  font-weight: bold;
+  color: #fff;
+  font-size: 1.1rem;
+  text-shadow: 0 0 4px rgba(200, 230, 255, 0.5);
+}
+
+/* ─────────────────────────────── */
+/* 진행도 영역 */
+.stats-progress {
+  width: 100%;
+  background: rgba(25, 35, 55, 0.7);
+  border: 1px solid rgba(120, 160, 220, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stats-progress h4 {
+  color: #99ccff;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(100, 150, 220, 0.3);
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.stats-progress p {
+  color: #d0e0ff;
+  margin: 6px 0;
+  font-size: 1rem;
+}
+
+/* ─────────────────────────────── */
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

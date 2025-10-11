@@ -4,11 +4,13 @@ import axios from "axios";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ProfileTab from "./ProfileTab";
-import StatsTab from "./StatsTab";
-import InventoryTab from "./InventoryTab";
 import ActivityTab from "./ActivityTab";
 import SettingsTab from "./SettingsTab";
+import EquipmentTab from "./EquipmentTab";
 import "./MyPage.css";
+
+import { FaUser, FaCog, FaClipboardList } from "react-icons/fa";
+import { GiCrossedSwords } from "react-icons/gi";
 
 function MyPage() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -20,6 +22,7 @@ function MyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 🔹 최초 로그인 상태 확인 및 데이터 로드
   useEffect(() => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -34,15 +37,16 @@ function MyPage() {
     loadMyPageData();
   }, []);
 
+  // 🔹 경로에 따라 탭 자동 활성화
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("/profile")) setActiveTab("profile");
-    else if (path.includes("/stats")) setActiveTab("stats");
-    else if (path.includes("/inventory")) setActiveTab("inventory");
+    else if (path.includes("/equipment")) setActiveTab("equipment");
     else if (path.includes("/activity")) setActiveTab("activity");
     else if (path.includes("/settings")) setActiveTab("settings");
   }, [location]);
 
+  // 🔹 마이페이지 정보 로드
   const loadMyPageData = () => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -68,11 +72,13 @@ function MyPage() {
       });
   };
 
+  // 🔹 탭 전환
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     navigate(`/mypage/${tab}`);
   };
 
+  // 🔹 탭 내용 렌더링
   const renderTabContent = () => {
     if (loading) return <p className="loading">로딩 중...</p>;
     if (error)
@@ -84,14 +90,16 @@ function MyPage() {
         return (
           <ProfileTab data={myPageData.profile} onUpdate={loadMyPageData} />
         );
-      case "stats":
-        return <StatsTab data={myPageData.stats} />;
-      case "inventory":
-        return <InventoryTab data={myPageData.stats} />;
+
+      case "equipment":
+        return <EquipmentTab data={myPageData} />;
+
       case "activity":
         return <ActivityTab />;
+
       case "settings":
         return <SettingsTab />;
+
       default:
         return (
           <ProfileTab data={myPageData.profile} onUpdate={loadMyPageData} />
@@ -99,62 +107,59 @@ function MyPage() {
     }
   };
 
+  // 🔹 최종 UI
   return (
     <>
       <Header />
       <div className="mypage-background">
         <div className="gradient-orb-right" />
         <div className="mypage-wrapper">
-          {/* 왼쪽 사이드바 네비게이션 */}
+          {/* 왼쪽 사이드바 */}
           <aside className="mypage-sidebar">
             <h2 className="sidebar-title">계정 관리</h2>
 
             <nav className="sidebar-nav">
+              {/* 프로필 정보 */}
               <button
                 className={`nav-item ${
                   activeTab === "profile" ? "active" : ""
                 }`}
                 onClick={() => handleTabChange("profile")}
               >
-                <span className="nav-icon">👤</span>
+                <FaUser className="nav-icon" />
                 <span className="nav-text">프로필 정보</span>
               </button>
 
-              <button
-                className={`nav-item ${activeTab === "stats" ? "active" : ""}`}
-                onClick={() => handleTabChange("stats")}
-              >
-                <span className="nav-icon">⚔️</span>
-                <span className="nav-text">게임 스탯</span>
-              </button>
-
+              {/* 장비 관리 (통합 탭) */}
               <button
                 className={`nav-item ${
-                  activeTab === "inventory" ? "active" : ""
+                  activeTab === "equipment" ? "active" : ""
                 }`}
-                onClick={() => handleTabChange("inventory")}
+                onClick={() => handleTabChange("equipment")}
               >
-                <span className="nav-icon">🎒</span>
-                <span className="nav-text">인벤토리</span>
+                <GiCrossedSwords className="nav-icon" />
+                <span className="nav-text">장비 관리</span>
               </button>
 
+              {/* 활동 내역 */}
               <button
                 className={`nav-item ${
                   activeTab === "activity" ? "active" : ""
                 }`}
                 onClick={() => handleTabChange("activity")}
               >
-                <span className="nav-icon">📝</span>
+                <FaClipboardList className="nav-icon" />
                 <span className="nav-text">활동 내역</span>
               </button>
 
+              {/* 설정 */}
               <button
                 className={`nav-item ${
                   activeTab === "settings" ? "active" : ""
                 }`}
                 onClick={() => handleTabChange("settings")}
               >
-                <span className="nav-icon">⚙️</span>
+                <FaCog className="nav-icon" />
                 <span className="nav-text">설정</span>
               </button>
             </nav>
