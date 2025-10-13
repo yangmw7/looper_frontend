@@ -13,6 +13,14 @@ function AdminReportDetail() {
   const [report, setReport] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [memo, setMemo] = useState("");
+  
+  // ✅ 제재 관련 상태 추가
+  const [penaltyType, setPenaltyType] = useState("");
+  const [penaltyReason, setPenaltyReason] = useState("");
+  const [penaltyDescription, setPenaltyDescription] = useState("");
+  const [suspensionDays, setSuspensionDays] = useState(3);
+  const [evidence, setEvidence] = useState("");
+  
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +44,15 @@ function AdminReportDetail() {
     OTHER: "기타",
   };
 
-  // ✅ 관리자 토큰 포함해서 상세 신고 데이터 요청
+  // 제재 유형 매핑
+  const penaltyTypeLabels = {
+    "": "제재 없음",
+    WARNING: "경고",
+    SUSPENSION: "정지",
+    PERMANENT: "영구정지",
+  };
+
+  // ✅ 신고 상세 데이터 요청
   useEffect(() => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -66,23 +82,39 @@ function AdminReportDetail() {
       });
   }, [API_BASE_URL, id, type]);
 
-  // 상태 변경
-  const handleUpdate = () => {
+  // ✅ 신고 처리 (제재 포함)
+  const handleProcess = () => {
+    if (!confirm("신고를 처리하시겠습니까?")) return;
+
     const token =
       localStorage.getItem("accessToken") ||
       sessionStorage.getItem("accessToken");
 
+    // ReportActionRequest 구조
+    const requestData = {
+      status: newStatus,
+      handlerMemo: memo,
+      penaltyType: penaltyType || null,
+      penaltyReason: penaltyReason || null,
+      penaltyDescription: penaltyDescription || null,
+      suspensionDays: penaltyType === "SUSPENSION" ? parseInt(suspensionDays) : null,
+      evidence: evidence || null,
+    };
+
     axios
-      .patch(
-        `${API_BASE_URL}/api/admin/reports/${type}s/${id}/status`,
-        { status: newStatus, handlerMemo: memo },
+      .post(
+        `${API_BASE_URL}/api/admin/reports/${type}s/${id}/process`,
+        requestData,
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then(() => {
-        alert("상태가 변경되었습니다.");
+        alert("신고 처리가 완료되었습니다.");
         navigate("/admin/reports");
       })
-      .catch(() => alert("상태 변경 중 오류 발생"));
+      .catch((err) => {
+        console.error("신고 처리 실패:", err);
+        alert("신고 처리 중 오류 발생: " + (err.response?.data?.message || err.message));
+      });
   };
 
   if (loading) return <p className="loading">로딩 중...</p>;
@@ -95,64 +127,171 @@ function AdminReportDetail() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <h2 className="admin-title">신고 상세</h2>
+            <h2 className="admin-title">신고 상세 & 처리</h2>
 
+            {/* ─── 신고 정보 ─────────────────────────── */}
             <div className="report-detail-box">
+              <h3>📋 신고 정보</h3>
               <p><b>ID:</b> {report.id}</p>
-              <p><b>유형:</b> {report.type === "POST" ? "게시글" : "댓글"}</p>
+              <p><b>유형:</b> {report.reportType === "POST" ? "게시글" : "댓글"}</p>
               <p><b>대상 ID:</b> {report.targetId}</p>
 
-              {report.type === "POST" && (
+              {report.reportType === "POST" && (
                 <>
                   <p><b>게시글 제목:</b> {report.targetTitle}</p>
-                  <p><b>게시글 내용:</b> {report.targetContent}</p>
+                  <p><b>게시글 내용:</b></p>
+                  <pre style={{ 
+                    background: 'rgba(0,0,0,0.3)', 
+                    padding: '12px', 
+                    borderRadius: '8px',
+                    whiteSpace: 'pre-wrap',
+                    maxHeight: '200px',
+                    overflow: 'auto'
+                  }}>
+                    {report.targetContent}
+                  </pre>
                 </>
               )}
 
-              {report.type === "COMMENT" && (
-                <p><b>댓글 내용:</b> {report.targetContent}</p>
+              {report.reportType === "COMMENT" && (
+                <>
+                  <p><b>댓글 내용:</b></p>
+                  <pre style={{ 
+                    background: 'rgba(0,0,0,0.3)', 
+                    padding: '12px', 
+                    borderRadius: '8px',
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {report.targetContent}
+                  </pre>
+                </>
               )}
 
-              <p><b>신고자:</b> {report.reporterNickname}</p>
-              <p><b>피신고자:</b> {report.reportedNickname}</p>
+              <p><b>신고자:</b> {report.reporterNickname} (ID: {report.reporterId})</p>
+              <p><b>피신고자:</b> {report.reportedNickname} (ID: {report.reportedId})</p>
               <p>
                 <b>신고 사유:</b>{" "}
                 {Array.from(report.reasons)
                   .map((r) => reasonLabels[r] || r)
                   .join(", ")}
               </p>
-              <p><b>설명:</b> {report.description}</p>
-              <p><b>접수 상태:</b> {statusLabels[report.status] || report.status}</p>
+              <p><b>신고 설명:</b> {report.description || "없음"}</p>
+              <p><b>현재 상태:</b> {statusLabels[report.status] || report.status}</p>
               <p><b>등록일:</b> {new Date(report.createdAt).toLocaleString()}</p>
+              
+              {report.handledBy && (
+                <>
+                  <p><b>처리자:</b> {report.handledBy}</p>
+                  <p><b>처리일:</b> {new Date(report.handledAt).toLocaleString()}</p>
+                  <p><b>처리 메모:</b> {report.handlerMemo}</p>
+                </>
+              )}
             </div>
 
+            {/* ─── 신고 처리 ─────────────────────────── */}
             <div className="report-actions">
-              <label>상태 변경: </label>
-              <select
-                value={newStatus}
-                onChange={(e) => setNewStatus(e.target.value)}
-              >
-                <option value="PENDING">접수</option>
-                <option value="IN_REVIEW">확인 중</option>
-                <option value="REJECTED">기각</option>
-                <option value="ACTION_TAKEN">조치 완료</option>
-                <option value="RESOLVED">종결</option>
-              </select>
+              <h3>⚖️ 신고 처리</h3>
+              
+              <div className="form-group">
+                <label>처리 상태:</label>
+                <select
+                  value={newStatus}
+                  onChange={(e) => setNewStatus(e.target.value)}
+                >
+                  <option value="PENDING">접수</option>
+                  <option value="IN_REVIEW">확인 중</option>
+                  <option value="REJECTED">기각</option>
+                  <option value="RESOLVED">종결 (경고)</option>
+                  <option value="ACTION_TAKEN">조치 완료 (정지/영구정지)</option>
+                </select>
+              </div>
 
-              <textarea
-                placeholder="관리자 메모"
-                value={memo}
-                onChange={(e) => setMemo(e.target.value)}
-              />
-              <button onClick={handleUpdate}>상태 저장</button>
+              <div className="form-group">
+                <label>처리 메모:</label>
+                <textarea
+                  placeholder="관리자 메모 (신고자에게 표시됨)"
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                  rows="3"
+                />
+              </div>
+
+              {/* ─── 제재 부과 (선택) ─────────────────────────── */}
+              {(newStatus === "RESOLVED" || newStatus === "ACTION_TAKEN") && (
+                <div className="penalty-section">
+                  <h4>🚨 제재 부과 (선택)</h4>
+                  
+                  <div className="form-group">
+                    <label>제재 유형:</label>
+                    <select
+                      value={penaltyType}
+                      onChange={(e) => setPenaltyType(e.target.value)}
+                    >
+                      <option value="">제재 없음</option>
+                      <option value="WARNING">경고</option>
+                      <option value="SUSPENSION">정지</option>
+                      <option value="PERMANENT">영구정지</option>
+                    </select>
+                  </div>
+
+                  {penaltyType && (
+                    <>
+                      <div className="form-group">
+                        <label>제재 사유:</label>
+                        <input
+                          type="text"
+                          placeholder="예: 욕설 사용"
+                          value={penaltyReason}
+                          onChange={(e) => setPenaltyReason(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>제재 상세 설명:</label>
+                        <textarea
+                          placeholder="예: 커뮤니티 가이드 위반으로 경고 조치"
+                          value={penaltyDescription}
+                          onChange={(e) => setPenaltyDescription(e.target.value)}
+                          rows="3"
+                        />
+                      </div>
+
+                      {penaltyType === "SUSPENSION" && (
+                        <div className="form-group">
+                          <label>정지 기간 (일):</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="365"
+                            value={suspensionDays}
+                            onChange={(e) => setSuspensionDays(e.target.value)}
+                          />
+                        </div>
+                      )}
+
+                      <div className="form-group">
+                        <label>증거 자료:</label>
+                        <textarea
+                          placeholder="예: 게시글 URL, 스크린샷 링크 등"
+                          value={evidence}
+                          onChange={(e) => setEvidence(e.target.value)}
+                          rows="2"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              <div className="action-buttons">
+                <button className="admin-btn-primary" onClick={handleProcess}>
+                  ✅ 신고 처리하기
+                </button>
+                <button className="btn-secondary" onClick={() => navigate("/admin/reports")}>
+                  ← 목록으로
+                </button>
+              </div>
             </div>
-
-            <button
-              className="back-button bottom-left"
-              onClick={() => navigate("/admin/reports")}
-            >
-              ← 목록으로
-            </button>
           </div>
         </div>
       </div>

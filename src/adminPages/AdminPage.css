@@ -1,0 +1,236 @@
+/* 전체 배경 - 관리자 페이지 전용 */
+.admin-background {
+  position: relative;
+  background: linear-gradient(180deg, #0a0e12 0%, #1a1e2e 50%, #0a0e12 100%);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 120px 20px 100px;
+  overflow-x: hidden;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* 그레인 텍스처 오버레이 */
+.admin-background::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* 그라디언트 구체 효과 - 왼쪽 상단 */
+.admin-background::after {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 152, 0, 0.3) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: adminFloat1 20s infinite ease-in-out;
+}
+
+@keyframes adminFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+}
+
+/* 그라디언트 구체 효과 - 오른쪽 하단 */
+.admin-gradient-orb-right {
+  position: fixed;
+  bottom: -150px;
+  right: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 193, 7, 0.3) 0%, transparent 70%);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: adminFloat2 20s infinite ease-in-out;
+  animation-delay: 7s;
+}
+
+@keyframes adminFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-50px, 50px) scale(1.1); }
+  66% { transform: translate(30px, -30px) scale(0.9); }
+}
+
+/* 메인 래퍼 (사이드바 + 컨텐츠) */
+.admin-wrapper {
+  position: relative;
+  display: flex;
+  gap: 32px;
+  max-width: 1600px;
+  width: 100%;
+  align-items: flex-start;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+/* 왼쪽 사이드바 - 화면에 고정 */
+.admin-sidebar {
+  position: fixed;
+  top: 190px;
+  left: calc(50% - 800px);
+  width: 340px;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 10px;
+  padding: 32px 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  height: fit-content;
+  z-index: 5;
+}
+
+/* 사이드바 제목 */
+.sidebar-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+}
+
+/* 네비게이션 아이템 */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-left-color: rgba(255, 193, 7, 0.5);
+}
+
+.nav-item.active {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+  border-left-color: #ffc107;
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-text {
+  flex: 1;
+}
+
+/* 오른쪽 컨텐츠 영역 */
+.admin-content {
+  margin-left: 372px; /* 사이드바 너비(340) + 간격(32) */
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 8px;
+  padding: 50px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 700px;
+  color: #fff;
+}
+
+/* 반응형 - 태블릿 */
+@media (max-width: 1200px) {
+  .admin-sidebar {
+    position: static;
+    width: 100%;
+    left: 0;
+  }
+
+  .admin-wrapper {
+    flex-direction: column;
+    max-width: 95%;
+  }
+
+  .admin-content {
+    margin-left: 0;
+    padding: 40px 24px;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-item {
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+  }
+
+  .nav-icon {
+    font-size: 1.3rem;
+  }
+
+  .nav-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* 반응형 - 모바일 */
+@media (max-width: 768px) {
+  .admin-background {
+    padding: 100px 16px 80px;
+  }
+
+  .admin-sidebar {
+    padding: 24px 16px;
+    position: static;
+  }
+
+  .sidebar-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .sidebar-nav {
+    flex-direction: column;
+  }
+
+  .nav-item {
+    justify-content: flex-start;
+  }
+
+  .admin-content {
+    padding: 24px 20px;
+  }
+}

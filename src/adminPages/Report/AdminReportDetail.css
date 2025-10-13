@@ -1,19 +1,26 @@
 @import '../User/AdminUserList.css';
 
-/* ─────────────────────────────────────────────── */
-/* 신고 상세 컨테이너 */
+/* ─── 신고 상세 컨테이너 ─────────────────────── */
 .report-detail-box {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
   margin-top: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   color: #fff;
   line-height: 1.6;
 }
 
+.report-detail-box h3 {
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 .report-detail-box p {
-  margin: 8px 0;
+  margin: 10px 0;
   font-size: 0.95rem;
 }
 
@@ -22,121 +29,221 @@
   margin-right: 6px;
 }
 
-/* ─────────────────────────────────────────────── */
-/* 상태 변경 섹션 */
+.report-detail-box pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── 신고 처리 섹션 ─────────────────────── */
 .report-actions {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
   margin-top: 30px;
   margin-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
-.report-actions label {
-  font-size: 1rem;
+.report-actions h3 {
+  margin-bottom: 24px;
   color: #fff;
+  font-size: 1.2rem;
   font-weight: 600;
-  margin-bottom: -8px;
 }
 
-.report-actions select {
+/* ─── 폼 그룹 ─────────────────────── */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
   color: #fff;
   font-size: 0.95rem;
-  cursor: pointer;
   box-sizing: border-box;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.2s ease;
+  outline: none;
 }
 
-.report-actions select:focus {
-  outline: none;
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   border-color: #2a7cff;
   background: rgba(42, 124, 255, 0.1);
+  box-shadow: 0 0 6px rgba(42, 124, 255, 0.3);
 }
 
-.report-actions select option {
+.form-group textarea {
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+  min-height: 80px;
+}
+
+.form-group textarea::placeholder,
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #fff 50%),
+    linear-gradient(135deg, #fff 50%, transparent 50%);
+  background-position: calc(100% - 15px) center, calc(100% - 10px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+
+.form-group option {
   background: #1a1a1a;
   color: #fff;
   padding: 8px;
 }
 
-.report-actions textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: rgba(0, 0, 0, 0.4);
-  color: #fff;
-  font-size: 0.95rem;
-  resize: vertical;
-  line-height: 1.5;
-  box-sizing: border-box;
-  transition: border-color 0.2s, background 0.2s;
+/* ─── 제재 섹션 ─────────────────────── */
+.penalty-section {
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(255, 152, 0, 0.08);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: 12px;
 }
 
-.report-actions textarea:focus {
-  outline: none;
-  border-color: #2a7cff;
-  background: rgba(42, 124, 255, 0.1);
-}
-
-.report-actions textarea::placeholder {
-  color: #999;
-}
-
-.report-actions button {
-  align-self: flex-end;
-  padding: 12px 24px;
-  background: #2a7cff;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
+.penalty-section h4 {
+  margin-bottom: 20px;
+  color: #ff9800;
+  font-size: 1.1rem;
   font-weight: 600;
-  font-size: 0.95rem;
+}
+
+/* ─── 액션 버튼 ─────────────────────── */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.admin-btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
 }
 
-.report-actions button:hover {
-  background: #1a5cd8;
+.admin-btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.admin-btn-primary:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(233, 30, 99, 0.4);
 }
 
-.report-actions button:active {
+.admin-btn-primary:active {
   transform: translateY(0);
 }
 
-/* 목록으로 버튼 */
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ─── 목록으로 버튼 (하단) ─────────────────────── */
 .back-button.bottom-left {
   margin-top: 32px;
 }
 
-/* ─────────────────────────────────────────────── */
-/* 반응형 */
+/* ─── 반응형 ─────────────────────── */
 @media (max-width: 768px) {
-  .report-detail-box {
+  .report-detail-box,
+  .report-actions {
     padding: 16px;
     font-size: 0.9rem;
   }
 
-  .report-actions {
-    gap: 14px;
-    margin-bottom: 32px;
+  .report-detail-box h3,
+  .report-actions h3 {
+    font-size: 1.1rem;
   }
 
-  .report-actions button {
+  .penalty-section {
+    padding: 16px;
+  }
+
+  .penalty-section h4 {
+    font-size: 1rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-btn-primary,
+  .btn-secondary {
     width: 100%;
-    text-align: center;
-    align-self: stretch;
   }
 
   .back-button.bottom-left {
     margin-top: 24px;
+    width: 100%;
+  }
+
+  .report-detail-box pre {
+    font-size: 0.85rem;
+    padding: 10px;
+    max-height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group select,
+  .form-group textarea {
+    font-size: 0.9rem;
+    padding: 8px 10px;
+  }
+
+  .admin-btn-primary,
+  .btn-secondary {
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 }

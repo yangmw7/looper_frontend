@@ -1,5 +1,3 @@
-@import '../User/AdminUserList.css';
-
 /* NPC 그리드 레이아웃 (5x4) */
 .npcs-grid {
   display: grid;
@@ -7,24 +5,48 @@
   gap: 20px;
   margin: 20px 0;
   padding: 20px 0;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* NPC 카드 */
 .npc-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   padding: 12px;
   cursor: pointer;
-  transition: all 0.3s;
-  border: 2px solid transparent;
+  transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
+}
+
+.npc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .npc-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #ffe07a;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 193, 7, 0.3);
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 193, 7, 0.1);
+}
+
+.npc-card:hover::before {
+  opacity: 1;
 }
 
 /* NPC 이미지 */
@@ -32,10 +54,11 @@
   position: relative;
   width: 100%;
   padding-bottom: 100%; /* 1:1 비율 유지 */
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .npc-image-wrapper img {
@@ -45,69 +68,65 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.npc-card:hover .npc-image-wrapper img {
+  transform: scale(1.05);
 }
 
 /* NPC 정보 */
 .npc-info {
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .npc-id {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 4px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 6px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .npc-name {
   font-size: 0.95rem;
   color: #fff;
-  font-weight: 500;
-  line-height: 1.2;
-  min-height: 1.2em;
+  font-weight: 600;
+  line-height: 1.3;
+  min-height: 1.3em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-/* ─── NPC 추가 버튼 ───────────────────── */
-.create-button {
-  margin-left: 10px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  background: #28a745;
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.create-button:hover {
-  background: #34d058;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
-}
-
-.create-button:active {
-  background: #1e7e34;
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* 반응형 */
+/* 반응형 그리드 */
 @media (max-width: 1200px) {
   .npcs-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
 @media (max-width: 900px) {
   .npcs-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
 }
+
 @media (max-width: 600px) {
   .npcs-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .npc-card {
+    padding: 8px;
+  }
+  
+  .npc-name {
+    font-size: 0.9rem;
   }
 }

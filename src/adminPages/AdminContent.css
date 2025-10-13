@@ -1,0 +1,405 @@
+/* 관리자 컨텐츠 섹션 */
+.admin-content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 섹션 헤더 */
+.admin-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
+  margin-bottom: 16px;
+}
+
+.section-left {
+  flex: 0 0 320px;
+}
+
+.admin-section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.section-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 검색 컨트롤 */
+.search-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-select {
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  appearance: none;
+  min-width: 140px;
+}
+
+.search-select:focus {
+  outline: none;
+  border-color: #ffc107;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.search-select option {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+.search-input {
+  padding: 12px 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 300px;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #ffc107;
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.search-button {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-button:hover {
+  background-color: #ffca28;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+/* 로딩/에러 메시지 */
+.loading-text,
+.error-text {
+  padding: 24px;
+  text-align: center;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.error-text {
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+  border-radius: 4px;
+}
+
+/* 테이블 래퍼 */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 데이터 테이블 */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.data-table th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-table td {
+  padding: 16px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.data-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.data-table th:last-child,
+.data-table td:last-child {
+  text-align: center;
+}
+
+/* 액션 버튼 */
+.action-button {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
+}
+
+.action-button:hover:not(.disabled) {
+  background: linear-gradient(135deg, #ffca28 0%, #ffa726 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+}
+
+.action-button:active:not(.disabled) {
+  background: linear-gradient(135deg, #ffb300 0%, #f57c00 100%);
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
+}
+
+.action-button.disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 삭제 버튼 (빨간색) - 우선순위 최대 */
+.data-table .action-button.delete,
+.table-wrapper .action-button.delete,
+.admin-content-section .action-button.delete,
+.delete-button,
+button.action-button.delete {
+  background: linear-gradient(135deg, #ef5350 0%, #e53935 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(239, 83, 80, 0.3) !important;
+}
+
+.data-table .action-button.delete:hover:not(.disabled),
+.table-wrapper .action-button.delete:hover:not(.disabled),
+.admin-content-section .action-button.delete:hover:not(.disabled),
+.delete-button:hover:not(:disabled),
+button.action-button.delete:hover:not(.disabled) {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.5) !important;
+}
+
+.data-table .action-button.delete:active:not(.disabled),
+.table-wrapper .action-button.delete:active:not(.disabled),
+.admin-content-section .action-button.delete:active:not(.disabled),
+.delete-button:active:not(:disabled),
+button.action-button.delete:active:not(.disabled) {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%) !important;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(239, 83, 80, 0.3) !important;
+}
+
+.data-table .action-button.delete.disabled,
+.table-wrapper .action-button.delete.disabled,
+.admin-content-section .action-button.delete.disabled,
+.delete-button:disabled,
+button.action-button.delete.disabled {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+/* 페이징 컨트롤 */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.page-button {
+  padding: 10px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 40px;
+}
+
+.page-button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.page-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.page-button.active {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #000;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+  font-weight: 700;
+}
+
+.page-button.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+}
+
+/* 버튼 그룹 */
+.button-group {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* 생성 버튼 */
+.create-button {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.create-button:hover {
+  background: linear-gradient(135deg, #34d058 0%, #28dca8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.5);
+}
+
+.create-button:active {
+  background: linear-gradient(135deg, #1e7e34 0%, #198754 100%);
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* 반응형 - 태블릿 */
+@media (max-width: 1024px) {
+  .admin-section-header {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .section-left {
+    flex: none;
+  }
+
+  .search-controls {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+/* 반응형 - 모바일 */
+@media (max-width: 768px) {
+  .admin-section-title {
+    font-size: 1.5rem;
+  }
+
+  .section-description {
+    font-size: 0.9rem;
+  }
+
+  .search-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-select,
+  .search-input,
+  .search-button {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .table-wrapper {
+    font-size: 0.85rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 12px 8px;
+    font-size: 0.85rem;
+  }
+
+  .action-button {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .page-button {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-width: 36px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .create-button {
+    width: 100%;
+  }
+}

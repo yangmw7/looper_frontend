@@ -5,11 +5,11 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import ProfileTab from "./ProfileTab";
 import ActivityTab from "./ActivityTab";
-import SettingsTab from "./SettingsTab";
 import EquipmentTab from "./EquipmentTab";
+import ReportTab from "./ReportTab";
 import "./MyPage.css";
 
-import { FaUser, FaCog, FaClipboardList } from "react-icons/fa";
+import { FaUser, FaCog, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";
 import { GiCrossedSwords } from "react-icons/gi";
 
 function MyPage() {
@@ -43,6 +43,7 @@ function MyPage() {
     if (path.includes("/profile")) setActiveTab("profile");
     else if (path.includes("/equipment")) setActiveTab("equipment");
     else if (path.includes("/activity")) setActiveTab("activity");
+    else if (path.includes("/report")) setActiveTab("report");
     else if (path.includes("/settings")) setActiveTab("settings");
   }, [location]);
 
@@ -97,6 +98,9 @@ function MyPage() {
       case "activity":
         return <ActivityTab />;
 
+      case "report":
+        return <ReportTab />;
+
       case "settings":
         return <SettingsTab />;
 
@@ -130,7 +134,7 @@ function MyPage() {
                 <span className="nav-text">프로필 정보</span>
               </button>
 
-              {/* 장비 관리 (통합 탭) */}
+              {/* 장비 관리 */}
               <button
                 className={`nav-item ${
                   activeTab === "equipment" ? "active" : ""
@@ -150,6 +154,17 @@ function MyPage() {
               >
                 <FaClipboardList className="nav-icon" />
                 <span className="nav-text">활동 내역</span>
+              </button>
+
+              {/* 신고 & 제재 */}
+              <button
+                className={`nav-item ${
+                  activeTab === "report" ? "active" : ""
+                }`}
+                onClick={() => handleTabChange("report")}
+              >
+                <FaExclamationTriangle className="nav-icon" />
+                <span className="nav-text">신고 & 제재</span>
               </button>
 
               {/* 설정 */}
