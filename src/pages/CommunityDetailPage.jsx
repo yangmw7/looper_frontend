@@ -26,7 +26,7 @@ export default function CommunityDetailPage() {
   // 신고 모달 상태
   const [reportModal, setReportModal] = useState({
     open: false,
-    targetType: null, // "POST" | "COMMENT"
+    targetType: null,
     targetId: null,
   });
   const [reportReasons, setReportReasons] = useState([]);
@@ -204,146 +204,263 @@ export default function CommunityDetailPage() {
   };
 
   return (
-    <div className="community-background">
+    <div className="detail-page">
+      <div className="grain-overlay" />
       <Header />
 
-      <div className="community-detail-page">
-        <h2 className="detail-title">커뮤니티</h2>
-        <div className="detail-subtitle">게시물 상세 보기</div>
+      <div className="detail-container">
+        <div className="detail-header">
+          <div className="header-content">
+            <h1>커뮤니티</h1>
+            <p>게시물 상세 보기</p>
+          </div>
+          <button className="btn-back-header" onClick={handleBack}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 4L6 8L10 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            목록으로
+          </button>
+        </div>
 
-        {error
-          ? <div className="error-message">{error}</div>
-          : !post
-            ? <div className="loading">로딩 중...</div>
-            : (
-              <div className="detail-container">
-                <h3 className="post-title">{post.title}</h3>
-                <div className="post-meta">
-                  <span className="meta-author">{post.author}</span>
-                  <span className="meta-views"> {post.views}</span>
-                  <span className="meta-comments">💬 {comments.length}</span>
-                  <span className="meta-date">{post.createdAt}</span>
+        {error ? (
+          <div className="error-msg">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M10 6V10M10 13V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            {error}
+          </div>
+        ) : !post ? (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>게시글을 불러오는 중...</p>
+          </div>
+        ) : (
+          <div className="post-detail-content">
+            <div className="post-detail-card">
+              <h2 className="post-detail-title">{post.title}</h2>
+              
+              <div className="post-detail-meta">
+                <div className="meta-left">
+                  <span className="meta-author">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="5" r="3" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M2 14C2 11.2386 4.23858 9 7 9H9C11.7614 9 14 11.2386 14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {post.author}
+                  </span>
+                  <span className="meta-divider">•</span>
+                  <span className="meta-date">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M8 2V8L11 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
+                    {post.createdAt}
+                  </span>
                 </div>
-                <div className="post-content">{post.content}</div>
-
-                {post.imageUrls.length > 0 && (
-                  <div className="image-gallery">
-                    {post.imageUrls.map((url, idx) => {
-                      // Cloudinary URL 변환: 너비 1200px, 자동 품질, 자동 포맷
-                      const transformedUrl = url.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
-                      return (
-                        <img 
-                          key={idx} 
-                          src={transformedUrl} 
-                          alt={`img-${idx}`} 
-                          className="post-image" 
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-
-                <div className="button-group">
-                  <button className="btn-back" onClick={handleBack}>목록으로</button>
-                  {currentUserNickname === post.author && (
-                    <button className="btn-edit" onClick={handleEdit}>수정</button>
-                  )}
-                  {(currentUserNickname === post.author || currentUserRole === 'ADMIN') && (
-                    <button className="btn-delete" onClick={handleDelete}>삭제</button>
-                  )}
-                  {currentUserNickname && (
-                    <button
-                      className="btn-report"
-                      onClick={() => setReportModal({ open: true, targetType: 'POST', targetId: post.id })}
-                    >
-                      🚨 신고
-                    </button>
-                  )}
-                </div>
-
-                {/* 댓글 입력 */}
-                {currentUserNickname ? (
-                  <div className="comment-input-container">
-                    <textarea className="comment-input"
-                      placeholder="댓글을 입력하세요..."
-                      value={newComment}
-                      onChange={e => setNewComment(e.target.value)}
-                    />
-                    <button className="btn-comment-submit" onClick={handleCommentSubmit} disabled={!newComment.trim()}>
-                      댓글 등록
-                    </button>
-                  </div>
-                ) : (
-                  <div className="comment-login-prompt">댓글을 작성하려면 로그인해주세요.</div>
-                )}
-
-                {/* 댓글 리스트 */}
-                <div className="comments-section">
-                  <h4 className="comments-title">댓글 ({comments.length})</h4>
-                  {commentsError && <div className="error-message">{commentsError}</div>}
-                  {comments.length === 0 ? (
-                    <div className="no-comments">작성된 댓글이 없습니다.</div>
-                  ) : (
-                    <ul className="comments-list">
-                      {comments.map(c => (
-                        <li key={c.id} className="comment-item">
-                          <div className="comment-header">
-                            <span className="comment-author">{c.writerNickname}</span>
-                            <div className="comment-meta-right">
-                              <div className="comment-button-group">
-                                {currentUserNickname === c.writerNickname && (
-                                  <>
-                                    <button className="comment-edit-btn" onClick={() => handleCommentEdit(c.id, c.content)}>수정</button>
-                                    <button className="comment-delete-btn" onClick={() => handleCommentDelete(c.id)}>삭제</button>
-                                  </>
-                                )}
-                                {currentUserRole === 'ADMIN' && currentUserNickname !== c.writerNickname && (
-                                  <button className="comment-delete-btn" onClick={() => handleCommentDelete(c.id)}>삭제</button>
-                                )}
-                                {currentUserNickname && currentUserNickname !== c.writerNickname && (
-                                  <button
-                                    className="comment-report-btn"
-                                    onClick={() => setReportModal({ open: true, targetType: 'COMMENT', targetId: c.id })}
-                                  >
-                                    🚨 신고
-                                  </button>
-                                )}
-                              </div>
-                              <span className="comment-date">{c.createdAt}</span>
-                            </div>
-                          </div>
-                          <div className="comment-content">{c.content}</div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                <div className="meta-right">
+                  <span className="meta-views">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M1 8C1 8 3 4 8 4C13 4 15 8 15 8C15 8 13 12 8 12C3 12 1 8 1 8Z" stroke="currentColor" strokeWidth="1.5"/>
+                      <circle cx="8" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
+                    {post.views}
+                  </span>
+                  <span className="meta-divider">•</span>
+                  <span className="meta-comments">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M2 2H14V10H8L5 13V10H2V2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </svg>
+                    {comments.length}
+                  </span>
                 </div>
               </div>
-            )}
+
+              <div className="post-detail-body">{post.content}</div>
+
+              {post.imageUrls.length > 0 && (
+                <div className="image-gallery">
+                  {post.imageUrls.map((url, idx) => {
+                    const transformedUrl = url.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
+                    return (
+                      <img 
+                        key={idx} 
+                        src={transformedUrl} 
+                        alt={`img-${idx}`} 
+                        className="post-image" 
+                      />
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="post-actions">
+                {currentUserNickname === post.author && (
+                  <button className="btn-action btn-edit" onClick={handleEdit}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M11 2L14 5L5 14H2V11L11 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </svg>
+                    수정
+                  </button>
+                )}
+                {(currentUserNickname === post.author || currentUserRole === 'ADMIN') && (
+                  <button className="btn-action btn-delete" onClick={handleDelete}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 4H13M5 4V3C5 2.44772 5.44772 2 6 2H10C10.5523 2 11 2.44772 11 3V4M6 7V11M10 7V11M4 4H12V13C12 13.5523 11.5523 14 11 14H5C4.44772 14 4 13.5523 4 13V4Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    삭제
+                  </button>
+                )}
+                {currentUserNickname && (
+                  <button
+                    className="btn-action btn-report"
+                    onClick={() => setReportModal({ open: true, targetType: 'POST', targetId: post.id })}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M8 2V8M8 11V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M3 14L8 2L13 14H3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </svg>
+                    신고
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* 댓글 섹션 */}
+            <div className="comments-section">
+              <h3 className="comments-header">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M3 3H17V13H10L6 17V13H3V3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                </svg>
+                댓글 <span className="comment-count">{comments.length}</span>
+              </h3>
+
+              {currentUserNickname ? (
+                <div className="comment-write">
+                  <textarea
+                    className="comment-textarea"
+                    placeholder="댓글을 입력하세요..."
+                    value={newComment}
+                    onChange={e => setNewComment(e.target.value)}
+                  />
+                  <button 
+                    className="btn-comment-submit" 
+                    onClick={handleCommentSubmit} 
+                    disabled={!newComment.trim()}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M2 8L14 2L8 14L7 10L2 8Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                    </svg>
+                    댓글 등록
+                  </button>
+                </div>
+              ) : (
+                <div className="comment-login-prompt">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M12 8V12M12 15V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  <p>댓글을 작성하려면 로그인해주세요.</p>
+                </div>
+              )}
+
+              {commentsError && (
+                <div className="error-msg">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M10 6V10M10 13V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  {commentsError}
+                </div>
+              )}
+
+              <div className="comments-list">
+                {comments.length === 0 ? (
+                  <div className="empty-comments">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                      <path d="M12 12H52V40H32L22 50V40H12V12Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                    </svg>
+                    <p>작성된 댓글이 없습니다</p>
+                    <span>첫 번째 댓글을 작성해보세요!</span>
+                  </div>
+                ) : (
+                  comments.map(c => (
+                    <div key={c.id} className="comment-item">
+                      <div className="comment-header">
+                        <div className="comment-author">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="5" r="3" stroke="currentColor" strokeWidth="1.5"/>
+                            <path d="M2 14C2 11.2386 4.23858 9 7 9H9C11.7614 9 14 11.2386 14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                          </svg>
+                          {c.writerNickname}
+                        </div>
+                        <div className="comment-meta">
+                          <span className="comment-date">{c.createdAt}</span>
+                          <div className="comment-actions">
+                            {currentUserNickname === c.writerNickname && (
+                              <>
+                                <button onClick={() => handleCommentEdit(c.id, c.content)}>수정</button>
+                                <button onClick={() => handleCommentDelete(c.id)}>삭제</button>
+                              </>
+                            )}
+                            {currentUserRole === 'ADMIN' && currentUserNickname !== c.writerNickname && (
+                              <button onClick={() => handleCommentDelete(c.id)}>삭제</button>
+                            )}
+                            {currentUserNickname && currentUserNickname !== c.writerNickname && (
+                              <button
+                                onClick={() => setReportModal({ open: true, targetType: 'COMMENT', targetId: c.id })}
+                              >
+                                신고
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="comment-content">{c.content}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 신고 모달 */}
       {reportModal.open && (
-        <div className="report-modal">
-          <div className="report-box" style={{ width: "500px" }}>
-            <div className="report-header">
+        <div className="report-modal-overlay" onClick={() => setReportModal({ open: false, targetType: null, targetId: null })}>
+          <div className="report-modal" onClick={e => e.stopPropagation()}>
+            <div className="report-modal-header">
               <h3>
-                🚨 {reportModal.targetType === 'POST' ? '게시글 신고하기' : '댓글 신고하기'}
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 3V10M10 14V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M4 17L10 3L16 17H4Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                </svg>
+                {reportModal.targetType === 'POST' ? '게시글 신고하기' : '댓글 신고하기'}
               </h3>
-              <button className="report-close" onClick={() => setReportModal({ open: false, targetType: null, targetId: null })}>✖</button>
+              <button 
+                className="modal-close" 
+                onClick={() => setReportModal({ open: false, targetType: null, targetId: null })}
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </button>
             </div>
-            <p className="report-desc">문제되는 사유를 선택하세요.<br />최대 3개까지 선택할 수 있습니다.</p>
+            
+            <p className="report-description">문제되는 사유를 선택하세요. 최대 3개까지 선택할 수 있습니다.</p>
+            
             <div className="report-reasons">
               {[
-                { code: 'SPAM', label: '스팸/광고' },
-                { code: 'ABUSE', label: '욕설/비방' },
-                { code: 'HATE', label: '차별/혐오' },
-                { code: 'SEXUAL', label: '음란/불건전' },
-                { code: 'ILLEGAL', label: '불법 정보' },
-                { code: 'PERSONAL_INFO', label: '개인정보 노출' },
-                { code: 'OTHER', label: '기타' }
+                { code: 'SPAM', label: '스팸/광고', icon: '📧' },
+                { code: 'ABUSE', label: '욕설/비방', icon: '💢' },
+                { code: 'HATE', label: '차별/혐오', icon: '⚠️' },
+                { code: 'SEXUAL', label: '음란/불건전', icon: '🔞' },
+                { code: 'ILLEGAL', label: '불법 정보', icon: '⛔' },
+                { code: 'PERSONAL_INFO', label: '개인정보 노출', icon: '🔒' },
+                { code: 'OTHER', label: '기타', icon: '📝' }
               ].map(r => (
-                <label key={r.code} className="report-reason">
+                <label key={r.code} className={`report-reason ${reportReasons.includes(r.code) ? 'selected' : ''}`}>
                   <input
                     type="checkbox"
                     value={r.code}
@@ -357,20 +474,28 @@ export default function CommunityDetailPage() {
                       }
                     }}
                   />
-                  {r.label}
+                  <span className="reason-icon">{r.icon}</span>
+                  <span className="reason-label">{r.label}</span>
                 </label>
               ))}
             </div>
+            
             <textarea
-              placeholder="추가 설명 (100자 이하)"
+              className="report-textarea"
+              placeholder="추가 설명을 입력하세요 (선택사항, 100자 이하)"
               value={reportDescription}
               onChange={e => setReportDescription(e.target.value)}
               maxLength={100}
-              style={{ minHeight: "100px", resize: "vertical" }}
             />
+            <div className="char-count">{reportDescription.length}/100</div>
+            
             <div className="report-actions">
-              <button onClick={handleReportSubmit}>신고</button>
-              <button onClick={() => setReportModal({ open: false, targetType: null, targetId: null })}>취소</button>
+              <button className="btn-cancel" onClick={() => setReportModal({ open: false, targetType: null, targetId: null })}>
+                취소
+              </button>
+              <button className="btn-submit" onClick={handleReportSubmit}>
+                신고하기
+              </button>
             </div>
           </div>
         </div>

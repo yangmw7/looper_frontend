@@ -24,6 +24,7 @@ function AdminPage() {
     else if (path.includes("/admin/npcs")) setActiveTab("npcs");
     else if (path.includes("/admin/skills")) setActiveTab("skills");
     else if (path.includes("/admin/reports")) setActiveTab("reports");
+    else if (path.includes("/admin/appeals")) setActiveTab("reports");
   }, [location]);
 
   // 탭 전환
@@ -97,13 +98,13 @@ function AdminPage() {
                 <span className="nav-text">스킬 관리</span>
               </button>
 
-              {/* 신고 관리 */}
+              {/* 신고 & 이의신청 관리 (통합) */}
               <button
                 className={`nav-item ${activeTab === "reports" ? "active" : ""}`}
                 onClick={() => handleTabChange("reports")}
               >
                 <FaExclamationTriangle className="nav-icon" />
-                <span className="nav-text">신고 관리</span>
+                <span className="nav-text">신고 & 이의신청</span>
               </button>
             </nav>
           </aside>

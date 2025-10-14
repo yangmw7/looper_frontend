@@ -30,7 +30,7 @@ function AdminAppealDetail() {
     REJECTED: "기각",
   };
 
-  // ✅ 이의신청 상세 데이터 요청
+  // 이의신청 상세 데이터 요청
   useEffect(() => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -64,7 +64,7 @@ function AdminAppealDetail() {
       });
   }, [API_BASE_URL, id]);
 
-  // ✅ 이의신청 처리
+  // 이의신청 처리
   const handleProcess = () => {
     if (!decision) {
       alert("승인 또는 거부를 선택해주세요.");

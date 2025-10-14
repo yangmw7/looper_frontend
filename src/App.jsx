@@ -37,6 +37,7 @@ import AdminSkillDetail      from './adminPages/Skill/AdminSkillDetail';
 import AdminSkillCreate      from './adminPages/Skill/AdminSkillCreate';
 
 import AdminReportDetail     from './adminPages/Report/AdminReportDetail';
+import AdminAppealDetail     from './adminPages/Report/AdminAppealDetail';
 
 import './App.css';
 
@@ -89,6 +90,8 @@ function App() {
             <Route path="npcs" element={<AdminPage />} />
             <Route path="skills" element={<AdminPage />} />
             <Route path="reports" element={<AdminPage />} />
+            {/* 이의신청 탭 */}
+            <Route path="appeals" element={<AdminPage />} />
 
             {/* 아이템 상세/생성 페이지 */}
             <Route path="items/new" element={<AdminItemCreate />} />
@@ -104,6 +107,9 @@ function App() {
 
             {/* Report 상세 페이지 */}
             <Route path="reports/:type/:id" element={<AdminReportDetail />} />
+            
+            {/* Appeal 상세 페이지 */}
+            <Route path="appeals/:id" element={<AdminAppealDetail />} />
           </Route>
         </Routes>
       </main>

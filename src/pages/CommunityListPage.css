@@ -74,27 +74,62 @@
 
 /* ===== 헤더 ===== */
 .community-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 3rem;
+  gap: 2rem;
 }
 
-.community-header h1 {
+.header-content h1 {
   font-size: 2.5rem;
   font-weight: 700;
   color: #fff;
   margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.community-header p {
+.header-content p {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.6);
+}
+
+.write-btn-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+  white-space: nowrap;
+}
+
+.write-btn-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+}
+
+.write-btn-header:active {
+  transform: translateY(0);
 }
 
 /* ===== 컨텐츠 영역 ===== */
 .community-content {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 /* ===== 상단 영역 ===== */
@@ -115,46 +150,97 @@
 }
 
 .tabs button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.6rem 1.2rem;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 10px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
+.tabs button svg {
+  opacity: 0.7;
+}
+
 .tabs button:hover {
   border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
   color: #fff;
+}
+
+.tabs button:hover svg {
+  opacity: 1;
 }
 
 .tabs button.active {
-  background: #e91e63;
-  border-color: #e91e63;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  border-color: transparent;
   color: #fff;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
 }
 
-/* ===== 액션 영역 ===== */
-.actions {
+.tabs button.active svg {
+  opacity: 1;
+}
+
+/* ===== 검색 영역 ===== */
+.search-area {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
-.search {
-  display: flex;
-  gap: 0.5rem;
+.search-select {
+  padding: 0.6rem 1rem;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  padding: 0.5rem;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
 }
 
-.search select,
-.search input {
+.search-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-select option {
+  background: #1a1e2e;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #e91e63;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.search-input-wrapper svg {
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.search-input-wrapper input {
+  width: 160px;
   background: transparent;
   border: none;
   color: #fff;
@@ -162,50 +248,51 @@
   outline: none;
 }
 
-.search select {
-  padding: 0 0.5rem;
-  cursor: pointer;
-}
-
-.search select option {
-  background: #1a1e2e;
-}
-
-.search input {
-  width: 200px;
-  padding: 0 0.5rem;
-}
-
-.search input::placeholder {
+.search-input-wrapper input::placeholder {
   color: rgba(255, 255, 255, 0.4);
-}
-
-.write-btn {
-  padding: 0.6rem 1.2rem;
-  background: #e91e63;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.write-btn:hover {
-  background: #c2185b;
 }
 
 /* ===== 에러 메시지 ===== */
 .error-msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   margin: 1rem 1.5rem;
   padding: 1rem;
   background: rgba(244, 67, 54, 0.1);
   border: 1px solid rgba(244, 67, 54, 0.3);
-  border-radius: 8px;
+  border-radius: 10px;
   color: #f44336;
   text-align: center;
+}
+
+/* ===== 로딩 상태 ===== */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(233, 30, 99, 0.1);
+  border-top-color: #e91e63;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
 }
 
 /* ===== 게시글 테이블 ===== */
@@ -223,6 +310,8 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .table-body {
@@ -238,11 +327,13 @@
   padding: 1rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .post-row:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #e91e63;
+  padding-left: calc(1.5rem - 3px);
 }
 
 .post-row:last-child {
@@ -250,28 +341,62 @@
 }
 
 .col-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.post-title-text {
   color: #fff;
   font-size: 0.95rem;
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.comment-count {
+.comment-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(233, 30, 99, 0.15);
+  border: 1px solid rgba(233, 30, 99, 0.3);
+  border-radius: 6px;
   color: #e91e63;
+  font-size: 0.8rem;
   font-weight: 600;
-  margin-left: 0.5rem;
+  white-space: nowrap;
 }
 
 .col-author {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
 }
 
-.col-views {
+.col-author svg {
+  opacity: 0.5;
+}
+
+.col-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
-  text-align: center;
+  font-size: 0.85rem;
+}
+
+.stat-item svg {
+  opacity: 0.5;
 }
 
 .col-date {
@@ -281,50 +406,88 @@
 }
 
 /* ===== 빈 상태 ===== */
-.empty {
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 4rem 2rem;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  gap: 1rem;
+}
+
+.empty-state svg {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.empty-state span {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* ===== 페이지네이션 ===== */
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 0.5rem;
   padding: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.pagination button {
-  width: 36px;
+.pagination button,
+.pagination .page-ellipsis {
+  min-width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  border-radius: 8px;
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.pagination button:hover:not(:disabled) {
+.pagination .page-ellipsis {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.pagination button:hover:not(:disabled):not(.page-nav) {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
+  transform: translateY(-2px);
 }
 
 .pagination button.active {
-  background: #e91e63;
-  border-color: #e91e63;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+  border-color: transparent;
   color: #fff;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
 }
 
 .pagination button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+.pagination .page-nav {
+  padding: 0;
+}
+
+.pagination .page-nav:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 
 /* ===== 반응형 ===== */
@@ -333,8 +496,19 @@
     padding: 90px 1rem 2rem;
   }
 
-  .community-header h1 {
+  .community-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-content h1 {
     font-size: 2rem;
+  }
+
+  .write-btn-header {
+    width: 100%;
+    justify-content: center;
   }
 
   .content-top {
@@ -348,22 +522,23 @@
 
   .tabs button {
     flex: 1;
+    justify-content: center;
   }
 
-  .actions {
+  .search-area {
     flex-direction: column;
     width: 100%;
   }
 
-  .search {
+  .search-select {
     width: 100%;
   }
 
-  .search input {
+  .search-input-wrapper {
     width: 100%;
   }
 
-  .write-btn {
+  .search-input-wrapper input {
     width: 100%;
   }
 
@@ -373,22 +548,46 @@
 
   .post-row {
     grid-template-columns: 1fr;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 1rem;
+    border-left: none;
+  }
+
+  .post-row:hover {
+    padding-left: 1rem;
+    border-left: none;
   }
 
   .col-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .post-title-text {
     white-space: normal;
     word-break: break-word;
   }
 
-  .col-views,
+  .col-author,
+  .col-stats,
   .col-date {
-    text-align: left;
     font-size: 0.8rem;
+  }
+
+  .col-stats,
+  .col-date {
+    justify-content: flex-start;
   }
 
   .pagination {
     flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .pagination button {
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
   }
 }
