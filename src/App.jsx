@@ -6,6 +6,7 @@ import Header from './components/Header';
 
 import MainPage              from './pages/MainPage';
 import AuthPage              from './pages/AuthPage';
+import GameGuidePage         from './pages/GameGuidePage';
 import FindIDPage            from './pages/FindIDPage';
 import ShowIDPage            from './pages/ShowIDPage';
 import FailIDPage            from './pages/FailIDPage';
@@ -53,6 +54,7 @@ function App() {
           {/* 일반 유저 라우트 */}
           <Route path="/"                       element={<MainPage />} />
           <Route path="/auth"                   element={<AuthPage />} />
+          <Route path="/guide"                  element={<GameGuidePage />} />
 
           {/* ID 찾기 */}
           <Route path="/find-id"                element={<FindIDPage />} />

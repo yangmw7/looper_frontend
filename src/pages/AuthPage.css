@@ -1,14 +1,55 @@
 /* AuthPage.css */
 
 .auth-background {
+  position: relative;
   min-height: 100vh;
-  background: #000;
+  background: linear-gradient(180deg, #0a0e12 0%, #1a1e2e 50%, #0a0e12 100%);
   color: white;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Grain 효과 추가 */
+.auth-background::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* Gradient Orbs 추가 */
+.auth-background::after {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #e91e63 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.2;
+  animation: float 20s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(50px, -50px) scale(1.1); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
 }
 
 .auth-container {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,21 +90,22 @@
 .toggle-switch {
   width: 80px;
   height: 40px;
-  background: #444;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   position: relative;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: none;
   display: flex;
   align-items: center;
   padding: 2px;
+  backdrop-filter: blur(10px);
 }
 
 .toggle-slider {
   width: 36px;
   height: 36px;
-  background: #e91e63;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -134,11 +176,12 @@
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  background: #1a1a1a;
-  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   top: 0;
@@ -154,7 +197,7 @@
 .auth-title {
   text-align: center;
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 25px;
   letter-spacing: 1px;
   color: white;
@@ -179,9 +222,9 @@
 .auth-input {
   width: 100%;
   padding: 15px 15px 15px 45px;
-  background: #2a2a2a;
-  border: 2px solid #404040;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   color: white;
   font-size: 16px;
   outline: none;
@@ -191,11 +234,12 @@
 
 .auth-input:focus {
   border-color: #e91e63;
-  box-shadow: 0 0 10px rgba(233, 30, 99, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.2);
 }
 
 .auth-input::placeholder {
-  color: #888;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* 체크박스 스타일 */
@@ -205,7 +249,7 @@
   gap: 10px;
   margin-bottom: 20px;
   font-size: 14px;
-  color: #ccc;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .remember-checkbox input[type="checkbox"] {
@@ -223,26 +267,26 @@
 .auth-submit-btn {
   width: 100%;
   padding: 15px;
-  background: #e91e63;
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   color: white;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
   letter-spacing: 1px;
+  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.3);
 }
 
 .auth-submit-btn:hover {
-  background: #c2185b;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(233, 30, 99, 0.5);
 }
 
 .auth-submit-btn:disabled {
-  background: #666;
+  background: rgba(255, 255, 255, 0.1);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -255,7 +299,7 @@
 }
 
 .forgot-id a {
-  color: #888;
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s ease;
@@ -272,7 +316,7 @@
 }
 
 .forgot-password a {
-  color: #888;
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s ease;
