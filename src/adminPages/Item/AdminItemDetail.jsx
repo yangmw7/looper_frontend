@@ -26,7 +26,6 @@ function AdminItemDetail() {
     skills: [],
   });
 
-  // 이미지 업로드 관련 state
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -54,7 +53,6 @@ function AdminItemDetail() {
         
         let parsedAttributes;
         
-        // 먼저 문자열인 경우 파싱
         let attrData = data.attributes;
         if (typeof attrData === "string") {
           try {
@@ -66,15 +64,12 @@ function AdminItemDetail() {
           }
         }
 
-        // 파싱된 데이터가 배열인지 객체인지 확인
         if (Array.isArray(attrData)) {
-          // 배열인 경우 stat을 대문자로 변환
           parsedAttributes = attrData.map(attr => ({
             ...attr,
             stat: attr.stat.toUpperCase()
           }));
         } else if (typeof attrData === "object" && attrData !== null) {
-          // 객체 형태를 배열 형태로 변환
           parsedAttributes = Object.entries(attrData)
             .filter(([key, value]) => 
               !["twoHander", "stackable"].includes(key) && 
@@ -140,17 +135,14 @@ function AdminItemDetail() {
     setEditData({ ...editData, attributes: updated });
   };
 
-  // 이미지 파일 선택 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 파일 크기 체크 (10MB)
       if (file.size > 10 * 1024 * 1024) {
         alert("파일 크기는 10MB를 초과할 수 없습니다.");
         return;
       }
       
-      // 이미지 파일 타입 체크
       if (!file.type.startsWith('image/')) {
         alert("이미지 파일만 업로드 가능합니다.");
         return;
@@ -158,7 +150,6 @@ function AdminItemDetail() {
       
       setImageFile(file);
       
-      // 미리보기 생성
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -167,26 +158,22 @@ function AdminItemDetail() {
     }
   };
 
-  // 이미지 제거 핸들러
   const handleRemoveImage = () => {
     setImageFile(null);
     setImagePreview(null);
   };
 
   const handleSave = async () => {
-    // 이름 검증
     if (!editData.name[0].trim() || !editData.name[1].trim()) {
       alert("모든 값을 입력해야 합니다.");
       return;
     }
 
-    // 설명 검증
     if (!editData.description[0].trim() || !editData.description[1].trim()) {
       alert("모든 값을 입력해야 합니다.");
       return;
     }
 
-    // Attributes 검증
     for (let i = 0; i < editData.attributes.length; i++) {
       const attr = editData.attributes[i];
       if (!attr.value || attr.value.toString().trim() === "") {
@@ -202,7 +189,6 @@ function AdminItemDetail() {
     try {
       const formData = new FormData();
       
-      // 아이템 데이터를 JSON으로 변환
       const itemData = {
         ...editData,
         attributes: editData.attributes.map((attr) => ({
@@ -215,7 +201,6 @@ function AdminItemDetail() {
         type: 'application/json'
       }));
       
-      // 새 이미지가 있으면 추가
       if (imageFile) {
         formData.append('image', imageFile);
       }
@@ -228,7 +213,6 @@ function AdminItemDetail() {
       });
 
       alert("아이템이 수정되었습니다.");
-      // 페이지 새로고침으로 최신 데이터 가져오기
       window.location.reload();
       
     } catch (err) {
@@ -257,15 +241,12 @@ function AdminItemDetail() {
   };
 
   const getItemImage = () => {
-    // 미리보기가 있으면 미리보기 사용 (수정 중)
     if (imagePreview) {
       return imagePreview;
     }
-    // item의 imageUrl이 있으면 사용
     if (item?.imageUrl) {
       return item.imageUrl;
     }
-    // 기본 이미지
     return "https://search.pstatic.net/sunny/?src=https%3A%2F%2Fi.namu.wiki%2Fi%2F77y-ptU__gqfagWpDS4YmvNGvE2tAbwFwUN0KZDYI2mbuReEb5AbFhK-3pZbswXTX3l4vii0pdQRgoJG35lHZg.webp&type=sc960_832";
   };
 
@@ -279,52 +260,46 @@ function AdminItemDetail() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <div className="detail-header">
+            <div className="item-detail-header">
               <h2 className="admin-title">아이템 상세정보</h2>
             </div>
 
-            <div className="item-detail-content">
-              <div className="item-detail-left">
-                <div className="item-detail-image">
+            <div className="item-detail-layout">
+              {/* 왼쪽: 이미지 섹션 */}
+              <div className="item-detail-left-panel">
+                <div className="item-detail-image-wrapper">
                   <img
                     src={getItemImage()}
                     alt={editData.name[1] || editData.name[0]}
+                    className="item-detail-image"
                   />
                 </div>
-                <div className={`item-rarity-badge ${item.rarity}`}>
+                
+                <div className={`item-detail-rarity-badge rarity-${item.rarity}`}>
                   {item.rarity.toUpperCase()}
                 </div>
                 
-                {/* 수정 모드일 때만 이미지 업로드 섹션 표시 */}
                 {isEditing && (
-                  <div className="image-upload-section" style={{ marginTop: '20px' }}>
-                    <label htmlFor="image-upload" className="image-upload-label">
+                  <div className="item-detail-upload-section">
+                    <label htmlFor="item-detail-image-upload" className="item-detail-upload-btn">
                       {imageFile ? '이미지 변경' : '새 이미지 업로드'}
                     </label>
                     <input
-                      id="image-upload"
+                      id="item-detail-image-upload"
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
-                      style={{ display: 'none' }}
+                      className="item-detail-file-input"
                     />
                     {imageFile && (
-                      <div style={{ marginTop: '10px' }}>
-                        <p style={{ fontSize: '14px', color: '#666' }}>
+                      <div className="item-detail-file-info">
+                        <p className="item-detail-filename">
                           {imageFile.name}
                         </p>
                         <button
                           type="button"
                           onClick={handleRemoveImage}
-                          style={{
-                            padding: '5px 10px',
-                            backgroundColor: '#dc3545',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '12px'
-                          }}
+                          className="item-detail-remove-btn"
                         >
                           이미지 제거
                         </button>
@@ -334,108 +309,123 @@ function AdminItemDetail() {
                 )}
               </div>
 
-              <div className="item-detail-right">
+              {/* 오른쪽: 정보/폼 섹션 */}
+              <div className="item-detail-right-panel">
                 {!isEditing ? (
-                  <>
-                    <div className="detail-row">
-                      <label>ID:</label>
-                      <span>{item.id}</span>
+                  <div className="item-detail-view-mode">
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">ID:</label>
+                      <span className="item-detail-value">{item.id}</span>
                     </div>
-                    <div className="detail-row">
-                      <label>이름 (한글):</label>
-                      <span>{item.name[1]}</span>
+                    
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">이름 (한글):</label>
+                      <span className="item-detail-value">{item.name[1]}</span>
                     </div>
-                    <div className="detail-row">
-                      <label>이름 (영문):</label>
-                      <span>{item.name[0]}</span>
+                    
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">이름 (영문):</label>
+                      <span className="item-detail-value">{item.name[0]}</span>
                     </div>
-                    <div className="detail-row">
-                      <label>레어도:</label>
-                      <span className={`rarity-text ${item.rarity}`}>
-                        {item.rarity}
+                    
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">레어도:</label>
+                      <span className={`item-detail-rarity-text rarity-${item.rarity}`}>
+                        {item.rarity.toUpperCase()}
                       </span>
                     </div>
-                    <div className="detail-row">
-                      <label>설명 (한글):</label>
-                      <span>{item.description[1]}</span>
+                    
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">설명 (한글):</label>
+                      <span className="item-detail-value">{item.description[1]}</span>
                     </div>
-                    <div className="detail-row">
-                      <label>설명 (영문):</label>
-                      <span>{item.description[0]}</span>
+                    
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">설명 (영문):</label>
+                      <span className="item-detail-value">{item.description[0]}</span>
                     </div>
 
-                    <div className="detail-section">
-                      <h3>속성 (Attributes)</h3>
+                    <div className="item-detail-section">
+                      <h3 className="item-detail-section-title">속성 (Attributes)</h3>
                       {item.attributes && item.attributes.length > 0 ? (
                         <>
-                          <div className="attribute-header">
+                          <div className="item-detail-attr-header">
                             <span>STAT</span>
                             <span>OP</span>
                             <span>VALUE</span>
                           </div>
                           {item.attributes.map((attr, idx) => (
-                            <div key={idx} className="attribute-display">
-                              <span className="attr-stat">{attr.stat}</span>
-                              <span className="attr-op">{attr.op}</span>
-                              <span className="attr-value">{attr.value}</span>
+                            <div key={idx} className="item-detail-attr-display">
+                              <span className="item-detail-attr-stat">{attr.stat}</span>
+                              <span className="item-detail-attr-op">{attr.op}</span>
+                              <span className="item-detail-attr-value">{attr.value}</span>
                             </div>
                           ))}
                         </>
                       ) : (
-                        <span className="no-data">속성 없음</span>
+                        <span className="item-detail-no-data">속성 없음</span>
                       )}
                     </div>
 
-                    <div className="checkbox-section">
-                      <div className="checkbox-item">
-                        <label className="checkbox-label-display">
+                    <div className="item-detail-checkbox-display">
+                      <div className="item-detail-checkbox-item">
+                        <span className="item-detail-checkbox-text">
                           Two-Hander: {item.twoHander ? "Yes" : "No"}
-                        </label>
+                        </span>
                       </div>
-                      <div className="checkbox-item">
-                        <label className="checkbox-label-display">
+                      <div className="item-detail-checkbox-item">
+                        <span className="item-detail-checkbox-text">
                           Stackable: {item.stackable ? "Yes" : "No"}
-                        </label>
+                        </span>
                       </div>
                     </div>
 
-                    <div className="detail-section">
-                      <h3>스킬 (Skills)</h3>
-                      <div className="skills-list">
+                    <div className="item-detail-section">
+                      <h3 className="item-detail-section-title">스킬 (Skills)</h3>
+                      <div className="item-detail-skills-list">
                         {item.skills.length > 0 ? (
                           item.skills.map((skill, idx) => (
-                            <span key={idx} className="skill-tag">
+                            <span key={idx} className="item-detail-skill-tag">
                               {skill}
                             </span>
                           ))
                         ) : (
-                          <span className="no-data">스킬 없음</span>
+                          <span className="item-detail-no-data">스킬 없음</span>
                         )}
                       </div>
                     </div>
 
-                    <div className="button-group">
+                    <div className="item-detail-actions">
                       <button
-                        className="edit-button"
+                        className="item-detail-btn edit"
                         onClick={() => setIsEditing(true)}
                       >
                         수정
                       </button>
-                      <button className="delete-button" onClick={handleDelete}>
+                      <button 
+                        className="item-detail-btn delete" 
+                        onClick={handleDelete}
+                      >
                         삭제
                       </button>
                     </div>
-                  </>
+                  </div>
                 ) : (
-                  <>
-                    <div className="detail-row">
-                      <label>ID:</label>
-                      <input type="text" value={editData.id} disabled />
+                  <div className="item-detail-edit-mode">
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">ID:</label>
+                      <input 
+                        type="text" 
+                        value={editData.id} 
+                        disabled 
+                        className="item-detail-input disabled"
+                      />
                     </div>
-                    <div className="detail-row">
-                      <label>레어도:</label>
+
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">레어도:</label>
                       <select
-                        className="rarity-select"
+                        className="item-detail-select"
                         value={editData.rarity}
                         onChange={(e) =>
                           setEditData({ ...editData, rarity: e.target.value })
@@ -448,8 +438,9 @@ function AdminItemDetail() {
                         <option value="legendary">Legendary</option>
                       </select>
                     </div>
-                    <div className="detail-row">
-                      <label>이름 (영문):</label>
+
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">이름 (영문):</label>
                       <input
                         type="text"
                         value={editData.name[0]}
@@ -459,10 +450,12 @@ function AdminItemDetail() {
                             name: [e.target.value, editData.name[1]],
                           })
                         }
+                        className="item-detail-input"
                       />
                     </div>
-                    <div className="detail-row">
-                      <label>이름 (한글):</label>
+
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">이름 (한글):</label>
                       <input
                         type="text"
                         value={editData.name[1]}
@@ -472,10 +465,12 @@ function AdminItemDetail() {
                             name: [editData.name[0], e.target.value],
                           })
                         }
+                        className="item-detail-input"
                       />
                     </div>
-                    <div className="detail-row">
-                      <label>설명 (영문):</label>
+
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">설명 (영문):</label>
                       <textarea
                         value={editData.description[0]}
                         onChange={(e) =>
@@ -484,10 +479,12 @@ function AdminItemDetail() {
                             description: [e.target.value, editData.description[1]],
                           })
                         }
+                        className="item-detail-textarea"
                       />
                     </div>
-                    <div className="detail-row">
-                      <label>설명 (한글):</label>
+
+                    <div className="item-detail-field">
+                      <label className="item-detail-label">설명 (한글):</label>
                       <textarea
                         value={editData.description[1]}
                         onChange={(e) =>
@@ -496,24 +493,28 @@ function AdminItemDetail() {
                             description: [editData.description[0], e.target.value],
                           })
                         }
+                        className="item-detail-textarea"
                       />
                     </div>
 
-                    <div className="detail-section">
-                      <h3>속성 (Attributes)</h3>
-                      <div className="attribute-header">
+                    <div className="item-detail-section">
+                      <h3 className="item-detail-section-title">속성 (Attributes)</h3>
+                      
+                      <div className="item-detail-attr-header">
                         <span>STAT</span>
                         <span>OP</span>
                         <span>VALUE</span>
+                        <span></span>
                       </div>
 
                       {editData.attributes.map((attr, index) => (
-                        <div key={index} className="attribute-row">
+                        <div key={index} className="item-detail-attr-row">
                           <select
                             value={attr.stat}
                             onChange={(e) =>
                               handleAttributeChange(index, "stat", e.target.value)
                             }
+                            className="item-detail-attr-select stat"
                           >
                             {["HP", "ATK", "ATS", "DEF", "CRI", "CRID", "SPD", "JMP", "JCNT"].map(
                               (s) => (
@@ -529,6 +530,7 @@ function AdminItemDetail() {
                             onChange={(e) =>
                               handleAttributeChange(index, "op", e.target.value)
                             }
+                            className="item-detail-attr-select op"
                           >
                             <option value="ADD">ADD</option>
                             <option value="MUL">MUL</option>
@@ -541,81 +543,85 @@ function AdminItemDetail() {
                             onChange={(e) =>
                               handleAttributeChange(index, "value", e.target.value)
                             }
+                            className="item-detail-attr-input"
                           />
 
-                          <div className="attr-btn-group">
+                          <div className="item-detail-attr-buttons">
                             <button
                               type="button"
-                              className="remove-attr-btn"
+                              className="item-detail-attr-btn remove"
                               onClick={() => handleRemoveAttribute(index)}
+                              title="속성 제거"
                             >
                               −
                             </button>
                             <button
                               type="button"
-                              className="add-attr-btn"
+                              className="item-detail-attr-btn add"
                               onClick={handleAddAttribute}
+                              title="속성 추가"
                             >
-                              ＋
+                              +
                             </button>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="checkbox-section">
-                      <div className="checkbox-item">
-                        <label className="checkbox-label">
-                          Two-Hander:
-                          <input
-                            type="checkbox"
-                            checked={editData.twoHander}
-                            onChange={(e) =>
-                              setEditData({ ...editData, twoHander: e.target.checked })
-                            }
-                          />
-                        </label>
-                      </div>
-                      <div className="checkbox-item">
-                        <label className="checkbox-label">
-                          Stackable:
-                          <input
-                            type="checkbox"
-                            checked={editData.stackable}
-                            onChange={(e) =>
-                              setEditData({ ...editData, stackable: e.target.checked })
-                            }
-                          />
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="detail-section">
-                      <h3>스킬 (Skills)</h3>
-                      <div className="detail-row">
+                    <div className="item-detail-checkbox-group">
+                      <label className="item-detail-checkbox-label">
                         <input
-                          type="text"
-                          value={editData.skills.join(", ")}
+                          type="checkbox"
+                          checked={editData.twoHander}
                           onChange={(e) =>
-                            setEditData({
-                              ...editData,
-                              skills: e.target.value
-                                .split(",")
-                                .map((s) => s.trim())
-                                .filter((s) => s),
-                            })
+                            setEditData({ ...editData, twoHander: e.target.checked })
                           }
-                          placeholder="스킬1, 스킬2, 스킬3"
+                          className="item-detail-checkbox"
                         />
-                      </div>
+                        <span>Two-Hander</span>
+                      </label>
+
+                      <label className="item-detail-checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={editData.stackable}
+                          onChange={(e) =>
+                            setEditData({ ...editData, stackable: e.target.checked })
+                          }
+                          className="item-detail-checkbox"
+                        />
+                        <span>Stackable</span>
+                      </label>
                     </div>
 
-                    <div className="button-group">
-                      <button className="save-button" onClick={handleSave}>
+                    <div className="item-detail-section">
+                      <h3 className="item-detail-section-title">스킬 (Skills)</h3>
+                      <input
+                        type="text"
+                        value={editData.skills.join(", ")}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            skills: e.target.value
+                              .split(",")
+                              .map((s) => s.trim())
+                              .filter((s) => s),
+                          })
+                        }
+                        placeholder="스킬1, 스킬2, 스킬3"
+                        className="item-detail-input"
+                      />
+                    </div>
+
+                    <div className="item-detail-actions">
+                      <button 
+                        className="item-detail-btn save" 
+                        onClick={handleSave}
+                      >
                         저장
                       </button>
                       <button
-                        className="cancel-button"
+                        className="item-detail-btn cancel"
                         onClick={() => {
                           setIsEditing(false);
                           setEditData(item);
@@ -626,13 +632,13 @@ function AdminItemDetail() {
                         취소
                       </button>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
 
             <button
-              className="back-button bottom-left"
+              className="item-detail-back-btn"
               onClick={() => navigate("/admin/items")}
             >
               ← 목록으로

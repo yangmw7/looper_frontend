@@ -21,7 +21,6 @@ function AdminItemCreate() {
     skills: [],
   });
   
-  // 이미지 업로드 관련 state
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -55,17 +54,14 @@ function AdminItemCreate() {
     setEditData({ ...editData, attributes: updated });
   };
 
-  // 이미지 파일 선택 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 파일 크기 체크 (10MB)
       if (file.size > 10 * 1024 * 1024) {
         alert("파일 크기는 10MB를 초과할 수 없습니다.");
         return;
       }
       
-      // 이미지 파일 타입 체크
       if (!file.type.startsWith('image/')) {
         alert("이미지 파일만 업로드 가능합니다.");
         return;
@@ -73,7 +69,6 @@ function AdminItemCreate() {
       
       setImageFile(file);
       
-      // 미리보기 생성
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -82,32 +77,27 @@ function AdminItemCreate() {
     }
   };
 
-  // 이미지 제거 핸들러
   const handleRemoveImage = () => {
     setImageFile(null);
     setImagePreview(null);
   };
 
   const handleSave = async () => {
-    // ID 검증
     if (!editData.id.trim()) {
       alert("아이템 ID를 입력해주세요.");
       return;
     }
 
-    // 이름 검증
     if (!editData.name[0].trim() || !editData.name[1].trim()) {
       alert("모든 값을 입력해야 합니다.");
       return;
     }
 
-    // 설명 검증
     if (!editData.description[0].trim() || !editData.description[1].trim()) {
       alert("모든 값을 입력해야 합니다.");
       return;
     }
 
-    // Attributes 검증
     for (let i = 0; i < editData.attributes.length; i++) {
       const attr = editData.attributes[i];
       if (!attr.value || attr.value.trim() === "") {
@@ -123,7 +113,6 @@ function AdminItemCreate() {
     try {
       const formData = new FormData();
       
-      // 아이템 데이터를 JSON으로 변환
       const itemData = {
         ...editData,
         attributes: editData.attributes.map((attr) => ({
@@ -136,7 +125,6 @@ function AdminItemCreate() {
         type: 'application/json'
       }));
       
-      // 이미지 파일 추가 (있는 경우)
       if (imageFile) {
         formData.append('image', imageFile);
       }
@@ -184,51 +172,45 @@ function AdminItemCreate() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <div className="detail-header">
+            <div className="item-create-header">
               <h2 className="admin-title">아이템 추가</h2>
             </div>
 
-            <div className="item-detail-content">
-              <div className="item-detail-left">
-                <div className="item-detail-image">
+            <div className="item-create-layout">
+              {/* 왼쪽: 이미지 섹션 */}
+              <div className="item-create-left-panel">
+                <div className="item-create-image-wrapper">
                   <img
                     src={getItemImage()}
                     alt={editData.name[1] || editData.name[0] || "New Item"}
+                    className="item-create-image"
                   />
                 </div>
-                <div className={`item-rarity-badge ${editData.rarity}`}>
+                
+                <div className={`item-create-rarity-badge rarity-${editData.rarity}`}>
                   {editData.rarity.toUpperCase()}
                 </div>
                 
-                {/* 이미지 업로드 섹션 */}
-                <div className="image-upload-section" style={{ marginTop: '20px' }}>
-                  <label htmlFor="image-upload" className="image-upload-label">
+                <div className="item-create-upload-section">
+                  <label htmlFor="item-image-upload" className="item-create-upload-btn">
                     {imageFile ? '이미지 변경' : '이미지 업로드'}
                   </label>
                   <input
-                    id="image-upload"
+                    id="item-image-upload"
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    style={{ display: 'none' }}
+                    className="item-create-file-input"
                   />
                   {imageFile && (
-                    <div style={{ marginTop: '10px' }}>
-                      <p style={{ fontSize: '14px', color: '#666' }}>
+                    <div className="item-create-file-info">
+                      <p className="item-create-filename">
                         {imageFile.name}
                       </p>
                       <button
                         type="button"
                         onClick={handleRemoveImage}
-                        style={{
-                          padding: '5px 10px',
-                          backgroundColor: '#dc3545',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '12px'
-                        }}
+                        className="item-create-remove-btn"
                       >
                         이미지 제거
                       </button>
@@ -237,184 +219,207 @@ function AdminItemCreate() {
                 </div>
               </div>
 
-              <div className="item-detail-right">
-                <div className="detail-row">
-                  <label>ID:</label>
-                  <input
-                    type="text"
-                    value={editData.id}
-                    onChange={handleIdChange}
-                    placeholder="예) 01001"
-                  />
-                </div>
-
-                <div className="detail-row">
-                  <label>레어도:</label>
-                  <select
-                    className="rarity-select"
-                    value={editData.rarity}
-                    onChange={(e) =>
-                      setEditData({ ...editData, rarity: e.target.value })
-                    }
-                  >
-                    <option value="common">Common</option>
-                    <option value="uncommon">Uncommon</option>
-                    <option value="rare">Rare</option>
-                    <option value="epic">Epic</option>
-                    <option value="legendary">Legendary</option>
-                  </select>
-                </div>
-
-                <div className="detail-row">
-                  <label>이름 (영문):</label>
-                  <input
-                    type="text"
-                    value={editData.name[0]}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        name: [e.target.value, editData.name[1]],
-                      })
-                    }
-                    placeholder="English name"
-                  />
-                </div>
-                <div className="detail-row">
-                  <label>이름 (한글):</label>
-                  <input
-                    type="text"
-                    value={editData.name[1]}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        name: [editData.name[0], e.target.value],
-                      })
-                    }
-                    placeholder="한글 이름"
-                  />
-                </div>
-
-                <div className="detail-row">
-                  <label>설명 (영문):</label>
-                  <textarea
-                    value={editData.description[0]}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        description: [e.target.value, editData.description[1]],
-                      })
-                    }
-                    placeholder="English description"
-                  />
-                </div>
-                <div className="detail-row">
-                  <label>설명 (한글):</label>
-                  <textarea
-                    value={editData.description[1]}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        description: [editData.description[0], e.target.value],
-                      })
-                    }
-                    placeholder="한글 설명"
-                  />
-                </div>
-
-                <div className="detail-section">
-                  <h3>속성 (Attributes)</h3>
-                  <div className="attribute-header">
-                    <span>STAT</span>
-                    <span>OP</span>
-                    <span>VALUE</span>
+              {/* 오른쪽: 폼 섹션 */}
+              <div className="item-create-right-panel">
+                <div className="item-create-form">
+                  {/* ID */}
+                  <div className="item-create-field">
+                    <label className="item-create-label">ID:</label>
+                    <input
+                      type="text"
+                      value={editData.id}
+                      onChange={handleIdChange}
+                      placeholder="예) 01001"
+                      className="item-create-input"
+                    />
                   </div>
 
-                  {editData.attributes.map((attr, index) => (
-                    <div key={index} className="attribute-row">
-                      <select
-                        value={attr.stat}
-                        onChange={(e) =>
-                          handleAttributeChange(index, "stat", e.target.value)
-                        }
-                      >
-                        {["HP", "ATK", "ATS", "DEF", "CRI", "CRID", "SPD", "JMP", "JCNT"].map(
-                          (s) => (
-                            <option key={s} value={s}>
-                              {s}
-                            </option>
-                          )
-                        )}
-                      </select>
+                  {/* 레어도 */}
+                  <div className="item-create-field">
+                    <label className="item-create-label">레어도:</label>
+                    <select
+                      className="item-create-select"
+                      value={editData.rarity}
+                      onChange={(e) =>
+                        setEditData({ ...editData, rarity: e.target.value })
+                      }
+                    >
+                      <option value="common">Common</option>
+                      <option value="uncommon">Uncommon</option>
+                      <option value="rare">Rare</option>
+                      <option value="epic">Epic</option>
+                      <option value="legendary">Legendary</option>
+                    </select>
+                  </div>
 
-                      <select
-                        value={attr.op}
-                        onChange={(e) =>
-                          handleAttributeChange(index, "op", e.target.value)
-                        }
-                      >
-                        <option value="ADD">ADD</option>
-                        <option value="MUL">MUL</option>
-                      </select>
+                  {/* 이름 영문 */}
+                  <div className="item-create-field">
+                    <label className="item-create-label">이름 (영문):</label>
+                    <input
+                      type="text"
+                      value={editData.name[0]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          name: [e.target.value, editData.name[1]],
+                        })
+                      }
+                      placeholder="English name"
+                      className="item-create-input"
+                    />
+                  </div>
 
-                      <input
-                        type="text"
-                        placeholder="123.456"
-                        value={attr.value}
-                        onChange={(e) =>
-                          handleAttributeChange(index, "value", e.target.value)
-                        }
-                      />
+                  {/* 이름 한글 */}
+                  <div className="item-create-field">
+                    <label className="item-create-label">이름 (한글):</label>
+                    <input
+                      type="text"
+                      value={editData.name[1]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          name: [editData.name[0], e.target.value],
+                        })
+                      }
+                      placeholder="한글 이름"
+                      className="item-create-input"
+                    />
+                  </div>
 
-                      <div className="attr-btn-group">
-                        <button
-                          type="button"
-                          className="remove-attr-btn"
-                          onClick={() => handleRemoveAttribute(index)}
-                        >
-                          −
-                        </button>
-                        <button
-                          type="button"
-                          className="add-attr-btn"
-                          onClick={handleAddAttribute}
-                        >
-                          +
-                        </button>
-                      </div>
+                  {/* 설명 영문 */}
+                  <div className="item-create-field">
+                    <label className="item-create-label">설명 (영문):</label>
+                    <textarea
+                      value={editData.description[0]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          description: [e.target.value, editData.description[1]],
+                        })
+                      }
+                      placeholder="English description"
+                      className="item-create-textarea"
+                    />
+                  </div>
+
+                  {/* 설명 한글 */}
+                  <div className="item-create-field">
+                    <label className="item-create-label">설명 (한글):</label>
+                    <textarea
+                      value={editData.description[1]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          description: [editData.description[0], e.target.value],
+                        })
+                      }
+                      placeholder="한글 설명"
+                      className="item-create-textarea"
+                    />
+                  </div>
+
+                  {/* 속성 섹션 */}
+                  <div className="item-create-section">
+                    <h3 className="item-create-section-title">속성 (Attributes)</h3>
+                    
+                    <div className="item-create-attr-header">
+                      <span>STAT</span>
+                      <span>OP</span>
+                      <span>VALUE</span>
+                      <span></span>
                     </div>
-                  ))}
-                </div>
 
-                <div className="checkbox-section">
-                  <div className="checkbox-item">
-                    <label className="checkbox-label">
-                      Two-Hander:
+                    {editData.attributes.map((attr, index) => (
+                      <div key={index} className="item-create-attr-row">
+                        <select
+                          value={attr.stat}
+                          onChange={(e) =>
+                            handleAttributeChange(index, "stat", e.target.value)
+                          }
+                          className="item-create-attr-select stat"
+                        >
+                          {["HP", "ATK", "ATS", "DEF", "CRI", "CRID", "SPD", "JMP", "JCNT"].map(
+                            (s) => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            )
+                          )}
+                        </select>
+
+                        <select
+                          value={attr.op}
+                          onChange={(e) =>
+                            handleAttributeChange(index, "op", e.target.value)
+                          }
+                          className="item-create-attr-select op"
+                        >
+                          <option value="ADD">ADD</option>
+                          <option value="MUL">MUL</option>
+                        </select>
+
+                        <input
+                          type="text"
+                          placeholder="123.456"
+                          value={attr.value}
+                          onChange={(e) =>
+                            handleAttributeChange(index, "value", e.target.value)
+                          }
+                          className="item-create-attr-input"
+                        />
+
+                        <div className="item-create-attr-buttons">
+                          <button
+                            type="button"
+                            className="item-create-attr-btn remove"
+                            onClick={() => handleRemoveAttribute(index)}
+                            title="속성 제거"
+                          >
+                            −
+                          </button>
+                          <button
+                            type="button"
+                            className="item-create-attr-btn add"
+                            onClick={handleAddAttribute}
+                            title="속성 추가"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 체크박스 섹션 */}
+                  <div className="item-create-checkbox-group">
+                    <label className="item-create-checkbox-label">
                       <input
                         type="checkbox"
                         checked={editData.twoHander}
                         onChange={(e) =>
                           setEditData({ ...editData, twoHander: e.target.checked })
                         }
+                        className="item-create-checkbox"
                       />
+                      <span>Two-Hander</span>
                     </label>
-                  </div>
-                  <div className="checkbox-item">
-                    <label className="checkbox-label">
-                      Stackable:
+
+                    <label className="item-create-checkbox-label">
                       <input
                         type="checkbox"
                         checked={editData.stackable}
                         onChange={(e) =>
                           setEditData({ ...editData, stackable: e.target.checked })
                         }
+                        className="item-create-checkbox"
                       />
+                      <span>Stackable</span>
                     </label>
                   </div>
-                </div>
 
-                <div className="detail-section">
-                  <h3>스킬 (Skills)</h3>
-                  <div className="detail-row">
+                  {/* 스킬 섹션 */}
+                  <div className="item-create-section">
+                    <h3 className="item-create-section-title">스킬 (Skills)</h3>
                     <input
                       type="text"
                       value={editData.skills.join(", ")}
@@ -428,26 +433,28 @@ function AdminItemCreate() {
                         })
                       }
                       placeholder="스킬1, 스킬2, 스킬3"
+                      className="item-create-input"
                     />
                   </div>
-                </div>
 
-                <div className="button-group">
-                  <button className="save-button" onClick={handleSave}>
-                    저장
-                  </button>
-                  <button
-                    className="cancel-button"
-                    onClick={() => navigate("/admin/items")}
-                  >
-                    취소
-                  </button>
+                  {/* 버튼 그룹 */}
+                  <div className="item-create-actions">
+                    <button className="item-create-btn save" onClick={handleSave}>
+                      저장
+                    </button>
+                    <button
+                      className="item-create-btn cancel"
+                      onClick={() => navigate("/admin/items")}
+                    >
+                      취소
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
             <button
-              className="back-button bottom-left"
+              className="item-create-back-btn"
               onClick={() => navigate("/admin/items")}
             >
               ← 목록으로
