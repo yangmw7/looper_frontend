@@ -288,11 +288,11 @@ export default function GameGuidePage() {
                 </div>
                 <div className="guide-control-item">
                   <div className="guide-control-key">E</div>
-                  <span>상호작용</span>
+                  <span>스킬 사용</span>
                 </div>
                 <div className="guide-control-item">
                   <div className="guide-control-key">F</div>
-                  <span>스킬 사용</span>
+                  <span>상호작용</span>
                 </div>
                 <div className="guide-control-item">
                   <div className="guide-control-key">ESC</div>

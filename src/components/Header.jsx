@@ -203,7 +203,7 @@ function Header() {
         </Link>
         <Link to="/">홈</Link>
         <Link to="/guide">게임 정보</Link>
-        <Link to="/notice">공지사항</Link>
+        <Link to="/announcement">공지사항</Link>
         <Link to="/community">커뮤니티</Link>
       </div>
 

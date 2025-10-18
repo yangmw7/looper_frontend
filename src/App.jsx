@@ -18,6 +18,11 @@ import CommunityDetailPage   from './pages/CommunityDetailPage';
 import CommunityCreatePage   from './pages/CommunityCreatePage';
 import CommunityEditPage     from './pages/CommunityEditPage';
 
+// 공지사항 페이지
+import AnnouncementListPage  from './pages/AnnouncementListPage';
+import AnnouncementDetailPage from './pages/AnnouncementDetailPage';
+import AnnouncementWritePage from './pages/AnnouncementWritePage';
+
 import MyPage                from './pages/MyPage/MyPage';
 import ProfileTab            from './pages/MyPage/ProfileTab';
 import EquipmentTab          from './pages/MyPage/EquipmentTab';
@@ -71,6 +76,12 @@ function App() {
           <Route path="/community/new"          element={<CommunityCreatePage />} />
           <Route path="/community/:id"          element={<CommunityDetailPage />} />
           <Route path="/community/:id/edit"     element={<CommunityEditPage />} />
+
+          {/* 공지사항 */}
+          <Route path="/announcement"           element={<AnnouncementListPage />} />
+          <Route path="/announcement/new"       element={<AnnouncementWritePage />} />
+          <Route path="/announcement/:id"       element={<AnnouncementDetailPage />} />
+          <Route path="/announcement/:id/edit"  element={<AnnouncementWritePage />} />
 
           {/* 마이페이지 (로그인 필수) */}
           <Route path="/mypage" element={<MyPage />}>
