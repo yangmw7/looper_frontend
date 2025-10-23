@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import Header from './components/Header';
+import ChatBot from './components/ChatBot';
 
 import MainPage              from './pages/MainPage';
 import AuthPage              from './pages/AuthPage';
@@ -126,6 +127,9 @@ function App() {
           </Route>
         </Routes>
       </main>
+
+      {/* 모든 페이지에서 표시되는 챗봇 */}
+      <ChatBot />
     </div>
   );
 }

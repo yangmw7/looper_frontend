@@ -5,15 +5,17 @@
   font-family: "Noto Sans KR", sans-serif;
   padding: 30px;
   position: relative;
+  height: calc(100vh - 60px);
+  overflow: hidden;
 }
 
 /* 왼쪽 패널 */
 .left-panel {
-  flex: 1;
+  flex: 0 0 500px;
   display: flex;
   flex-direction: column;
   gap: 25px;
-  max-width: 500px;
+  min-width: 400px;
 }
 
 /* 장비창 */
@@ -23,12 +25,15 @@
   border: 1px solid rgba(255,255,255,0.08);
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  flex-shrink: 0;
 }
 
 .character-panel h2 {
   margin-bottom: 20px;
   font-size: 1.5rem;
   color: #fff;
+  display: flex;
+  align-items: center;
 }
 
 .character-container {
@@ -97,10 +102,17 @@
   text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 }
 
-.slot-icon {
+.slot-icon,
+.slot-icon-image {
   font-size: 2rem;
   line-height: 1;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.slot-icon-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .slot-empty {
@@ -162,7 +174,7 @@
   transform: translateY(-50%) scale(1.05);
 }
 
-/* 툴팁 - 적응형 위치 */
+/* 툴팁 공통 스타일 */
 .item-tooltip {
   position: absolute;
   background: rgba(20, 20, 25, 0.98);
@@ -175,6 +187,16 @@
   max-width: 220px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   animation: tooltipFadeIn 0.2s ease;
+}
+
+/* 장비창용 툴팁 */
+.item-tooltip.equipment-tooltip {
+  z-index: 999;
+}
+
+/* 인벤토리용 툴팁 */
+.item-tooltip.inventory-tooltip {
+  z-index: 9999;
 }
 
 /* 아래 중앙 */
@@ -260,6 +282,30 @@
   color: #2196f3;
 }
 
+.stat-cri {
+  color: #ff9800;
+}
+
+.stat-crid {
+  color: #ff5722;
+}
+
+.stat-spd {
+  color: #00bcd4;
+}
+
+.stat-jmp {
+  color: #9c27b0;
+}
+
+.stat-ats {
+  color: #ffc107;
+}
+
+.stat-jcnt {
+  color: #e91e63;
+}
+
 /* 스탯창 */
 .stats-panel {
   background: rgba(30, 30, 35, 0.9);
@@ -267,12 +313,15 @@
   border: 1px solid rgba(255,255,255,0.1);
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  flex-shrink: 0;
 }
 
 .stats-panel h2 {
   margin-bottom: 15px;
   font-size: 1.3rem;
   color: #fff;
+  display: flex;
+  align-items: center;
 }
 
 .stats-list {
@@ -303,7 +352,7 @@
 
 /* 인벤토리 */
 .right-panel {
-  flex: 1.8;
+  flex: 1;
   background: linear-gradient(180deg, rgba(20,20,25,0.95), rgba(10,10,15,0.9));
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.08);
@@ -311,31 +360,36 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .inventory-header h2 {
   margin-bottom: 15px;
   color: #ff80ab;
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
-/* 인벤토리 래퍼 - 여백 추가 */
+/* 인벤토리 래퍼 */
 .inventory-grid-wrapper {
   flex: 1;
   overflow: hidden;
-  padding: 5px;
+  display: flex;
 }
 
 .inventory-grid {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 15px;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 100%;
+  width: 100%;
   padding: 15px;
-  padding-right: 20px;
+  padding-right: 25px;
+  align-content: start;
 }
 
 /* 스크롤바 스타일 */
@@ -359,11 +413,13 @@
   background: rgba(233, 30, 99, 0.7);
 }
 
+/* 인벤토리 슬롯 */
 .inventory-slot {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
-  min-height: 70px;
+  min-width: 100px;
+  max-width: 120px;
   background: rgba(255,255,255,0.05);
   border: 2px solid rgba(255,255,255,0.12);
   border-radius: 8px;
@@ -388,18 +444,24 @@
 }
 
 .item-icon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   line-height: 1;
+}
+
+.item-icon-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
 .equipped-badge {
   position: absolute;
-  top: 3px;
-  right: 3px;
+  top: 5px;
+  right: 5px;
   background: rgba(233, 30, 99, 0.95);
   color: #fff;
-  font-size: 0.6rem;
-  padding: 2px 5px;
+  font-size: 0.7rem;
+  padding: 3px 6px;
   border-radius: 4px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -414,20 +476,46 @@
 }
 
 /* 반응형 */
+@media (max-width: 1400px) {
+  .left-panel {
+    flex: 0 0 450px;
+    min-width: 350px;
+  }
+  
+  .inventory-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 12px;
+  }
+  
+  .inventory-slot {
+    min-width: 90px;
+    max-width: 110px;
+  }
+}
+
 @media (max-width: 1200px) {
   .equipment-ui {
     flex-direction: column;
+    height: auto;
+    overflow: auto;
   }
   
   .left-panel {
+    flex: none;
     max-width: 100%;
+    min-width: auto;
   }
+  
+  .right-panel {
+    min-height: 500px;
+  }
+  
   .character-container {
     height: 450px;
   }
   
   .inventory-grid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
 }
 
@@ -446,10 +534,21 @@
   }
   
   .inventory-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+  
+  .inventory-slot {
+    min-width: 80px;
+    max-width: 100px;
   }
   
   .item-icon {
-    font-size: 2rem;
+    font-size: 2.5rem;
+  }
+  
+  .item-icon-image {
+    width: 50px;
+    height: 50px;
   }
 }
