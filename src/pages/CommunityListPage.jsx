@@ -1,3 +1,4 @@
+// src/pages/CommunityListPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -33,6 +34,7 @@ export default function CommunityListPage() {
           author: p.writer,
           comments: p.commentCount,
           views: p.viewCount,
+          likes: p.likeCount,
           createdAt: formatDate(p.createdAt),
         }));
         setPosts(apiPosts);
@@ -71,7 +73,7 @@ export default function CommunityListPage() {
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
     if (activeTab === 'popular') {
-      return (b.views + b.comments * 10) - (a.views + a.comments * 10);
+      return (b.views + b.comments * 10 + b.likes * 5) - (a.views + a.comments * 10 + a.likes * 5);
     }
     return 0;
   });
@@ -94,7 +96,6 @@ export default function CommunityListPage() {
     setCurrentPage(1);
   };
 
-  // 페이지네이션 번호 계산 (현재 페이지 중심)
   const getPageNumbers = () => {
     const maxVisible = 5;
     let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
@@ -230,12 +231,27 @@ export default function CommunityListPage() {
                           {post.author}
                         </span>
                         <span className="col-stats">
+                          {/* 조회수 */}
                           <span className="stat-item">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                               <path d="M1 7C1 7 3 3 7 3C11 3 13 7 13 7C13 7 11 11 7 11C3 11 1 7 1 7Z" stroke="currentColor" strokeWidth="1.2"/>
                               <circle cx="7" cy="7" r="2" stroke="currentColor" strokeWidth="1.2"/>
                             </svg>
                             {post.views}
+                          </span>
+                          {/* ⭐ 댓글 수 */}
+                          <span className="stat-item">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                              <path d="M2 2H12V9H7L4 12V9H2V2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                            </svg>
+                            {post.comments}
+                          </span>
+                          {/* ⭐ 좋아요 수 */}
+                          <span className="stat-item">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                              <path d="M7 12L2.5 7.5C1.5 6.5 1.5 4.5 2.5 3.5C3.5 2.5 5.5 2.5 6.5 3.5L7 4L7.5 3.5C8.5 2.5 10.5 2.5 11.5 3.5C12.5 4.5 12.5 6.5 11.5 7.5L7 12Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                            </svg>
+                            {post.likes}
                           </span>
                         </span>
                         <span className="col-date">{post.createdAt}</span>
