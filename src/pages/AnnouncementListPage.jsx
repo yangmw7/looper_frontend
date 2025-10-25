@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaHeart, FaComment, FaEye, FaThumbtack } from 'react-icons/fa';
+import { FaHeart, FaEye, FaThumbtack } from 'react-icons/fa';
 import './AnnouncementListPage.css';
 
 import Header from '../components/Header';
@@ -62,7 +62,6 @@ export default function AnnouncementListPage() {
         author: a.writer,
         views: a.viewCount,
         likes: a.likeCount,
-        comments: a.commentCount,
         isPinned: a.isPinned,
         createdAt: formatDate(a.createdAt)
       }));
@@ -279,10 +278,6 @@ export default function AnnouncementListPage() {
                           <span className="stat-item">
                             <FaHeart />
                             {post.likes}
-                          </span>
-                          <span className="stat-item">
-                            <FaComment />
-                            {post.comments}
                           </span>
                         </span>
                         <span className="col-date">{post.createdAt}</span>
