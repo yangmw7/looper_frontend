@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 import "./AdminReportDetail.css";
 
 function AdminReportDetail() {
-  const { type, id } = useParams(); // /admin/reports/post/5
+  const { type, id } = useParams();
   const navigate = useNavigate();
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -14,7 +14,6 @@ function AdminReportDetail() {
   const [newStatus, setNewStatus] = useState("");
   const [memo, setMemo] = useState("");
   
-  // ✅ 제재 관련 상태 추가
   const [penaltyType, setPenaltyType] = useState("");
   const [penaltyReason, setPenaltyReason] = useState("");
   const [penaltyDescription, setPenaltyDescription] = useState("");
@@ -44,15 +43,13 @@ function AdminReportDetail() {
     OTHER: "기타",
   };
 
-  // 제재 유형 매핑
-  const penaltyTypeLabels = {
-    "": "제재 없음",
-    WARNING: "경고",
-    SUSPENSION: "정지",
-    PERMANENT: "영구정지",
-  };
+  const isProcessed = report?.status === "RESOLVED" || 
+                      report?.status === "ACTION_TAKEN" || 
+                      report?.status === "REJECTED";
 
-  // ✅ 신고 상세 데이터 요청
+  // 제재 섹션 표시 여부
+  const showPenaltySection = (newStatus === "RESOLVED" || newStatus === "ACTION_TAKEN") && !isProcessed;
+
   useEffect(() => {
     const token =
       localStorage.getItem("accessToken") ||
@@ -82,7 +79,6 @@ function AdminReportDetail() {
       });
   }, [API_BASE_URL, id, type]);
 
-  // ✅ 신고 처리 (제재 포함)
   const handleProcess = () => {
     if (!confirm("신고를 처리하시겠습니까?")) return;
 
@@ -90,7 +86,6 @@ function AdminReportDetail() {
       localStorage.getItem("accessToken") ||
       sessionStorage.getItem("accessToken");
 
-    // ReportActionRequest 구조
     const requestData = {
       status: newStatus,
       handlerMemo: memo,
@@ -113,7 +108,8 @@ function AdminReportDetail() {
       })
       .catch((err) => {
         console.error("신고 처리 실패:", err);
-        alert("신고 처리 중 오류 발생: " + (err.response?.data?.message || err.message));
+        const errorMessage = err.response?.data?.message || err.message;
+        alert("신고 처리 중 오류 발생:\n" + errorMessage);
       });
   };
 
@@ -129,62 +125,101 @@ function AdminReportDetail() {
           <div className="admin-container">
             <h2 className="admin-title">신고 상세 & 처리</h2>
 
+            {isProcessed && (
+              <div className="alert-box warning">
+                ⚠️ 이 신고는 이미 처리가 완료되어 수정할 수 없습니다.
+              </div>
+            )}
+
             {/* ─── 신고 정보 ─────────────────────────── */}
             <div className="report-detail-box">
               <h3>📋 신고 정보</h3>
-              <p><b>ID:</b> {report.id}</p>
-              <p><b>유형:</b> {report.reportType === "POST" ? "게시글" : "댓글"}</p>
-              <p><b>대상 ID:</b> {report.targetId}</p>
+              <div className="info-grid">
+                <div className="info-item">
+                  <span className="info-label">ID:</span>
+                  <span className="info-value">{report.id}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">유형:</span>
+                  <span className="info-value">
+                    {report.reportType === "POST" ? "게시글" : 
+                     report.reportType === "COMMENT" ? "댓글" : "공지사항 댓글"}
+                  </span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">대상 ID:</span>
+                  <span className="info-value">{report.targetId}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">현재 상태:</span>
+                  <span className={`status-badge status-${report.status.toLowerCase()}`}>
+                    {statusLabels[report.status] || report.status}
+                  </span>
+                </div>
+              </div>
 
               {report.reportType === "POST" && (
-                <>
-                  <p><b>게시글 제목:</b> {report.targetTitle}</p>
-                  <p><b>게시글 내용:</b></p>
-                  <pre style={{ 
-                    background: 'rgba(0,0,0,0.3)', 
-                    padding: '12px', 
-                    borderRadius: '8px',
-                    whiteSpace: 'pre-wrap',
-                    maxHeight: '200px',
-                    overflow: 'auto'
-                  }}>
-                    {report.targetContent}
-                  </pre>
-                </>
+                <div className="content-section">
+                  <div className="info-label">게시글 제목:</div>
+                  <div className="content-text">{report.targetTitle}</div>
+                  <div className="info-label">게시글 내용:</div>
+                  <pre className="content-box">{report.targetContent}</pre>
+                </div>
               )}
 
-              {report.reportType === "COMMENT" && (
-                <>
-                  <p><b>댓글 내용:</b></p>
-                  <pre style={{ 
-                    background: 'rgba(0,0,0,0.3)', 
-                    padding: '12px', 
-                    borderRadius: '8px',
-                    whiteSpace: 'pre-wrap'
-                  }}>
-                    {report.targetContent}
-                  </pre>
-                </>
+              {(report.reportType === "COMMENT" || report.reportType === "ANNOUNCEMENT_COMMENT") && (
+                <div className="content-section">
+                  <div className="info-label">댓글 내용:</div>
+                  <pre className="content-box">{report.targetContent}</pre>
+                </div>
               )}
 
-              <p><b>신고자:</b> {report.reporterNickname} (ID: {report.reporterId})</p>
-              <p><b>피신고자:</b> {report.reportedNickname} (ID: {report.reportedId})</p>
-              <p>
-                <b>신고 사유:</b>{" "}
-                {Array.from(report.reasons)
-                  .map((r) => reasonLabels[r] || r)
-                  .join(", ")}
-              </p>
-              <p><b>신고 설명:</b> {report.description || "없음"}</p>
-              <p><b>현재 상태:</b> {statusLabels[report.status] || report.status}</p>
-              <p><b>등록일:</b> {new Date(report.createdAt).toLocaleString()}</p>
+              <div className="info-grid">
+                <div className="info-item">
+                  <span className="info-label">신고자:</span>
+                  <span className="info-value">{report.reporterNickname} (ID: {report.reporterId})</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">피신고자:</span>
+                  <span className="info-value">{report.reportedNickname} (ID: {report.reportedId})</span>
+                </div>
+                <div className="info-item full-width">
+                  <span className="info-label">신고 사유:</span>
+                  <span className="info-value">
+                    {Array.from(report.reasons).map((r) => reasonLabels[r] || r).join(", ")}
+                  </span>
+                </div>
+                {report.description && (
+                  <div className="info-item full-width">
+                    <span className="info-label">신고 설명:</span>
+                    <span className="info-value">{report.description}</span>
+                  </div>
+                )}
+                <div className="info-item">
+                  <span className="info-label">등록일:</span>
+                  <span className="info-value">{new Date(report.createdAt).toLocaleString()}</span>
+                </div>
+              </div>
               
               {report.handledBy && (
-                <>
-                  <p><b>처리자:</b> {report.handledBy}</p>
-                  <p><b>처리일:</b> {new Date(report.handledAt).toLocaleString()}</p>
-                  <p><b>처리 메모:</b> {report.handlerMemo}</p>
-                </>
+                <div className="handled-info">
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">처리자:</span>
+                      <span className="info-value">{report.handledBy}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">처리일:</span>
+                      <span className="info-value">{new Date(report.handledAt).toLocaleString()}</span>
+                    </div>
+                    {report.handlerMemo && (
+                      <div className="info-item full-width">
+                        <span className="info-label">처리 메모:</span>
+                        <span className="info-value">{report.handlerMemo}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
 
@@ -192,100 +227,164 @@ function AdminReportDetail() {
             <div className="report-actions">
               <h3>⚖️ 신고 처리</h3>
               
-              <div className="form-group">
-                <label>처리 상태:</label>
-                <select
-                  value={newStatus}
-                  onChange={(e) => setNewStatus(e.target.value)}
-                >
-                  <option value="PENDING">접수</option>
-                  <option value="IN_REVIEW">확인 중</option>
-                  <option value="REJECTED">기각</option>
-                  <option value="RESOLVED">종결 (경고)</option>
-                  <option value="ACTION_TAKEN">조치 완료 (정지/영구정지)</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>처리 메모:</label>
-                <textarea
-                  placeholder="관리자 메모 (신고자에게 표시됨)"
-                  value={memo}
-                  onChange={(e) => setMemo(e.target.value)}
-                  rows="3"
-                />
-              </div>
-
-              {/* ─── 제재 부과 (선택) ─────────────────────────── */}
-              {(newStatus === "RESOLVED" || newStatus === "ACTION_TAKEN") && (
-                <div className="penalty-section">
-                  <h4>🚨 제재 부과 (선택)</h4>
-                  
-                  <div className="form-group">
-                    <label>제재 유형:</label>
-                    <select
-                      value={penaltyType}
-                      onChange={(e) => setPenaltyType(e.target.value)}
-                    >
-                      <option value="">제재 없음</option>
-                      <option value="WARNING">경고</option>
-                      <option value="SUSPENSION">정지</option>
-                      <option value="PERMANENT">영구정지</option>
-                    </select>
+              {isProcessed ? (
+                <div className="processed-info">
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">최종 처리 상태:</span>
+                      <span className={`status-badge status-${report.status.toLowerCase()}`}>
+                        {statusLabels[report.status]}
+                      </span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">처리자:</span>
+                      <span className="info-value">{report.handledBy}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">처리일:</span>
+                      <span className="info-value">{new Date(report.handledAt).toLocaleString()}</span>
+                    </div>
+                    {report.handlerMemo && (
+                      <div className="info-item full-width">
+                        <span className="info-label">처리 메모:</span>
+                        <span className="info-value">{report.handlerMemo}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="form-container">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>처리 상태 <span className="required">*</span></label>
+                      <select
+                        value={newStatus}
+                        onChange={(e) => {
+                          setNewStatus(e.target.value);
+                          // 상태 변경 시 제재 정보 초기화
+                          if (e.target.value !== "RESOLVED" && e.target.value !== "ACTION_TAKEN") {
+                            setPenaltyType("");
+                            setPenaltyReason("");
+                            setPenaltyDescription("");
+                            setSuspensionDays(3);
+                            setEvidence("");
+                          }
+                        }}
+                      >
+                        <option value="PENDING">접수</option>
+                        <option value="IN_REVIEW">확인 중</option>
+                        <option value="REJECTED">기각</option>
+                        <option value="RESOLVED">종결</option>
+                        <option value="ACTION_TAKEN">조치 완료</option>
+                      </select>
+                    </div>
                   </div>
 
-                  {penaltyType && (
-                    <>
+                  <div className="form-group">
+                    <label>처리 메모</label>
+                    <textarea
+                      placeholder="관리자 메모 (신고자에게 표시됨)"
+                      value={memo}
+                      onChange={(e) => setMemo(e.target.value)}
+                      rows="3"
+                    />
+                  </div>
+
+                  {/* ─── 제재 부과 섹션 ─────────────────────────── */}
+                  {showPenaltySection && (
+                    <div className="penalty-section">
+                      <div className="penalty-header">
+                        <h4>🚨 제재 부과</h4>
+                        <span className="penalty-subtitle">신고가 타당한 경우 제재를 부과할 수 있습니다</span>
+                      </div>
+                      
                       <div className="form-group">
-                        <label>제재 사유:</label>
-                        <input
-                          type="text"
-                          placeholder="예: 욕설 사용"
-                          value={penaltyReason}
-                          onChange={(e) => setPenaltyReason(e.target.value)}
-                        />
+                        <label>제재 유형 <span className="optional">(선택)</span></label>
+                        <select
+                          value={penaltyType}
+                          onChange={(e) => {
+                            setPenaltyType(e.target.value);
+                            // 제재 유형 변경 시 관련 필드 초기화
+                            if (e.target.value === "") {
+                              setPenaltyReason("");
+                              setPenaltyDescription("");
+                              setEvidence("");
+                            }
+                          }}
+                        >
+                          <option value="">제재 없음</option>
+                          <option value="WARNING">경고</option>
+                          <option value="SUSPENSION">정지</option>
+                          <option value="PERMANENT">영구정지</option>
+                        </select>
                       </div>
 
-                      <div className="form-group">
-                        <label>제재 상세 설명:</label>
-                        <textarea
-                          placeholder="예: 커뮤니티 가이드 위반으로 경고 조치"
-                          value={penaltyDescription}
-                          onChange={(e) => setPenaltyDescription(e.target.value)}
-                          rows="3"
-                        />
-                      </div>
+                      {penaltyType && (
+                        <div className="penalty-details">
+                          <div className="form-group">
+                            <label>제재 사유 <span className="required">*</span></label>
+                            <input
+                              type="text"
+                              placeholder="예: 욕설 사용 (최소 5자 이상)"
+                              value={penaltyReason}
+                              onChange={(e) => setPenaltyReason(e.target.value)}
+                              required
+                            />
+                            {penaltyReason && penaltyReason.length < 5 && (
+                              <span className="field-hint error">최소 5자 이상 입력해주세요</span>
+                            )}
+                          </div>
 
-                      {penaltyType === "SUSPENSION" && (
-                        <div className="form-group">
-                          <label>정지 기간 (일):</label>
-                          <input
-                            type="number"
-                            min="1"
-                            max="365"
-                            value={suspensionDays}
-                            onChange={(e) => setSuspensionDays(e.target.value)}
-                          />
+                          <div className="form-group">
+                            <label>제재 상세 설명 <span className="optional">(선택)</span></label>
+                            <textarea
+                              placeholder="예: 커뮤니티 가이드 위반으로 경고 조치"
+                              value={penaltyDescription}
+                              onChange={(e) => setPenaltyDescription(e.target.value)}
+                              rows="3"
+                            />
+                          </div>
+
+                          {penaltyType === "SUSPENSION" && (
+                            <div className="form-group">
+                              <label>정지 기간 (일) <span className="required">*</span></label>
+                              <div className="input-with-hint">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="365"
+                                  value={suspensionDays}
+                                  onChange={(e) => setSuspensionDays(e.target.value)}
+                                  required
+                                />
+                                <span className="field-hint">1일 ~ 365일 사이로 설정</span>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="form-group">
+                            <label>증거 자료 <span className="optional">(선택)</span></label>
+                            <textarea
+                              placeholder="예: 게시글 URL, 스크린샷 링크 등"
+                              value={evidence}
+                              onChange={(e) => setEvidence(e.target.value)}
+                              rows="2"
+                            />
+                          </div>
                         </div>
                       )}
-
-                      <div className="form-group">
-                        <label>증거 자료:</label>
-                        <textarea
-                          placeholder="예: 게시글 URL, 스크린샷 링크 등"
-                          value={evidence}
-                          onChange={(e) => setEvidence(e.target.value)}
-                          rows="2"
-                        />
-                      </div>
-                    </>
+                    </div>
                   )}
                 </div>
               )}
 
               <div className="action-buttons">
-                <button className="admin-btn-primary" onClick={handleProcess}>
-                  ✅ 신고 처리하기
+                <button 
+                  className="admin-btn-primary" 
+                  onClick={handleProcess}
+                  disabled={isProcessed}
+                >
+                  {isProcessed ? "✅ 처리 완료됨" : "✅ 신고 처리하기"}
                 </button>
                 <button className="btn-secondary" onClick={() => navigate("/admin/reports")}>
                   ← 목록으로

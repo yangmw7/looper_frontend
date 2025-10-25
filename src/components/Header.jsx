@@ -137,13 +137,17 @@ function Header() {
   };
 
   // 알림 클릭 핸들러
-  const handleNotificationClick = (notification) => {
+  const handleNotificationClick = async (notification) => {
+    // 읽지 않은 알림이면 읽음 처리
     if (!notification.isRead) {
-      markAsRead(notification.id);
+      await markAsRead(notification.id);
     }
+    
+    // 알림 드롭다운 닫기
     setShowNotifications(false);
-    // 알림 타입에 따라 페이지 이동
-    // navigate('/community'); 등
+    
+    // 신고 관련 알림이므로 마이페이지 신고 조회로 이동
+    navigate('/mypage/report');
   };
 
   // 로그아웃

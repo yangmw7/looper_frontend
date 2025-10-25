@@ -51,13 +51,11 @@ export default function ChatBot() {
     setIsTyping(true);
 
     try {
-      // Spring Boot MCP 서버 연동 API 호출
       const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
       
-      // /api/chat 엔드포인트 호출 (Spring Boot 경로)
       const response = await axios.post(`${API_BASE_URL}/api/chat`, {
-        question: currentQuery  // "question" 키로 전송 (Spring Boot와 일치)
+        question: currentQuery
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -67,21 +65,16 @@ export default function ChatBot() {
 
       console.log('챗봇 응답:', response.data);
 
-      // 응답 처리 - String 또는 JSON 모두 처리
       let botResponse;
       
       if (typeof response.data === 'string') {
-        // String 응답인 경우
         try {
-          // JSON 문자열을 파싱 시도
           const parsedData = JSON.parse(response.data);
           botResponse = parsedData.answer || response.data;
         } catch (e) {
-          // JSON이 아니면 그대로 사용
           botResponse = response.data;
         }
       } else if (typeof response.data === 'object') {
-        // Object 응답인 경우
         botResponse = response.data.answer || JSON.stringify(response.data);
       } else {
         botResponse = '응답을 가져올 수 없습니다.';
@@ -96,15 +89,12 @@ export default function ChatBot() {
     } catch (error) {
       console.error('챗봇 응답 실패:', error);
       
-      // 에러 메시지 처리
       let errorMessage;
       
       if (error.response) {
-        // 서버 응답이 있는 경우
         console.error('서버 에러:', error.response.status, error.response.data);
         errorMessage = error.response.data || '서버에서 오류가 발생했습니다.';
       } else if (error.request) {
-        // 요청은 보냈지만 응답이 없는 경우
         console.error('네트워크 에러:', error.request);
         errorMessage = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
       } else {
@@ -130,10 +120,8 @@ export default function ChatBot() {
   };
 
   const quickQuestions = [
-    '화염의 검에 대해 알려줘',
-    '숲 고블린 공략법은?',
-    '초보자 가이드 보여줘',
-    '생명의 물약 효과는?'
+    '게임 가이드 보여줘',
+    '개발자들의 정보는?'
   ];
 
   const handleQuickQuestion = (question) => {
@@ -148,9 +136,9 @@ export default function ChatBot() {
         onClick={handleToggle}
       >
         {isOpen ? (
-          <FaTimes size={24} />
+          <FaTimes size={26} />
         ) : (
-          <FaRobot size={24} />
+          <FaRobot size={26} />
         )}
         {!isOpen && <div className="chatbot-toggle-pulse" />}
       </div>
@@ -161,7 +149,7 @@ export default function ChatBot() {
         <div className="chatbot-header">
           <div className="chatbot-header-info">
             <div className="chatbot-avatar">
-              <GiSwordman size={24} />
+              <GiSwordman size={28} />
             </div>
             <div className="chatbot-title">
               <h3>게임 도우미</h3>
@@ -172,7 +160,7 @@ export default function ChatBot() {
             </div>
           </div>
           <button className="chatbot-close" onClick={handleToggle}>
-            <FaTimes size={20} />
+            <FaTimes size={22} />
           </button>
         </div>
 
@@ -182,7 +170,7 @@ export default function ChatBot() {
             <div key={index} className={`chatbot-message ${message.type}`}>
               {message.type === 'bot' && (
                 <div className="message-avatar">
-                  <FaGamepad size={16} />
+                  <FaGamepad size={18} />
                 </div>
               )}
               <div className="message-content">
@@ -207,7 +195,7 @@ export default function ChatBot() {
           {isTyping && (
             <div className="chatbot-message bot">
               <div className="message-avatar">
-                <FaGamepad size={16} />
+                <FaGamepad size={18} />
               </div>
               <div className="message-content">
                 <div className="message-bubble typing">
@@ -227,14 +215,15 @@ export default function ChatBot() {
         {/* 빠른 질문 (메시지가 1개일 때만 표시) */}
         {messages.length === 1 && (
           <div className="chatbot-quick-questions">
-            <div className="quick-questions-title">자주 묻는 질문</div>
-            <div className="quick-questions-list">
+            <div className="quick-questions-title">💬 자주 묻는 질문</div>
+            <div className="quick-questions-grid">
               {quickQuestions.map((question, index) => (
                 <button
                   key={index}
                   className="quick-question-btn"
                   onClick={() => handleQuickQuestion(question)}
                 >
+                  <span className="question-icon">💡</span>
                   {question}
                 </button>
               ))}
@@ -259,7 +248,7 @@ export default function ChatBot() {
               onClick={handleSendMessage}
               disabled={!inputValue.trim()}
             >
-              <FaPaperPlane size={18} />
+              <FaPaperPlane size={20} />
             </button>
           </div>
         </div>
