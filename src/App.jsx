@@ -29,6 +29,7 @@ import ProfileTab            from './pages/MyPage/ProfileTab';
 import EquipmentTab          from './pages/MyPage/EquipmentTab';
 import ActivityTab           from './pages/MyPage/ActivityTab';
 import ReportTab             from './pages/MyPage/ReportTab';
+import SettingsTab           from './pages/MyPage/SettingsTab';
 
 import AdminRoute            from './components/AdminRoute';
 import AdminPage             from './adminPages/AdminPage';
@@ -91,6 +92,7 @@ function App() {
             <Route path="equipment" element={<EquipmentTab />} />
             <Route path="activity" element={<ActivityTab />} />
             <Route path="report" element={<ReportTab />} />
+            <Route path="settings" element={<SettingsTab />} />
           </Route>
 
           {/* 관리자 전용 라우트 */}

@@ -7,6 +7,7 @@ import ProfileTab from "./ProfileTab";
 import ActivityTab from "./ActivityTab";
 import EquipmentTab from "./EquipmentTab";
 import ReportTab from "./ReportTab";
+import SettingsTab from "./SettingsTab";
 import "./MyPage.css";
 
 import { FaUser, FaCog, FaClipboardList, FaExclamationTriangle } from "react-icons/fa";

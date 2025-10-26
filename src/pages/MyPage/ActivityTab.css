@@ -1,0 +1,107 @@
+.activity-tab {
+  padding: 20px;
+  background: #1a1a1a;
+  min-height: 100vh;
+}
+
+.activity-section {
+  margin-bottom: 40px;
+}
+
+.activity-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #2a2a2a;
+}
+
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-item {
+  background: #242424;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activity-item:hover {
+  background: #2a2a2a;
+  border-color: #444;
+  transform: translateX(4px);
+}
+
+.activity-content {
+  margin-bottom: 12px;
+}
+
+.activity-content h4 {
+  font-size: 1.05rem;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.activity-content p {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.activity-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.activity-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #666;
+  padding: 60px 20px;
+  background: #242424;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+/* 로딩 상태 */
+.activity-tab > div:first-child {
+  color: #e0e0e0;
+  text-align: center;
+  padding: 40px;
+}
+
+/* 스크롤바 스타일 */
+.activity-tab::-webkit-scrollbar {
+  width: 8px;
+}
+
+.activity-tab::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.activity-tab::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+
+.activity-tab::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

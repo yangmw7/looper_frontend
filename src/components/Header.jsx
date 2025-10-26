@@ -301,7 +301,7 @@ function Header() {
                   <div className="user-menu-divider" />
                   
                   <div className="user-menu-items">
-                    {roles.includes('ADMIN') ? (
+                    {roles.includes('ADMIN') && (
                       <Link 
                         to="/admin" 
                         className="user-menu-item"
@@ -309,15 +309,15 @@ function Header() {
                       >
                         관리자 페이지
                       </Link>
-                    ) : (
-                      <Link 
-                        to="/mypage" 
-                        className="user-menu-item"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        마이 페이지
-                      </Link>
                     )}
+                    
+                    <Link 
+                      to="/mypage" 
+                      className="user-menu-item"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      마이 페이지
+                    </Link>
                     
                     <button 
                       className="user-menu-item logout-item"
