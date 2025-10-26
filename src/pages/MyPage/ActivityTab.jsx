@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AiFillEye, AiFillHeart } from "react-icons/ai";
+import { FaCommentDots, FaEdit } from "react-icons/fa";
 import "./ActivityTab.css";
 
 function ActivityTab() {
@@ -56,9 +58,9 @@ function ActivityTab() {
                   <p>{post.content.substring(0, 100)}{post.content.length > 100 ? '...' : ''}</p>
                 </div>
                 <div className="activity-meta">
-                  <span>👁️ {post.viewCount}</span>
-                  <span>❤️ {post.likeCount}</span>
-                  <span>💬 {post.commentCount}</span>
+                  <span><AiFillEye /> {post.viewCount}</span>
+                  <span><AiFillHeart /> {post.likeCount}</span>
+                  <span><FaCommentDots /> {post.commentCount}</span>
                   <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
               </li>
@@ -80,11 +82,11 @@ function ActivityTab() {
                 onClick={() => navigate(`/community/${comment.postId}`)}
               >
                 <div className="activity-content">
-                  <h4>📝 {comment.postTitle}</h4>
+                  <h4><FaEdit /> {comment.postTitle}</h4>
                   <p>{comment.content}</p>
                 </div>
                 <div className="activity-meta">
-                  <span>❤️ {comment.likeCount}</span>
+                  <span><AiFillHeart /> {comment.likeCount}</span>
                   <span>{comment.createdAt}</span>
                 </div>
               </li>

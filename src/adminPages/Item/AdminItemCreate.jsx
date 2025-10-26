@@ -13,14 +13,13 @@ function AdminItemCreate() {
     rarity: "common",
     name: ["", ""],
     description: ["", ""],
-    attributes: [
-      { stat: "HP", op: "ADD", value: "" }
-    ],
+    attributes: [{ stat: "HP", op: "ADD", value: "" }],
     twoHander: false,
     stackable: false,
     skills: [],
   });
-  
+
+  const [skillInput, setSkillInput] = useState(""); // ✅ 스킬 입력용 별도 상태
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -61,14 +60,14 @@ function AdminItemCreate() {
         alert("파일 크기는 10MB를 초과할 수 없습니다.");
         return;
       }
-      
-      if (!file.type.startsWith('image/')) {
+
+      if (!file.type.startsWith("image/")) {
         alert("이미지 파일만 업로드 가능합니다.");
         return;
       }
-      
+
       setImageFile(file);
-      
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -106,33 +105,43 @@ function AdminItemCreate() {
       }
     }
 
+    // ✅ 입력창 내용 -> skills 배열로 변환
+    const skillsArray = skillInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
     const token =
       localStorage.getItem("accessToken") ||
       sessionStorage.getItem("accessToken");
 
     try {
       const formData = new FormData();
-      
+
       const itemData = {
         ...editData,
+        skills: skillsArray,
         attributes: editData.attributes.map((attr) => ({
           ...attr,
           value: parseFloat(attr.value) || 0,
         })),
       };
-      
-      formData.append('item', new Blob([JSON.stringify(itemData)], {
-        type: 'application/json'
-      }));
-      
+
+      formData.append(
+        "item",
+        new Blob([JSON.stringify(itemData)], {
+          type: "application/json",
+        })
+      );
+
       if (imageFile) {
-        formData.append('image', imageFile);
+        formData.append("image", imageFile);
       }
 
       await axios.post(`${API_BASE_URL}/api/items`, formData, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -141,12 +150,15 @@ function AdminItemCreate() {
     } catch (err) {
       console.error(err);
       if (err.response?.status === 400) {
-        const errorMessage = err.response?.data?.message || err.response?.data?.error || "";
-        
-        if (errorMessage.includes("duplicate") || 
-            errorMessage.includes("already exists") || 
-            errorMessage.includes("중복") ||
-            errorMessage.includes("이미 존재")) {
+        const errorMessage =
+          err.response?.data?.message || err.response?.data?.error || "";
+
+        if (
+          errorMessage.includes("duplicate") ||
+          errorMessage.includes("already exists") ||
+          errorMessage.includes("중복") ||
+          errorMessage.includes("이미 존재")
+        ) {
           alert("ID가 중복되었습니다. 다른 ID를 입력해주세요.");
         } else {
           alert("잘못된 요청입니다. 입력 내용을 확인해주세요.");
@@ -186,14 +198,19 @@ function AdminItemCreate() {
                     className="item-create-image"
                   />
                 </div>
-                
-                <div className={`item-create-rarity-badge rarity-${editData.rarity}`}>
+
+                <div
+                  className={`item-create-rarity-badge rarity-${editData.rarity}`}
+                >
                   {editData.rarity.toUpperCase()}
                 </div>
-                
+
                 <div className="item-create-upload-section">
-                  <label htmlFor="item-image-upload" className="item-create-upload-btn">
-                    {imageFile ? '이미지 변경' : '이미지 업로드'}
+                  <label
+                    htmlFor="item-image-upload"
+                    className="item-create-upload-btn"
+                  >
+                    {imageFile ? "이미지 변경" : "이미지 업로드"}
                   </label>
                   <input
                     id="item-image-upload"
@@ -204,9 +221,7 @@ function AdminItemCreate() {
                   />
                   {imageFile && (
                     <div className="item-create-file-info">
-                      <p className="item-create-filename">
-                        {imageFile.name}
-                      </p>
+                      <p className="item-create-filename">{imageFile.name}</p>
                       <button
                         type="button"
                         onClick={handleRemoveImage}
@@ -294,7 +309,10 @@ function AdminItemCreate() {
                       onChange={(e) =>
                         setEditData({
                           ...editData,
-                          description: [e.target.value, editData.description[1]],
+                          description: [
+                            e.target.value,
+                            editData.description[1],
+                          ],
                         })
                       }
                       placeholder="English description"
@@ -310,7 +328,10 @@ function AdminItemCreate() {
                       onChange={(e) =>
                         setEditData({
                           ...editData,
-                          description: [editData.description[0], e.target.value],
+                          description: [
+                            editData.description[0],
+                            e.target.value,
+                          ],
                         })
                       }
                       placeholder="한글 설명"
@@ -320,8 +341,10 @@ function AdminItemCreate() {
 
                   {/* 속성 섹션 */}
                   <div className="item-create-section">
-                    <h3 className="item-create-section-title">속성 (Attributes)</h3>
-                    
+                    <h3 className="item-create-section-title">
+                      속성 (Attributes)
+                    </h3>
+
                     <div className="item-create-attr-header">
                       <span>STAT</span>
                       <span>OP</span>
@@ -338,13 +361,21 @@ function AdminItemCreate() {
                           }
                           className="item-create-attr-select stat"
                         >
-                          {["HP", "ATK", "ATS", "DEF", "CRI", "CRID", "SPD", "JMP", "JCNT"].map(
-                            (s) => (
-                              <option key={s} value={s}>
-                                {s}
-                              </option>
-                            )
-                          )}
+                          {[
+                            "HP",
+                            "ATK",
+                            "ATS",
+                            "DEF",
+                            "CRI",
+                            "CRID",
+                            "SPD",
+                            "JMP",
+                            "JCNT",
+                          ].map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
                         </select>
 
                         <select
@@ -397,7 +428,10 @@ function AdminItemCreate() {
                         type="checkbox"
                         checked={editData.twoHander}
                         onChange={(e) =>
-                          setEditData({ ...editData, twoHander: e.target.checked })
+                          setEditData({
+                            ...editData,
+                            twoHander: e.target.checked,
+                          })
                         }
                         className="item-create-checkbox"
                       />
@@ -409,7 +443,10 @@ function AdminItemCreate() {
                         type="checkbox"
                         checked={editData.stackable}
                         onChange={(e) =>
-                          setEditData({ ...editData, stackable: e.target.checked })
+                          setEditData({
+                            ...editData,
+                            stackable: e.target.checked,
+                          })
                         }
                         className="item-create-checkbox"
                       />
@@ -417,21 +454,13 @@ function AdminItemCreate() {
                     </label>
                   </div>
 
-                  {/* 스킬 섹션 */}
+                  {/* ✅ 스킬 입력 섹션 */}
                   <div className="item-create-section">
                     <h3 className="item-create-section-title">스킬 (Skills)</h3>
                     <input
                       type="text"
-                      value={editData.skills.join(", ")}
-                      onChange={(e) =>
-                        setEditData({
-                          ...editData,
-                          skills: e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter((s) => s),
-                        })
-                      }
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
                       placeholder="스킬1, 스킬2, 스킬3"
                       className="item-create-input"
                     />
@@ -439,7 +468,10 @@ function AdminItemCreate() {
 
                   {/* 버튼 그룹 */}
                   <div className="item-create-actions">
-                    <button className="item-create-btn save" onClick={handleSave}>
+                    <button
+                      className="item-create-btn save"
+                      onClick={handleSave}
+                    >
                       저장
                     </button>
                     <button
