@@ -394,10 +394,10 @@ function EquipmentTab() {
                     <div className="stat-def">DEF {hoveredItem.def > 0 ? '+' : ''}{hoveredItem.def}</div>
                   )}
                   {hoveredItem.cri && hoveredItem.cri !== 0 && (
-                    <div className="stat-cri">CRI {hoveredItem.cri > 0 ? '+' : ''}{hoveredItem.cri}%</div>
+                    <div className="stat-cri">CRI {hoveredItem.cri > 0 ? '+' : ''}{parseFloat(hoveredItem.cri).toFixed(2)}%</div>
                   )}
                   {hoveredItem.crid && hoveredItem.crid !== 0 && (
-                    <div className="stat-crid">CRID {hoveredItem.crid > 0 ? '+' : ''}{hoveredItem.crid}x</div>
+                    <div className="stat-crid">CRID {hoveredItem.crid > 0 ? '+' : ''}{parseFloat(hoveredItem.crid).toFixed(2)}x</div>
                   )}
                   {hoveredItem.spd && hoveredItem.spd !== 0 && (
                     <div className="stat-spd">SPD {hoveredItem.spd > 0 ? '+' : ''}{hoveredItem.spd}</div>
@@ -446,17 +446,17 @@ function EquipmentTab() {
             
             <div>CRI</div>
             <div>
-              {playerStats.cri || 0}%
+              {parseFloat(playerStats.cri || 0).toFixed(2)}%
               {playerStats.equipmentCri > 0 && (
-                <span className="stat-bonus"> (+{playerStats.equipmentCri}%)</span>
+                <span className="stat-bonus"> (+{parseFloat(playerStats.equipmentCri).toFixed(2)}%)</span>
               )}
             </div>
             
             <div>CRID</div>
             <div>
-              {playerStats.crid || 0}x
+              {parseFloat(playerStats.crid || 0).toFixed(2)}x
               {playerStats.equipmentCrid > 0 && (
-                <span className="stat-bonus"> (+{playerStats.equipmentCrid}x)</span>
+                <span className="stat-bonus"> (+{parseFloat(playerStats.equipmentCrid).toFixed(2)}x)</span>
               )}
             </div>
             
@@ -522,10 +522,10 @@ function EquipmentTab() {
                     <div className="stat-def">DEF {hoveredItem.def > 0 ? '+' : ''}{hoveredItem.def}</div>
                   )}
                   {hoveredItem.cri && hoveredItem.cri !== 0 && (
-                    <div className="stat-cri">CRI {hoveredItem.cri > 0 ? '+' : ''}{hoveredItem.cri}%</div>
+                    <div className="stat-cri">CRI {hoveredItem.cri > 0 ? '+' : ''}{parseFloat(hoveredItem.cri).toFixed(2)}%</div>
                   )}
                   {hoveredItem.crid && hoveredItem.crid !== 0 && (
-                    <div className="stat-crid">CRID {hoveredItem.crid > 0 ? '+' : ''}{hoveredItem.crid}x</div>
+                    <div className="stat-crid">CRID {hoveredItem.crid > 0 ? '+' : ''}{parseFloat(hoveredItem.crid).toFixed(2)}x</div>
                   )}
                   {hoveredItem.spd && hoveredItem.spd !== 0 && (
                     <div className="stat-spd">SPD {hoveredItem.spd > 0 ? '+' : ''}{hoveredItem.spd}</div>
