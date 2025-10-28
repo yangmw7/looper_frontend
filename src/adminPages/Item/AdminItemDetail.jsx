@@ -36,7 +36,7 @@ function AdminItemDetail() {
       sessionStorage.getItem("accessToken");
 
     axios
-      .get(`${API_BASE_URL}/api/items/${id}`, {
+      .get(`${API_BASE_URL}/api/items/${id}/admin`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

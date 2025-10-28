@@ -32,7 +32,7 @@ function AdminSkillDetail() {
       sessionStorage.getItem("accessToken");
 
     axios
-      .get(`${API_BASE_URL}/api/skills/${id}`, {
+      .get(`${API_BASE_URL}/api/skills/${id}/admin`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -152,9 +152,9 @@ function AdminSkillDetail() {
     }
   };
 
-  if (loading) return <div className="loading">로딩 중...</div>;
-  if (error) return <div className="error-message">에러 발생: {error.message}</div>;
-  if (!skill) return <div className="error-message">스킬을 찾을 수 없습니다.</div>;
+  if (loading) return <div className="skill-detail-loading">로딩 중...</div>;
+  if (error) return <div className="skill-detail-error">에러 발생: {error.message}</div>;
+  if (!skill) return <div className="skill-detail-error">스킬을 찾을 수 없습니다.</div>;
 
   return (
     <>
@@ -162,165 +162,146 @@ function AdminSkillDetail() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <div className="detail-header">
-              <h2 className="admin-title">스킬 상세정보</h2>
-            </div>
+            {/* 헤더 */}
+            <h2 className="skill-detail-title">스킬 상세정보</h2>
 
-            <div className="skill-detail-content">
+            {/* 메인 컨테이너 */}
+            <div className="skill-detail-container">
               {/* 왼쪽 - 이미지 */}
               <div className="skill-detail-left">
-                <div className="skill-detail-image">
+                <div className="skill-detail-image-box">
                   <img src={getSkillImage()} alt="Skill" />
                 </div>
 
                 {isEditing && (
-                  <div className="image-upload-section" style={{ marginTop: "20px" }}>
-                    <label htmlFor="image-upload" className="image-upload-label">
-                      {imageFile ? "이미지 변경" : "새 이미지 업로드"}
-                    </label>
-                    <input
-                      id="image-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      style={{ display: "none" }}
-                    />
-                    {imageFile && (
-                      <div style={{ marginTop: "10px" }}>
-                        <p style={{ fontSize: "14px", color: "#ccc" }}>
-                          {imageFile.name}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={handleRemoveImage}
-                          style={{
-                            padding: "5px 10px",
-                            backgroundColor: "#dc3545",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                            fontSize: "12px",
-                          }}
-                        >
-                          이미지 제거
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <button
+                    className="skill-detail-upload-button"
+                    onClick={() => document.getElementById("skill-detail-image-upload").click()}
+                  >
+                    이미지 업로드
+                  </button>
                 )}
+                <input
+                  id="skill-detail-image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
               </div>
 
-              {/* 오른쪽 - 상세정보 */}
+              {/* 오른쪽 - 폼 */}
               <div className="skill-detail-right">
-                {!isEditing ? (
-                  <>
-                    <div className="detail-row">
-                      <label>ID:</label>
-                      <span>{skill.id}</span>
-                    </div>
-                    <div className="detail-row">
-                      <label>이름 (영문):</label>
-                      <span>{skill.name[0]}</span>
-                    </div>
-                    <div className="detail-row">
-                      <label>이름 (한글):</label>
-                      <span>{skill.name[1]}</span>
-                    </div>
-                    <div className="detail-row">
-                      <label>설명 (영문):</label>
-                      <span>{skill.description[0]}</span>
-                    </div>
-                    <div className="detail-row">
-                      <label>설명 (한글):</label>
-                      <span>{skill.description[1]}</span>
-                    </div>
+                {/* ID */}
+                <div className="skill-detail-row">
+                  <label>ID:</label>
+                  {!isEditing ? (
+                    <div className="skill-detail-value">{skill.id}</div>
+                  ) : (
+                    <input type="text" value={editData.id} disabled />
+                  )}
+                </div>
 
-                    <div className="button-group">
+                {/* 이름 (영문) */}
+                <div className="skill-detail-row">
+                  <label>이름 (영문):</label>
+                  {!isEditing ? (
+                    <div className="skill-detail-value">{skill.name[0]}</div>
+                  ) : (
+                    <input
+                      type="text"
+                      value={editData.name[0]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          name: [e.target.value, editData.name[1]],
+                        })
+                      }
+                      placeholder="English name"
+                    />
+                  )}
+                </div>
+
+                {/* 이름 (한글) */}
+                <div className="skill-detail-row">
+                  <label>이름 (한글):</label>
+                  {!isEditing ? (
+                    <div className="skill-detail-value">{skill.name[1]}</div>
+                  ) : (
+                    <input
+                      type="text"
+                      value={editData.name[1]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          name: [editData.name[0], e.target.value],
+                        })
+                      }
+                      placeholder="한글 이름"
+                    />
+                  )}
+                </div>
+
+                {/* 설명 (영문) */}
+                <div className="skill-detail-row">
+                  <label>설명 (영문):</label>
+                  {!isEditing ? (
+                    <div className="skill-detail-value">{skill.description[0]}</div>
+                  ) : (
+                    <textarea
+                      value={editData.description[0]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          description: [e.target.value, editData.description[1]],
+                        })
+                      }
+                      placeholder="Skill description in English"
+                    />
+                  )}
+                </div>
+
+                {/* 설명 (한글) */}
+                <div className="skill-detail-row">
+                  <label>설명 (한글):</label>
+                  {!isEditing ? (
+                    <div className="skill-detail-value">{skill.description[1]}</div>
+                  ) : (
+                    <textarea
+                      value={editData.description[1]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          description: [editData.description[0], e.target.value],
+                        })
+                      }
+                      placeholder="스킬 설명 (한글)"
+                    />
+                  )}
+                </div>
+
+                {/* 버튼 */}
+                <div className="skill-detail-divider"></div>
+                <div className="skill-detail-buttons">
+                  {!isEditing ? (
+                    <>
                       <button
-                        className="edit-button"
+                        className="skill-detail-edit-btn"
                         onClick={() => setIsEditing(true)}
                       >
                         수정
                       </button>
-                      <button className="delete-button" onClick={handleDelete}>
+                      <button className="skill-detail-delete-btn" onClick={handleDelete}>
                         삭제
                       </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="detail-row">
-                      <label>ID:</label>
-                      <input type="text" value={editData.id} disabled />
-                    </div>
-
-                    <div className="detail-row">
-                      <label>이름 (영문):</label>
-                      <input
-                        type="text"
-                        value={editData.name[0]}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            name: [e.target.value, editData.name[1]],
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="detail-row">
-                      <label>이름 (한글):</label>
-                      <input
-                        type="text"
-                        value={editData.name[1]}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            name: [editData.name[0], e.target.value],
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="detail-row">
-                      <label>설명 (영문):</label>
-                      <textarea
-                        value={editData.description[0]}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            description: [
-                              e.target.value,
-                              editData.description[1],
-                            ],
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="detail-row">
-                      <label>설명 (한글):</label>
-                      <textarea
-                        value={editData.description[1]}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            description: [
-                              editData.description[0],
-                              e.target.value,
-                            ],
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="button-group">
-                      <button className="save-button" onClick={handleSave}>
+                    </>
+                  ) : (
+                    <>
+                      <button className="skill-detail-save-btn" onClick={handleSave}>
                         저장
                       </button>
                       <button
-                        className="cancel-button"
+                        className="skill-detail-cancel-btn"
                         onClick={() => {
                           setIsEditing(false);
                           setEditData(skill);
@@ -330,14 +311,15 @@ function AdminSkillDetail() {
                       >
                         취소
                       </button>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
+            {/* 뒤로 가기 */}
             <button
-              className="back-button bottom-left"
+              className="skill-detail-back-btn"
               onClick={() => navigate("/admin/skills")}
             >
               ← 목록으로

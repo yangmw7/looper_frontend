@@ -138,49 +138,42 @@ function AdminNpcCreate() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <div className="detail-header">
+            {/* 헤더 */}
+            <div className="npc-create-header">
               <h2 className="admin-title">NPC 추가</h2>
             </div>
 
-            <div className="npc-detail-content">
-              {/* 왼쪽 - 이미지 미리보기 및 업로드 */}
-              <div className="npc-detail-left">
-                <div className="npc-detail-image">
+            {/* 메인 레이아웃 */}
+            <div className="npc-create-layout">
+              {/* 왼쪽 패널 - 이미지 */}
+              <div className="npc-create-left-panel">
+                <div className="npc-create-image-wrapper">
                   <img
                     src={getNpcImage()}
                     alt={editData.name[1] || editData.name[0] || "New NPC"}
+                    className="npc-create-image"
                   />
                 </div>
 
                 {/* 이미지 업로드 섹션 */}
-                <div className="image-upload-section" style={{ marginTop: "20px" }}>
-                  <label htmlFor="image-upload" className="image-upload-label">
+                <div className="npc-create-upload-section">
+                  <label htmlFor="npc-image-upload" className="npc-create-upload-btn">
                     {imageFile ? "이미지 변경" : "이미지 업로드"}
                   </label>
                   <input
-                    id="image-upload"
+                    id="npc-image-upload"
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    style={{ display: "none" }}
+                    className="npc-create-file-input"
                   />
                   {imageFile && (
-                    <div style={{ marginTop: "10px" }}>
-                      <p style={{ fontSize: "14px", color: "#ccc" }}>
-                        {imageFile.name}
-                      </p>
+                    <div className="npc-create-file-info">
+                      <p className="npc-create-filename">{imageFile.name}</p>
                       <button
                         type="button"
                         onClick={handleRemoveImage}
-                        style={{
-                          padding: "5px 10px",
-                          backgroundColor: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          fontSize: "12px",
-                        }}
+                        className="npc-create-remove-btn"
                       >
                         이미지 제거
                       </button>
@@ -189,144 +182,161 @@ function AdminNpcCreate() {
                 </div>
               </div>
 
-              {/* 오른쪽 - 정보 입력 폼 */}
-              <div className="npc-detail-right">
-                <div className="detail-row">
-                  <label>ID:</label>
-                  <input
-                    type="text"
-                    value={editData.id}
-                    onChange={(e) =>
-                      setEditData({ ...editData, id: e.target.value })
-                    }
-                    placeholder="예: 10001"
-                  />
-                </div>
-
-                <div className="detail-row">
-                  <label>이름 (영문):</label>
-                  <input
-                    type="text"
-                    value={editData.name[0]}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        name: [e.target.value, editData.name[1]],
-                      })
-                    }
-                    placeholder="English name"
-                  />
-                </div>
-
-                <div className="detail-row">
-                  <label>이름 (한글):</label>
-                  <input
-                    type="text"
-                    value={editData.name[1]}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        name: [editData.name[0], e.target.value],
-                      })
-                    }
-                    placeholder="한글 이름"
-                  />
-                </div>
-
-                <div className="detail-section">
-                  <h3>속성 (Attributes)</h3>
-                  <div className="attributes-grid">
-                    <div className="attribute-item">
-                      <label>HP:</label>
-                      <input
-                        type="number"
-                        value={editData.hp}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            hp: parseFloat(e.target.value) || 0,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="attribute-item">
-                      <label>ATK:</label>
-                      <input
-                        type="number"
-                        value={editData.atk}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            atk: parseFloat(e.target.value) || 0,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="attribute-item">
-                      <label>DEF:</label>
-                      <input
-                        type="number"
-                        value={editData.def}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            def: parseFloat(e.target.value) || 0,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="attribute-item">
-                      <label>SPD:</label>
-                      <input
-                        type="number"
-                        value={editData.spd}
-                        onChange={(e) =>
-                          setEditData({
-                            ...editData,
-                            spd: parseFloat(e.target.value) || 0,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="detail-section">
-                  <h3>특징 (Features)</h3>
-                  <div className="detail-row">
+              {/* 오른쪽 패널 - 폼 */}
+              <div className="npc-create-right-panel">
+                <div className="npc-create-form">
+                  {/* ID */}
+                  <div className="npc-create-field">
+                    <label className="npc-create-label">ID:</label>
                     <input
                       type="text"
-                      value={editData.features.join(", ")}
+                      className="npc-create-input"
+                      value={editData.id}
+                      onChange={(e) =>
+                        setEditData({ ...editData, id: e.target.value })
+                      }
+                      placeholder="예: 10001"
+                    />
+                  </div>
+
+                  {/* 이름 (영문) */}
+                  <div className="npc-create-field">
+                    <label className="npc-create-label">이름 (영문):</label>
+                    <input
+                      type="text"
+                      className="npc-create-input"
+                      value={editData.name[0]}
                       onChange={(e) =>
                         setEditData({
                           ...editData,
-                          features: e.target.value
-                            .split(",")
-                            .map((f) => f.trim())
-                            .filter((f) => f),
+                          name: [e.target.value, editData.name[1]],
                         })
                       }
-                      placeholder="예: 불속성, 보스, 원거리"
+                      placeholder="English name"
                     />
                   </div>
-                </div>
 
-                <div className="button-group">
-                  <button className="save-button" onClick={handleSave}>
-                    저장
-                  </button>
-                  <button
-                    className="cancel-button"
-                    onClick={() => navigate("/admin/npcs")}
-                  >
-                    취소
-                  </button>
+                  {/* 이름 (한글) */}
+                  <div className="npc-create-field">
+                    <label className="npc-create-label">이름 (한글):</label>
+                    <input
+                      type="text"
+                      className="npc-create-input"
+                      value={editData.name[1]}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          name: [editData.name[0], e.target.value],
+                        })
+                      }
+                      placeholder="한글 이름"
+                    />
+                  </div>
+
+                  {/* 속성 섹션 */}
+                  <div className="npc-create-section">
+                    <h3 className="npc-create-section-title">속성 (Attributes)</h3>
+                    <div className="npc-create-attributes-grid">
+                      <div className="npc-create-attribute-item">
+                        <label className="npc-create-attr-label">HP:</label>
+                        <input
+                          type="number"
+                          className="npc-create-attr-input"
+                          value={editData.hp}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              hp: parseFloat(e.target.value) || 0,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="npc-create-attribute-item">
+                        <label className="npc-create-attr-label">ATK:</label>
+                        <input
+                          type="number"
+                          className="npc-create-attr-input"
+                          value={editData.atk}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              atk: parseFloat(e.target.value) || 0,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="npc-create-attribute-item">
+                        <label className="npc-create-attr-label">DEF:</label>
+                        <input
+                          type="number"
+                          className="npc-create-attr-input"
+                          value={editData.def}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              def: parseFloat(e.target.value) || 0,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="npc-create-attribute-item">
+                        <label className="npc-create-attr-label">SPD:</label>
+                        <input
+                          type="number"
+                          className="npc-create-attr-input"
+                          value={editData.spd}
+                          onChange={(e) =>
+                            setEditData({
+                              ...editData,
+                              spd: parseFloat(e.target.value) || 0,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 특징 섹션 */}
+                  <div className="npc-create-section">
+                    <h3 className="npc-create-section-title">특징 (Features)</h3>
+                    <div className="npc-create-field">
+                      <input
+                        type="text"
+                        className="npc-create-input npc-create-features-input"
+                        value={editData.features.join(", ")}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            features: e.target.value
+                              .split(",")
+                              .map((f) => f.trim())
+                              .filter((f) => f),
+                          })
+                        }
+                        placeholder="예: 불속성, 보스, 원거리"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 액션 버튼 */}
+                  <div className="npc-create-actions">
+                    <button className="npc-create-btn save" onClick={handleSave}>
+                      저장
+                    </button>
+                    <button
+                      className="npc-create-btn cancel"
+                      onClick={() => navigate("/admin/npcs")}
+                    >
+                      취소
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* 뒤로 가기 버튼 */}
             <button
-              className="back-button bottom-left"
+              className="npc-create-back-btn"
               onClick={() => navigate("/admin/npcs")}
             >
               ← 목록으로

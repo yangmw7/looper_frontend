@@ -1,157 +1,381 @@
-@import '../User/AdminUserList.css';
+/* ===== AdminNpcCreate 전용 스타일 (충돌 방지) ===== */
 
-.detail-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+/* 헤더 */
+.npc-create-header {
   margin-bottom: 30px;
 }
 
-.back-button {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.3s;
-}
-.back-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.npc-detail-content {
+/* 메인 레이아웃 */
+.npc-create-layout {
   display: flex;
   gap: 40px;
+  align-items: flex-start;
 }
 
-.npc-detail-left {
+/* ===== 왼쪽 패널 (이미지) ===== */
+.npc-create-left-panel {
   flex: 0 0 300px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.npc-detail-image {
+.npc-create-image-wrapper {
   width: 300px;
   height: 300px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.npc-detail-image img {
+
+.npc-create-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* 이미지 업로드 섹션 스타일 */
-.image-upload-section {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+/* 이미지 업로드 섹션 */
+.npc-create-upload-section {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.image-upload-label {
-  display: inline-block;
-  background-color: #007bff;
+.npc-create-upload-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-.image-upload-label:hover {
-  background-color: #0056b3;
-}
-
-/* 파일 이름 텍스트 */
-.image-file-name {
-  font-size: 14px;
-  color: #ccc;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: none;
 }
 
-/* 이미지 제거 버튼 */
-.image-remove-button {
-  padding: 5px 10px;
-  background-color: #dc3545;
+.npc-create-upload-btn:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.npc-create-file-input {
+  display: none;
+}
+
+.npc-create-file-info {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.npc-create-filename {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 10px;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.npc-create-remove-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: #dc3545;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  transition: background-color 0.2s;
-}
-.image-remove-button:hover {
-  background-color: #b02a37;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
-.npc-detail-right {
+.npc-create-remove-btn:hover {
+  background: #c82333;
+  transform: scale(1.02);
+}
+
+/* ===== 오른쪽 패널 (폼) ===== */
+.npc-create-right-panel {
   flex: 1;
+  min-width: 0;
 }
 
-.detail-row {
+.npc-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 필드 */
+.npc-create-field {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
-  gap: 12px;
+  margin-bottom: 20px;
+  gap: 16px;
 }
-.detail-row label {
+
+.npc-create-label {
   flex: 0 0 140px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
+  font-size: 0.95rem;
+  text-align: right;
 }
-.detail-row input {
+
+.npc-create-input {
   flex: 1;
   max-width: 500px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.npc-create-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 섹션 */
+.npc-create-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.npc-create-section-title {
+  color: #ffd966;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* 속성 그리드 */
+.npc-create-attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.npc-create-attribute-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+}
+
+.npc-create-attribute-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.npc-create-attr-label {
+  flex: 0 0 50px;
+  color: #ffd966;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.npc-create-attr-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  font-family: inherit;
-  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s;
 }
 
-.button-group {
-  margin-top: 20px;
+.npc-create-attr-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+}
+
+/* 특징 입력 */
+.npc-create-features-input {
+  max-width: 100%;
+}
+
+/* 액션 버튼 */
+.npc-create-actions {
   display: flex;
   gap: 12px;
-  margin-bottom: 40px;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.save-button {
-  background: #28a745;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 4px;
+.npc-create-btn {
+  padding: 14px 36px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   border: none;
-  transition: 0.2s;
-}
-.save-button:hover {
-  background: #1e7e34;
+  transition: all 0.3s;
+  letter-spacing: 0.3px;
 }
 
-.cancel-button {
-  background: #6c757d;
+.npc-create-btn.save {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
   color: #fff;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-}
-.cancel-button:hover {
-  background: #565e64;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
 }
 
-.back-button.bottom-left {
+.npc-create-btn.save:hover {
+  background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.npc-create-btn.cancel {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  color: #fff;
+}
+
+.npc-create-btn.cancel:hover {
+  background: linear-gradient(135deg, #5a6268 0%, #6c757d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* 뒤로 가기 버튼 */
+.npc-create-back-btn {
   display: inline-block;
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.npc-create-back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-4px);
+}
+
+/* ===== 반응형 디자인 ===== */
+
+@media (max-width: 1200px) {
+  .npc-create-layout {
+    gap: 30px;
+  }
+
+  .npc-create-left-panel {
+    flex: 0 0 280px;
+  }
+
+  .npc-create-image-wrapper {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .npc-create-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .npc-create-left-panel {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .npc-create-image-wrapper {
+    width: 300px;
+    height: 300px;
+  }
+
+  .npc-create-label {
+    flex: 0 0 120px;
+  }
+
+  .npc-create-attributes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .npc-create-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .npc-create-label {
+    text-align: left;
+  }
+
+  .npc-create-input {
+    max-width: 100%;
+  }
+
+  .npc-create-actions {
+    flex-direction: column;
+  }
+
+  .npc-create-btn {
+    width: 100%;
+  }
+
+  .npc-create-back-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .npc-create-left-panel {
+    max-width: 100%;
+  }
+
+  .npc-create-image-wrapper {
+    width: 100%;
+    height: 280px;
+  }
+
+  .npc-create-attribute-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .npc-create-attr-label {
+    text-align: left;
+  }
 }

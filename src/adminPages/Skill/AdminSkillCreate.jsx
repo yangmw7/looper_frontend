@@ -124,14 +124,14 @@ function AdminSkillCreate() {
       <div className="admin-background">
         <div className="admin-page">
           <div className="admin-container">
-            <div className="detail-header">
-              <h2 className="admin-title">스킬 추가</h2>
-            </div>
+            {/* 헤더 */}
+            <h2 className="skill-create-title">스킬 추가</h2>
 
-            <div className="skill-detail-content">
-              {/* 왼쪽: 이미지 업로드 */}
-              <div className="skill-detail-left">
-                <div className="skill-detail-image">
+            {/* 메인 컨테이너 */}
+            <div className="skill-create-container">
+              {/* 왼쪽 - 이미지 */}
+              <div className="skill-create-left">
+                <div className="skill-create-image-box">
                   <img
                     src={getSkillImage()}
                     alt="New Skill"
@@ -142,45 +142,25 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="image-upload-section" style={{ marginTop: "20px" }}>
-                  <label htmlFor="image-upload" className="image-upload-label">
-                    {imageFile ? "이미지 변경" : "이미지 업로드"}
-                  </label>
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                  />
-                  {imageFile && (
-                    <div style={{ marginTop: "10px" }}>
-                      <p style={{ fontSize: "14px", color: "#ccc" }}>
-                        {imageFile.name}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={handleRemoveImage}
-                        style={{
-                          padding: "5px 10px",
-                          backgroundColor: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          fontSize: "12px",
-                        }}
-                      >
-                        이미지 제거
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <button
+                  className="skill-create-upload-button"
+                  onClick={() => document.getElementById("skill-image-upload").click()}
+                >
+                  이미지 업로드
+                </button>
+                <input
+                  id="skill-image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
               </div>
 
-              {/* 오른쪽: 정보 입력 */}
-              <div className="skill-detail-right">
-                <div className="detail-row">
+              {/* 오른쪽 - 폼 */}
+              <div className="skill-create-right">
+                {/* ID */}
+                <div className="skill-create-row">
                   <label>ID:</label>
                   <input
                     type="text"
@@ -192,7 +172,8 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="detail-row">
+                {/* 이름 (영문) */}
+                <div className="skill-create-row">
                   <label>이름 (영문):</label>
                   <input
                     type="text"
@@ -207,7 +188,8 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="detail-row">
+                {/* 이름 (한글) */}
+                <div className="skill-create-row">
                   <label>이름 (한글):</label>
                   <input
                     type="text"
@@ -222,7 +204,8 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="detail-row">
+                {/* 설명 (영문) */}
+                <div className="skill-create-row">
                   <label>설명 (영문):</label>
                   <textarea
                     value={editData.description[0]}
@@ -236,7 +219,8 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="detail-row">
+                {/* 설명 (한글) */}
+                <div className="skill-create-row">
                   <label>설명 (한글):</label>
                   <textarea
                     value={editData.description[1]}
@@ -250,12 +234,14 @@ function AdminSkillCreate() {
                   />
                 </div>
 
-                <div className="button-group">
-                  <button className="save-button" onClick={handleSave}>
+                {/* 버튼 */}
+                <div className="skill-create-divider"></div>
+                <div className="skill-create-buttons">
+                  <button className="skill-create-save-btn" onClick={handleSave}>
                     저장
                   </button>
                   <button
-                    className="cancel-button"
+                    className="skill-create-cancel-btn"
                     onClick={() => navigate("/admin/skills")}
                   >
                     취소
@@ -264,8 +250,9 @@ function AdminSkillCreate() {
               </div>
             </div>
 
+            {/* 뒤로 가기 */}
             <button
-              className="back-button bottom-left"
+              className="skill-create-back-btn"
               onClick={() => navigate("/admin/skills")}
             >
               ← 목록으로

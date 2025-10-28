@@ -1,238 +1,395 @@
-@import '../User/AdminUserList.css';
+/* ===== NPC Detail 페이지 전용 스타일 ===== */
 
-.detail-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.npc-detail-loading,
+.npc-detail-error {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.npc-detail-error {
+  color: #ff6b6b;
+}
+
+.npc-detail-title {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
   margin-bottom: 30px;
 }
 
-.back-button {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.3s;
-}
-
-.back-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.npc-detail-content {
+.npc-detail-container {
   display: flex;
   gap: 40px;
+  align-items: flex-start;
 }
 
+/* ===== 왼쪽 - 이미지 영역 ===== */
 .npc-detail-left {
-  flex: 0 0 300px;
-  position: relative;
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.npc-detail-image {
-  width: 300px;
-  height: 300px;
-  background: rgba(0, 0, 0, 0.3);
+.npc-detail-image-box {
+  width: 280px;
+  height: 280px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.npc-detail-image img {
+.npc-detail-image-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+.npc-detail-upload-button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.npc-detail-upload-button:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* ===== 오른쪽 - 폼 영역 ===== */
 .npc-detail-right {
   flex: 1;
-}
-
-.detail-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  gap: 12px;
-}
-
-.detail-row label {
-  flex: 0 0 140px;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-}
-
-.detail-row span {
-  flex: 1;
-  color: #fff;
-  word-break: break-word;
-}
-
-.detail-row input,
-.detail-row select,
-.detail-row textarea {
-  flex: 1;
-  max-width: 500px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  font-family: inherit;
-  box-sizing: border-box;
-  text-align: left;
-}
-
-.detail-row input[type="number"] {
-  max-width: 150px;
-}
-
-.detail-row textarea {
-  resize: vertical;
-  min-height: 60px;
-}
-
-.detail-row input::placeholder,
-.detail-row textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.detail-section {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.detail-section h3 {
-  color: #ffe07a;
-  margin-bottom: 16px;
-  font-size: 1.1rem;
-}
-
-.attributes-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-top: 12px;
-  margin-bottom: 35px;
-}
-
-.attribute-item {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 10px;
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 20px;
 }
 
-.attribute-item label {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+.npc-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.attribute-item span {
-  color: #fff;
+.npc-detail-row label {
+  flex: 0 0 120px;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
   font-size: 0.95rem;
 }
 
-.attribute-item input {
-  width: 100%;
-  box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.1);
+.npc-detail-value {
+  flex: 1;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 0.9rem;
-  text-align: left;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
-.skills-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.skill-tag {
-  background: rgba(0, 112, 255, 0.2);
-  color: #0070ff;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.no-data {
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
-}
-
-.button-group {
-  margin-top: 30px;
-  display: flex;
-  gap: 12px;
-  margin-bottom: 40px;
-}
-
-.edit-button,
-.delete-button,
-.save-button,
-.cancel-button {
-  padding: 10px 24px;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  border: none;
+.npc-detail-row input {
+  flex: 1;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
   transition: all 0.2s;
 }
 
-.edit-button {
-  background: #0070ff;
+.npc-detail-row input:disabled {
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.npc-detail-row input:focus:not(:disabled) {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.npc-detail-row input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* 구분선 */
+.npc-detail-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0;
+}
+
+/* 서브타이틀 */
+.npc-detail-subtitle {
+  color: #ffd966;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* 속성 그리드 */
+.npc-detail-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 500px;
+}
+
+.npc-detail-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.npc-detail-stat-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.npc-detail-stat-item label {
+  flex: 0 0 50px;
+  color: #ffd966;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.npc-detail-stat-value {
+  flex: 1;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.npc-detail-stat-item input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.npc-detail-stat-item input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+}
+
+/* 특징 보기 모드 */
+.npc-detail-features-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.npc-detail-feature-tag {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.npc-detail-no-data {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* 특징 입력 (수정 모드) */
+.npc-detail-features-input {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.npc-detail-features-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.npc-detail-features-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* 버튼 그룹 */
+.npc-detail-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.npc-detail-edit-btn,
+.npc-detail-delete-btn,
+.npc-detail-save-btn,
+.npc-detail-cancel-btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.npc-detail-edit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.npc-detail-edit-btn:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.npc-detail-delete-btn {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+.npc-detail-delete-btn:hover {
+  background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+}
+
+.npc-detail-save-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.npc-detail-save-btn:hover {
+  background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.npc-detail-cancel-btn {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
   color: #fff;
 }
 
-.edit-button:hover {
-  background: #0057cc;
-  transform: translateY(-1px);
+.npc-detail-cancel-btn:hover {
+  background: linear-gradient(135deg, #5a6268 0%, #6c757d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
 }
 
-.delete-button {
-  background: #ff4444;
+/* 뒤로 가기 */
+.npc-detail-back-btn {
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.delete-button:hover {
-  background: #cc0000;
-  transform: translateY(-1px);
+.npc-detail-back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-4px);
 }
 
-.save-button {
-  background: #28a745;
-  color: #fff;
+/* ===== 반응형 ===== */
+
+@media (max-width: 1024px) {
+  .npc-detail-container {
+    flex-direction: column;
+  }
+
+  .npc-detail-left {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
 }
 
-.save-button:hover {
-  background: #1e7e34;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
+@media (max-width: 768px) {
+  .npc-detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 
-.cancel-button {
-  background: #6c757d;
-  color: #fff;
-}
+  .npc-detail-row label {
+    flex: none;
+  }
 
-.cancel-button:hover {
-  background: #565e64;
-  transform: translateY(-1px);
-}
+  .npc-detail-row input,
+  .npc-detail-value {
+    max-width: 100%;
+  }
 
-.back-button.bottom-left {
-  display: inline-block;
+  .npc-detail-stats-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  .npc-detail-buttons {
+    flex-direction: column;
+  }
+
+  .npc-detail-edit-btn,
+  .npc-detail-delete-btn,
+  .npc-detail-save-btn,
+  .npc-detail-cancel-btn {
+    width: 100%;
+  }
+
+  .npc-detail-back-btn {
+    width: 100%;
+    text-align: center;
+  }
 }
