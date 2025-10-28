@@ -239,6 +239,34 @@
   word-break: break-word;
 }
 
+/* 이미지 스타일 */
+.announcement-images {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.image-container {
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.announcement-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.announcement-image:hover {
+  transform: scale(1.01);
+}
+
 /* 액션 버튼 */
 .post-actions {
   display: flex;

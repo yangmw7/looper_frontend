@@ -14,6 +14,7 @@ export default function AnnouncementDetailPage() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const [announcement, setAnnouncement] = useState(null);
+  const [announcementImages, setAnnouncementImages] = useState([]); // New state for images
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -74,14 +75,33 @@ export default function AnnouncementDetailPage() {
     fetchAnnouncement();
   }, [id]);
 
-  const fetchAnnouncement = async () => {
+    const fetchAnnouncement = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/announcements/${id}`);
       setAnnouncement(response.data);
       setIsLiked(response.data.isLiked || false);
+      
+      // 이미지 URL은 announcement.imageUrls에서 가져옴
+      if (response.data.imageUrls && response.data.imageUrls.length > 0) {
+        setAnnouncementImages(
+          response.data.imageUrls.map(url => ({ filePath: url }))
+        );
+        console.log('이미지 URL들:', response.data.imageUrls);
+      }
     } catch (err) {
       setError('공지사항을 불러오는데 실패했습니다.');
       console.error(err);
+    }
+  };
+
+  // 공지사항 이미지 조회
+  const fetchAnnouncementImages = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/announcements/${id}/images`);
+      setAnnouncementImages(response.data || []);
+    } catch (err) {
+      console.error('공지사항 이미지를 불러오는데 실패했습니다:', err);
+      // 이미지 로드 실패는 치명적이지 않으므로 에러 상태로 설정하지 않음
     }
   };
 
@@ -177,6 +197,25 @@ export default function AnnouncementDetailPage() {
       day: 'numeric' 
     });
   }
+
+  // 이미지 렌더링
+  const renderImages = () => {
+    if (!announcementImages || announcementImages.length === 0) return null;
+    
+    return (
+      <div className="announcement-images">
+        {announcementImages.map((image, index) => (
+          <div key={index} className="image-container">
+            <img 
+              src={image.filePath} 
+              alt={`공지사항 이미지 ${index + 1}`} 
+              className="announcement-image" 
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   if (error) {
     return (
@@ -278,7 +317,12 @@ export default function AnnouncementDetailPage() {
             </div>
 
             {/* 본문 */}
-            <div className="post-detail-body">{announcement.content}</div>
+            <div className="post-detail-body">
+              {announcement.content}
+              
+              {/* 이미지 렌더링 */}
+              {renderImages()}
+            </div>
 
             {/* 액션 버튼 */}
             <div className="post-actions">
