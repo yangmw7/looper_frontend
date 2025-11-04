@@ -401,43 +401,53 @@ export default function GameGuidePage() {
             </div>
           ) : items.length > 0 ? (
             <div className="guide-items-grid">
-              {items.map((item) => (
-                <div key={item.id} className="guide-content-card guide-game-card">
-                  <div className="guide-game-image-wrapper">
-                    {item.imageUrl && (
-                      <img src={item.imageUrl} alt={item.name} />
-                    )}
-                    {item.rarity && (
-                      <div className={`guide-game-rarity ${item.rarity.toLowerCase()}`}>
-                        {item.rarity}
+              {items.map((item) => {
+                const displayName = Array.isArray(item.name)
+                  ? item.name.find(n => /[가-힣]/.test(n)) || item.name[0]
+                  : item.name;
+
+                const displayDesc = Array.isArray(item.description)
+                  ? item.description.find(d => /[가-힣]/.test(d)) || item.description[0]
+                  : item.description;
+
+                return (
+                  <div key={item.id} className="guide-content-card guide-game-card">
+                    <div className="guide-game-image-wrapper">
+                      {item.imageUrl && (
+                        <img src={item.imageUrl} alt={displayName} />
+                      )}
+                      {item.rarity && (
+                        <div className={`guide-game-rarity ${item.rarity.toLowerCase()}`}>
+                          {item.rarity}
+                        </div>
+                      )}
+                    </div>
+                    <div className="guide-game-info">
+                      <div className="guide-game-header">
+                        <h3>{displayName}</h3>
+                        <span className="guide-game-id">ID: {item.id}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      className="guide-expand-btn"
+                      onClick={() => toggleItemExpand(`item-${item.id}`)}
+                    >
+                      {expandedItems[`item-${item.id}`] ? (
+                        <>설명 닫기 <FaChevronUp /></>
+                      ) : (
+                        <>설명 보기 <FaChevronDown /></>
+                      )}
+                    </button>
+
+                    {expandedItems[`item-${item.id}`] && (
+                      <div className="guide-game-details">
+                        <p className="guide-game-description">{displayDesc}</p>
                       </div>
                     )}
                   </div>
-                  <div className="guide-game-info">
-                    <div className="guide-game-header">
-                      <h3>{item.name}</h3>
-                      <span className="guide-game-id">ID: {item.id}</span>
-                    </div>
-                  </div>
-                  
-                  <button 
-                    className="guide-expand-btn"
-                    onClick={() => toggleItemExpand(`item-${item.id}`)}
-                  >
-                    {expandedItems[`item-${item.id}`] ? (
-                      <>설명 닫기 <FaChevronUp /></>
-                    ) : (
-                      <>설명 보기 <FaChevronDown /></>
-                    )}
-                  </button>
-                  
-                  {expandedItems[`item-${item.id}`] && (
-                    <div className="guide-game-details">
-                      <p className="guide-game-description">{item.description}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="guide-empty-state">
@@ -446,6 +456,7 @@ export default function GameGuidePage() {
             </div>
           )}
         </section>
+
 
         {/* NPC 정보 */}
         <section id="npcs" className="guide-section">
@@ -461,58 +472,65 @@ export default function GameGuidePage() {
             </div>
           ) : npcs.length > 0 ? (
             <div className="guide-items-grid">
-              {npcs.map((npc) => (
-                <div key={npc.id} className="guide-content-card guide-game-card guide-npc-card">
-                  <div className="guide-game-image-wrapper">
-                    {npc.imageUrl && (
-                      <img src={npc.imageUrl} alt={npc.name} />
-                    )}
-                  </div>
-                  <div className="guide-game-info">
-                    <div className="guide-game-header">
-                      <h3>{npc.name}</h3>
-                      <span className="guide-game-id">ID: {npc.id}</span>
-                    </div>
-                    {npc.description && (
-                      <p className="guide-npc-short-desc">{npc.description}</p>
-                    )}
-                  </div>
-                  
-                  <button 
-                    className="guide-expand-btn"
-                    onClick={() => toggleItemExpand(`npc-${npc.id}`)}
-                  >
-                    {expandedItems[`npc-${npc.id}`] ? (
-                      <>특징 닫기 <FaChevronUp /></>
-                    ) : (
-                      <>특징 보기 <FaChevronDown /></>
-                    )}
-                  </button>
-                  
-                  {expandedItems[`npc-${npc.id}`] && (
-                    <div className="guide-game-details">
-                      {npc.features && (
-                        <div className="guide-detail-content">
-                          <strong>특징:</strong>
-                          <p>{npc.features}</p>
-                        </div>
-                      )}
-                      {npc.role && (
-                        <div className="guide-detail-row">
-                          <strong>역할:</strong>
-                          <span>{npc.role}</span>
-                        </div>
-                      )}
-                      {npc.location && (
-                        <div className="guide-detail-row">
-                          <strong>위치:</strong>
-                          <span>{npc.location}</span>
-                        </div>
+              {npcs.map((npc) => {
+                const displayName = Array.isArray(npc.name)
+                  ? npc.name.find(n => /[가-힣]/.test(n)) || npc.name[0]
+                  : npc.name;
+
+                const displayFeatures = Array.isArray(npc.features)
+                  ? npc.features.find(f => /[가-힣]/.test(f)) || npc.features[0]
+                  : npc.features;
+
+                return (
+                  <div key={npc.id} className="guide-content-card guide-game-card guide-npc-card">
+                    <div className="guide-game-image-wrapper">
+                      {npc.imageUrl && (
+                        <img src={npc.imageUrl} alt={displayName} />
                       )}
                     </div>
-                  )}
-                </div>
-              ))}
+                    <div className="guide-game-info">
+                      <div className="guide-game-header">
+                        <h3>{displayName}</h3>
+                        <span className="guide-game-id">ID: {npc.id}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      className="guide-expand-btn"
+                      onClick={() => toggleItemExpand(`npc-${npc.id}`)}
+                    >
+                      {expandedItems[`npc-${npc.id}`] ? (
+                        <>특징 닫기 <FaChevronUp /></>
+                      ) : (
+                        <>특징 보기 <FaChevronDown /></>
+                      )}
+                    </button>
+
+                    {expandedItems[`npc-${npc.id}`] && (
+                      <div className="guide-game-details">
+                        {displayFeatures && (
+                          <div className="guide-detail-content">
+                            <strong>특징:</strong>
+                            <p>{displayFeatures}</p>
+                          </div>
+                        )}
+                        {npc.role && (
+                          <div className="guide-detail-row">
+                            <strong>역할:</strong>
+                            <span>{npc.role}</span>
+                          </div>
+                        )}
+                        {npc.location && (
+                          <div className="guide-detail-row">
+                            <strong>위치:</strong>
+                            <span>{npc.location}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <div className="guide-empty-state">
@@ -521,6 +539,7 @@ export default function GameGuidePage() {
             </div>
           )}
         </section>
+
 
         {/* 스킬 정보 */}
         <section id="skills" className="guide-section">
@@ -536,49 +555,59 @@ export default function GameGuidePage() {
             </div>
           ) : skills.length > 0 ? (
             <div className="guide-items-grid">
-              {skills.map((skill) => (
-                <div key={skill.id} className="guide-content-card guide-game-card guide-skill-card">
-                  <div className="guide-game-image-wrapper">
-                    {skill.imageUrl && (
-                      <img src={skill.imageUrl} alt={skill.name} />
+              {skills.map((skill) => {
+                const displayName = Array.isArray(skill.name)
+                  ? skill.name.find(n => /[가-힣]/.test(n)) || skill.name[0]
+                  : skill.name;
+
+                const displayDesc = Array.isArray(skill.description)
+                  ? skill.description.find(d => /[가-힣]/.test(d)) || skill.description[0]
+                  : skill.description;
+
+                return (
+                  <div key={skill.id} className="guide-content-card guide-game-card guide-skill-card">
+                    <div className="guide-game-image-wrapper">
+                      {skill.imageUrl && (
+                        <img src={skill.imageUrl} alt={displayName} />
+                      )}
+                    </div>
+                    <div className="guide-game-info">
+                      <div className="guide-game-header">
+                        <h3>{displayName}</h3>
+                        <span className="guide-game-id">ID: {skill.id}</span>
+                      </div>
+                      <div className="guide-skill-stats">
+                        {skill.cooldown && (
+                          <span className="guide-skill-stat">쿨다운: {skill.cooldown}초</span>
+                        )}
+                        {skill.damage && (
+                          <span className="guide-skill-stat">데미지: {skill.damage}</span>
+                        )}
+                        {skill.manaCost && (
+                          <span className="guide-skill-stat">마나: {skill.manaCost}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      className="guide-expand-btn"
+                      onClick={() => toggleItemExpand(`skill-${skill.id}`)}
+                    >
+                      {expandedItems[`skill-${skill.id}`] ? (
+                        <>설명 닫기 <FaChevronUp /></>
+                      ) : (
+                        <>설명 보기 <FaChevronDown /></>
+                      )}
+                    </button>
+
+                    {expandedItems[`skill-${skill.id}`] && (
+                      <div className="guide-game-details">
+                        <p className="guide-game-description">{displayDesc}</p>
+                      </div>
                     )}
                   </div>
-                  <div className="guide-game-info">
-                    <div className="guide-game-header">
-                      <h3>{skill.name}</h3>
-                      <span className="guide-game-id">ID: {skill.id}</span>
-                    </div>
-                    <div className="guide-skill-stats">
-                      {skill.cooldown && (
-                        <span className="guide-skill-stat">쿨다운: {skill.cooldown}초</span>
-                      )}
-                      {skill.damage && (
-                        <span className="guide-skill-stat">데미지: {skill.damage}</span>
-                      )}
-                      {skill.manaCost && (
-                        <span className="guide-skill-stat">마나: {skill.manaCost}</span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <button 
-                    className="guide-expand-btn"
-                    onClick={() => toggleItemExpand(`skill-${skill.id}`)}
-                  >
-                    {expandedItems[`skill-${skill.id}`] ? (
-                      <>설명 닫기 <FaChevronUp /></>
-                    ) : (
-                      <>설명 보기 <FaChevronDown /></>
-                    )}
-                  </button>
-                  
-                  {expandedItems[`skill-${skill.id}`] && (
-                    <div className="guide-game-details">
-                      <p className="guide-game-description">{skill.description}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="guide-empty-state">
@@ -587,6 +616,8 @@ export default function GameGuidePage() {
             </div>
           )}
         </section>
+
+
 
       </div>
 

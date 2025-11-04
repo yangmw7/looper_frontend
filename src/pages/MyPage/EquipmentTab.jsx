@@ -446,9 +446,11 @@ function EquipmentTab() {
             
             <div>CRI</div>
             <div>
-              {parseFloat(playerStats.cri || 0).toFixed(2)}%
+              {(parseFloat(playerStats.cri || 0) * 100)}%
               {playerStats.equipmentCri > 0 && (
-                <span className="stat-bonus"> (+{parseFloat(playerStats.equipmentCri).toFixed(2)}%)</span>
+                <span className="stat-bonus">
+                  (+{(parseFloat(playerStats.equipmentCri) * 100)}%)
+                </span>
               )}
             </div>
             
